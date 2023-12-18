@@ -1,11 +1,14 @@
+% A LaTeX template for MSc Thesis submissions to 
 % Politecnico di Milano (PoliMi) - School of Industrial and Information Engineering
+%
+% P. F. Antonietti, S. Bonetti, A. Gruttadauria, G. Mescolini, A. Zingaro
 %
 % Last Revision: October 2021
 %
 % Copyright 2021 Politecnico di Milano, Italy. Inc. All rights reserved
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{Configuration_Files/Template}
+\ProvidesClass{Configuration_Files/PoliMi3i_thesis}[2021/6/30 PoliMi3i thesis submission class]
 \ProcessOptions\relax
 
 %--------------------------------------------------------------------------
