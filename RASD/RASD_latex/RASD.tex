@@ -163,15 +163,156 @@
 
 \section{Purpose}
 
+The purpose of the project CodeKataBattle (CKB) is to develop a platform where Students can practice coding together. Educators set up challenges (called Battles) within Tournaments, and Students work in teams to solve them. The platform checks their code automatically, giving scores based on how well it works, how quickly they finish, and how good their code quality is. Educators may optionally give extra scores by checking the work themselves, in a so-called Consolidation Stage which starts right after the end of every Battle. Students get ranked in Tournaments based on their scores obtained in teams, and can earn Badges for some achievements, in order to make learning programming more fun and competitive.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Goals}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Code Kata Battles and take part in its Battles.
+    \item[\textcolor{bluepoli}{G2}] Allows registered Educators to manage Tournaments for which they have been granted permission.
+    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Code Kata Battles to be rewarded of different achievements.
+    \item[\textcolor{bluepoli}{G4}] Allows registered Users to visualize information for which they have granted permission.
+    \item[\textcolor{bluepoli}{G5}] Automates code evaluation process using GitHub Actions and some static analysis tools.
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
 \section{Scope}
 
+The main features which should be provided in order to achieve the aim of the project are:
+
+\item \textcolor{bluepoli}{Creating Challenges:} Educators can make coding challenges (Battles) that Students can join, alone or in teams (groups), within the context of a Tournament.
+
+\item \textcolor{bluepoli}{Using GitHub Actions for Code Submsissions:} Students are supposed to submit their code for a Battle in their GitHub repository, and the system must be informed of a new commit by a participating Student making use of GitHub Actions.
+
+\item \textcolor{bluepoli}{Checking Code both Automatically and Manually:} The platform assigns a score to Students' code automatically, without the intervention of any Educator. Optionally, Educators may also decide to evaluate the code themselves.
+
+\item \textcolor{bluepoli}{Rankings:} During each Battle, a live ranking of the involved teams is available, enabling participating Students to track their performance. Additionally, live Tournament rankings show how well each Student is performing in the Battles within a given Tournament.
+
+\item \textcolor{bluepoli}{Badges for Achievements:} At the end of every Tournament, Students who achieved good results may be awarded with a special Badges, which are ruled by the Educator who created the Tournament.
+
+The main goal is to help Students practice coding, giving them feedback and comparing their results to others.
+
+\subsection{World phenomena}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{WP1}] An Educator wants to create a Tournament competition.
+    \item[\textcolor{bluepoli}{WP2}] A Student wants to participate in a Tournament competition.
+    \item[\textcolor{bluepoli}{WP3}] A Student forks a Battle GitHub repo.
+    \item[\textcolor{bluepoli}{WP4}] A Student sets up the update workflow using GitHub Actions.
+    \item[\textcolor{bluepoli}{WP5}] An Educator wants to end a Tournament competition.
+    \item[\textcolor{bluepoli}{WP6}] A User wants to visualize data about Tournaments, Battles, and Student profiles.
+    \item[\textcolor{bluepoli}{WP7}] An Educator is given permission by another Educator to manage a Tournament.
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Shared phenomena}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsubsection{Controlled by Machine}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{SP1}] The system notifies the Students about the creation of a Tournament.
+    \item[\textcolor{bluepoli}{SP2}] The system notifies the groups about the creation of a Battle.
+    \item[\textcolor{bluepoli}{SP3}] The system notifies the groups about the evaluation of a Battle.
+    \item[\textcolor{bluepoli}{SP4}] The system notifies the Students about the end of a Tournament.s
+    \item[\textcolor{bluepoli}{SP5}] The system shows some information about a Battle.
+    \item[\textcolor{bluepoli}{SP6}] The system shows some information about a Tournament.
+    \item[\textcolor{bluepoli}{SP7}] The system shows some information about a Student.
+    \item[\textcolor{bluepoli}{SP8}] The system creates a GitHub repository containing the code kata.
+    \item[\textcolor{bluepoli}{SP9}] The system assigns the score to the code of a group.
+    \item[\textcolor{bluepoli}{SP10}] The system assigns a Badge to a Student.
+\end{enumerate}
+
+\subsubsection{Controlled by World}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{SP11}] An Educator creates a Tournament of code kata Battles.
+    \item[\textcolor{bluepoli}{SP12}] An Educator defines Badges (see section 1.3) for the Tournament.
+    \item[\textcolor{bluepoli}{SP13}] An Educator gives permission to another Educator to manage a Tournament.
+    \item[\textcolor{bluepoli}{SP14}] An Educator creates a code kata Battle.
+    \item[\textcolor{bluepoli}{SP15}] A Student creates a group for a Battle.
+    \item[\textcolor{bluepoli}{SP16}] A Student invites another Student to join the group they created.
+    \item[\textcolor{bluepoli}{SP17}] A Student joins a group for a Battle.
+    \item[\textcolor{bluepoli}{SP18}] An API call is received by the system when a commit is pushed.
+    \item[\textcolor{bluepoli}{SP19}] An Educator closes a Battle.
+    \item[\textcolor{bluepoli}{SP20}] An Educator closes a Tournament.
+    \item[\textcolor{bluepoli}{SP21}] An Educator evaluates the code of a Student.
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
 \section{Definitions, Acronyms, Abbreviations}
+
+In this section some information about terminology is provided, in order to clarify terms, acronyms, and abbreviations used in the document, ensuring easy understanding and reference for readers.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Definitions}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\item \textcolor{bluepoli}{Battle:} A Code Kata, that is, a challenge in which teams of players need to solve a problem in a specific coding language and submit their code to get a score according to the rules of the Battle.
+\item \textcolor{bluepoli}{Tournament:} A competition composed of many Battles in which participants' overall score is the sum of all the scores obtained in every Battle they participated in, individually or in team with other players.
+\item \textcolor{bluepoli}{Student:} The User which takes part into the Tournaments of Battles.
+\item \textcolor{bluepoli}{Educator:} The User which organizes Tournaments of Battles to which the Students can participate and who manages every aspect about them.
+\item \textcolor{bluepoli}{Consolidation stage:} The Consolidation Stage is the phase of a Battle which starts as soon as the submission deadline expires, during which the Educators who manage the Tournament can eventually assign an additional score to every team, which will be summed to the score previously assigned by the platform.
+\item \textcolor{bluepoli}{Badge:} A Badge is an achievement marker related to a certain Tournament, obtained by Students if they satisfied the specific conditions defined by the Educator during the creation process of the Tournament.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Acronyms}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\item \textcolor{bluepoli}{CK:} Code Kata, that is, a Battle.
+\item \textcolor{bluepoli}{CKB:} Code Kata Battle, that is, the name of the platform.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Abbreviations}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\item \textcolor{bluepoli}{WPn:} n-th World Phenomena
+\item \textcolor{bluepoli}{SPn:} n-th Shared Phenomena
+\item \textcolor{bluepoli}{Gn:} n-th Goal
+\item \textcolor{bluepoli}{Dn:} n-th Domain Assumption
+\item \textcolor{bluepoli}{Rn:} n-th Requirement
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Revision history}
 
 \section{Reference Documents}
 
+\item \textcolor{bluepoli}{Assignment document A.Y. 2023/2024}\\
+(”Requirement Engineering and Design Project: goal, schedule and rules”)
+\item \textcolor{bluepoli}{Software Engineering 2 A.Y. 2023/2024 Slides}\\
+(Lecture slides provided during the course)
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
 \section{Document Structure}
+
+This document is composed of six sections:
+
+\item \textcolor{bluepoli}{1st Chapter:} We begin by presenting the problem statement and outlining the system's objectives. In the scope subsection, we offer insights into the various real-world and shared phenomena that the system addresses. Finally, we provide essential resources for readers, including definitions and abbreviations, to facilitate a comprehensive understanding of this document.
+\item \textcolor{bluepoli}{2nd Chapter:} We offer a comprehensive overview of the system, including insights into User profiles and their primary functions. Additionally, we present domain diagrams to illustrate system components and describe various scenarios. Finally, we establish the key domain assumptions underpinning the system's operation
+\item \textcolor{bluepoli}{3rd Chapter:} We delineate the system's requirements, encompassing both functional and non-functional aspects. In addition, we present use case diagrams that illustrate system interactions, accompanied by detailed descriptions of each use case and related sequence diagrams. Lastly, we establish a clear mapping of these requirements to both system goals and use cases for comprehensive understanding.
+\item \textcolor{bluepoli}{4th Chapter:} We provide a formal analysis of the system to be with Alloy.
+\item \textcolor{bluepoli}{5th Chapter:} We provide an estimate of the effort spent by each group member.
+\item \textcolor{bluepoli}{6th Chapter:} We provide a list of the references used in this document.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 
 % SECOND CHAPTER
