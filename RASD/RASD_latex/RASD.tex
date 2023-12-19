@@ -513,6 +513,169 @@ Qui\\
 % --------------------------------------------------------------------------
 \chapter{Formal analysis using alloy}
 
+\section{Objectives of the analysis}
+
+\item In this section, a presentation of the formal modelling activity that has been done using the Alloy formal notation. The main goal of this activity is to formally describe the domain and properties of the system to be.
+\item In particular, the main objective of this activity is to model and formally represent Educators, Students, Tournaments, Battles and Badges, as well as the main constraints which regard such entities.
+\item In order to ensure straightforward comprehension of the following, each constraint and entity will be annotated in natural language, along with any predicates and assertions which have been verified.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Alloy Code}
+
+\item // -------------- Definition of auxiliar entities -------------- //
+\\
+\item // Defined in order to model the deadlines
+\item sig Time \{\\
+timestamp: Int\\
+\}\{\\
+timestamp >= 0\\
+\}
+\\
+\item // Defined in order to model any flag, such as whether a Battle is in the Consolidation Stage
+\item abstract sig Boolean \{\}
+\item one sig True extends Boolean \{\}
+\item one sig False extends Boolean \{\}
+\\
+\item // -------------- Definition of game components -------------- //
+\\
+\item // Defined in order to model the score of a team in a Battle and the score of a Student in a Tournament
+\item sig Score \{\\
+value: Int\\
+\}\{\\
+value >= 0\\
+\}
+\\
+\item // Defined in order to model the rank of a team in a Battle and the rank of a Student in a Tournament
+\item sig Rank \{\\
+value: Int\\
+\}\{\\
+value >= 1\\
+\}
+\\
+\item // Defined in order to model the Tournament
+\item sig Tournament \{\\
+managers: some Educator,\\
+subscription\_deadline: one Time,\\
+battles: set Battle,\\
+scores: Student -> one Score,\\
+ranks: Student -> one Rank,
+badges: set Badge,\\
+achievements: Student -> set BadgeRule\\
+\}
+\\
+\item // Defined in order to model the Battle (unnecessary to model the programming language)
+\item sig Battle \{\\
+tournament: one Tournament,\\
+teams: Student -> some Student,\\
+scores: Student -> one Score,\\
+ranks: Student -> one Rank,\\
+subscription\_deadline: one Time,\\
+submission\_deadline: one Time,\\
+consolidation\_stage: one Boolean\\
+\}
+\\
+\item // Defined in order to model the Badge (unnecessary to model the title)
+\item sig BadgeRule \{\\
+\}
+\item sig Badge \{\\
+rule: one BadgeRule\\
+\}
+\\
+\item // -------------- Definition of actors -------------- //
+\\
+\item // Defined in order to model the nature of Student and Educator as Users
+\item abstract sig User \{\}
+\\
+\item // Defined in order to model the Student
+\item sig Student extends User \{\\
+badges: set Badge\\
+\}
+\\
+\item // Defined in order to model the Educator
+\item sig Educator extends User\{\\
+\}
+\\
+\item //  -------------- Facts -------------- //
+\\
+\item // Tournaments: A student must both have a score and a rank, if a student has higher score than another student than it has a lower rank (e.g. 1st is lower than 2nd), only achievements of Badges which relate to existing Badges for the Tournament are stored, a Student has one only score, a Student has one only rank
+\item fact TournamentFact \{\\
+    all t1: Tournament | all s: Student | some sc: Score | some r: Rank | ( sc in s.(t1.scores) ) => ( r in s.(t1.ranks) ) and ( r in s.(t1.ranks) => sc in s.(t1.scores) )\\
+    all t2: Tournament | all s1, s2: Student | ( ( s1.(t2.ranks).value < s2.(t2.ranks).value ) <=> ( s1.(t2.scores).value > s2.(t2.scores).value ) )\\
+    all t3: Tournament | all s3: Student | all b: Badge | ( b.rule in s3.(t3.achievements) ) => ( b in t3.badges )\\
+    all t4: Tournament | all disj sc1, sc2: Score | some s: Student | ( sc1 in s.(t4.scores) ) => not ( sc2 in s.(t4.scores) )\\
+    all t5: Tournament | all disj r1, r2: Rank | some s: Student | ( r1 in s.(t5.ranks) ) => not ( r2 in s.(t5.ranks) )\\
+\}
+\\
+\item // Battles: The subscription deadline must expire before the submission deadline, teams relationships are symmetrical, teams relationships are reflexive, if a Student s1 is in team with a Student s2 and not with a Student s3 then s2 is not in team with s3, Students in the same team have same score and rank, a Student has one only score, a Student has one only rank
+\item fact BattleFact \{\\
+    all b: Battle | b.subscription\_deadline.timestamp < b.submission\_deadline.timestamp\\
+    all b1: Battle | all s1, s2: Student | s2 in s1.(b1.teams) <=> s1 in s2.(b1.teams)\\
+    all b2: Battle | all s: Student | s in s.(b2.teams)\\
+    all b3: Battle | all s3, s4, s5: Student | ( ( s4 in s3.(b3.teams) )  and ( not ( s5 in s3.(b3.teams) ) ) ) => ( not (s4 in s5.(b3.teams) ) )\\
+    all b4: Battle | all s6, s7: Student | s7 in s6.(b4.teams) => ( ( s6.(b4.scores).value = s7.(b4.scores).value ) and ( s6.(b4.ranks).value = s7.(b4.scores).value ) )\\
+    all b5: Battle | all disj sc1, sc2: Score | some s8: Student | ( sc1 in s8.(b5.scores) ) => ( not ( sc2 in s8.(b5.scores) ) )\\
+    all b6: Battle | all disj r1, r2: Rank | some s9: Student | ( r1 in s9.(b6.ranks) ) => ( not ( r2 in s9.(b6.ranks) ) )\\
+\}
+\\
+\item // A student must have obtained the Badges in some Tournament
+\item fact studentObtainedBadges \{\\
+one t: Tournament | all s: Student, b: Badge | b in s.badges => b.rule in s.(t.achievements)\\
+\}
+\\
+\item // -------------- Predicates and assertions -------------- //
+\\
+\item //  1. A basic example
+\item pred show \{\\
+some b: Battle | some t: Tournament | b in t.battles\\
+\}
+\item run show
+\begin{figure}[H]
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/1Model.png}\\
+\centering
+\end{figure}
+\begin{figure}[H]
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/1Outcome.png}
+\centering
+\end{figure}
+\\
+\\
+\\
+\item //  2. An example to show that a higher position in the ranking corresponds to a lower score
+\item pred RankingExample \{\\
+    some disj b1, b2: Battle | some t: Tournament | b1 in t.battles and b2 in t.battles\\
+    some disj s3, s4: Student | some b3: Battle | ( not ( s3 in s4.(b3.teams) ) ) and ( s3.(b3.ranks).value != s4.(b3.ranks).value )\\
+    some r1, r2: Rank | r1.value = 1 and r2.value = 2\\
+    some sc1, sc2: Score | ( sc1. value = 5 ) and ( sc2.value = 6 )\\
+\}
+\item run RankingExample
+\begin{figure}[H]
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table1.png}\\
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table2.png}\\
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table3.png}\\
+\centering
+\end{figure}
+\begin{figure}[H]
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Outcome.png}\\
+\centering
+\end{figure}
+\\
+\\
+\\
+\item //  3. Ensuring that Badges obtained by students must be existed in some Tournaments (in this model, Tournament can both represent both a running one or a finished one)
+\item assert ExistingBadges \{
+    all b: Badge | all s: Student | some t: Tournament | ( b in s.badges ) => ( b in t.badges)\\
+\}
+\item check ExistingBadges
+\begin{figure}[H]
+\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/3Outcome.png}\\
+\centering
+\end{figure}
+\\
+\\
+\\
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
 % FIFTH CHAPTER
 % --------------------------------------------------------------------------
 \chapter{Effort spent}
