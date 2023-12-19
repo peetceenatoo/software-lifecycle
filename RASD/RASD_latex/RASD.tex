@@ -172,9 +172,9 @@ The purpose of the project CodeKataBattle (CKB) is to develop a platform where S
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \begin{enumerate}
-    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Code Kata Battles and take part in its Battles.
+    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Battles and take part in its Battles.
     \item[\textcolor{bluepoli}{G2}] Allows registered Educators to manage Tournaments for which they have been granted permission.
-    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Code Kata Battles to be rewarded of different achievements.
+    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Battles to be rewarded of different achievements.
     \item[\textcolor{bluepoli}{G4}] Allows registered Users to visualize information for which they have granted permission.
     \item[\textcolor{bluepoli}{G5}] Automates code evaluation process using GitHub Actions and some static analysis tools.
 \end{enumerate}
@@ -227,7 +227,7 @@ The main goal is to help Students practice coding, giving them feedback and comp
     \item[\textcolor{bluepoli}{SP5}] The system shows some information about a Battle.
     \item[\textcolor{bluepoli}{SP6}] The system shows some information about a Tournament.
     \item[\textcolor{bluepoli}{SP7}] The system shows some information about a Student.
-    \item[\textcolor{bluepoli}{SP8}] The system creates a GitHub repository containing the code kata.
+    \item[\textcolor{bluepoli}{SP8}] The system creates a GitHub repository containing the code Kata.
     \item[\textcolor{bluepoli}{SP9}] The system assigns the score to the code of a group.
     \item[\textcolor{bluepoli}{SP10}] The system assigns a Badge to a Student.
 \end{enumerate}
@@ -235,10 +235,10 @@ The main goal is to help Students practice coding, giving them feedback and comp
 \subsubsection{Controlled by World}
 
 \begin{enumerate}
-    \item[\textcolor{bluepoli}{SP11}] An Educator creates a Tournament of code kata Battles.
+    \item[\textcolor{bluepoli}{SP11}] An Educator creates a Tournament of Battles.
     \item[\textcolor{bluepoli}{SP12}] An Educator defines Badges (see section 1.3) for the Tournament.
     \item[\textcolor{bluepoli}{SP13}] An Educator gives permission to another Educator to manage a Tournament.
-    \item[\textcolor{bluepoli}{SP14}] An Educator creates a code kata Battle.
+    \item[\textcolor{bluepoli}{SP14}] An Educator creates a Battle.
     \item[\textcolor{bluepoli}{SP15}] A Student creates a group for a Battle.
     \item[\textcolor{bluepoli}{SP16}] A Student invites another Student to join the group they created.
     \item[\textcolor{bluepoli}{SP17}] A Student joins a group for a Battle.
@@ -365,10 +365,10 @@ Qui\\
 
 The platform CKB offers several key functions:
 
-\item \textcolor{bluepoli}{Battles and Tournaments Creation} Educators can create coding challenges (Battles) within Tournaments, specifying details like descriptions, team sizes, deadlines, scoring configurations and, eventually, badges.
+\item \textcolor{bluepoli}{Battles and Tournaments Creation} Educators can create coding challenges (Battles) within Tournaments, specifying details like descriptions, team sizes, deadlines, scoring configurations and, eventually, Badges.
 \item \textcolor{bluepoli}{Student Participation} On the other hand, Students can join such Tournaments and take part in Battles, individually or in teams. 
 \item \textcolor{bluepoli}{GitHub Integration} The system allows the Students to perform code submissions just by pushing their code on GitHub, thanks to automated workflows triggered by GitHub Actions service.
-\item \textcolor{bluepoli}{Automated Evaluation} The platform automatically evaluates student code based on test cases, timeliness, and code quality using external static analysis tools.
+\item \textcolor{bluepoli}{Automated Evaluation} The platform automatically evaluates Student code based on test cases, timeliness, and code quality using external static analysis tools.
 \item \textcolor{bluepoli}{Scoring and Ranking} It continuously updates team rankings during Battles and provides overall Tournament rankings at the end of each Battle.
 \item \textcolor{bluepoli}{Badges and Recognition} Educators define Badges which can be obtained by Students, serving as recognition for accomplishments and participation to a certain Tournament.
 \item \textcolor{bluepoli}{Manual Optional Evaluation} Educators can manually evaluate Students' work and assign additional scores at the end of every Battle.
@@ -383,7 +383,7 @@ The platform CKB offers several key functions:
     \item[\textcolor{bluepoli}{R1}] The system must allow an unregistered Educator to sign up.
     \item[\textcolor{bluepoli}{R2}] The system must allow an unregistered Student to sign up.
     \item[\textcolor{bluepoli}{R3}] The system must allow a registered User to log in.
-    \item[\textcolor{bluepoli}{R4}] The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.
+    \item[\textcolor{bluepoli}{R4}] The system must allow registered Educators to start the creation process of a Tournament of Battles.
     \item[\textcolor{bluepoli}{R5}] The system must provide registered Educators of a list of Tournament-related statistics for the Badges definition, during the Tournament creation process.
     \item[\textcolor{bluepoli}{R6}] The system must provide registered Educators of a specific language which lets them define the Badges, during the Tournament creation process.
     \item[\textcolor{bluepoli}{R7}] The system must allow registered Educators to grant other registered Educators the permission to manage the Tournament, during the Tournament creation process.
@@ -396,11 +396,11 @@ The platform CKB offers several key functions:
     \item[\textcolor{bluepoli}{R14}] The system must allow registered Students who are enrolled in a Battle to perform code submissions.
     \item[\textcolor{bluepoli}{R15}] The system must be provided of proper APIs to let registered Students perform code submissions through GitHub Actions.
     \item[\textcolor{bluepoli}{R16}] The system must update the Battle ranking when a valid code submission is performed.
-    \item[\textcolor{bluepoli}{R17}] The system must set the consolidation stage of a Battle when its submission deadline expires.
-    \item[\textcolor{bluepoli}{R18}] The system must let Educators to end the consolidation stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.
-    \item[\textcolor{bluepoli}{R19}] The system must update Tournament ranking when a Battle exits the consolidation stage.
-    \item[\textcolor{bluepoli}{R20}] The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the consolidation stage.
-    \item[\textcolor{bluepoli}{R21}] The system must assign an achievements’ Badge for a given Tournament to any student who satisfied the conditions defined by the creator of the Tournament.
+    \item[\textcolor{bluepoli}{R17}] The system must set the Consolidaton Stage of a Battle when its submission deadline expires.
+    \item[\textcolor{bluepoli}{R18}] The system must let Educators to end the Consolidaton Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.
+    \item[\textcolor{bluepoli}{R19}] The system must update Tournament ranking when a Battle exits the Consolidaton Stage.
+    \item[\textcolor{bluepoli}{R20}] The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidaton Stage.
+    \item[\textcolor{bluepoli}{R21}] The system must assign an achievements’ Badge for a given Tournament to any Student who satisfied the conditions defined by the creator of the Tournament.
     \item[\textcolor{bluepoli}{R22}] The system must allow every User to see the Badges which were ever obtained by a given Student.
     \item[\textcolor{bluepoli}{R23}] The system must notify every registered Student about the creation of a new Tournament.
     \item[\textcolor{bluepoli}{R24}] The system must notify every registered Student about the creation of a new Battle within a Tournament they are enrolled in.
