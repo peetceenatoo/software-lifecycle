@@ -1,4 +1,7 @@
+% A LaTeX template for MSc Thesis submissions to 
 % Politecnico di Milano (PoliMi) - School of Industrial and Information Engineering
+%
+% P. F. Antonietti, S. Bonetti, A. Gruttadauria, G. Mescolini, A. Zingaro
 %
 % Last Revision: October 2021
 %
@@ -102,23 +105,21 @@
 			\vfill
 			%\begin{minipage}{0.95\textwidth}
 			\begin{minipage}{0.95\textwidth}
-            \includegraphics[trim={1.2cm 0 0 0},clip, width=0.7\textwidth]{Images/02_ING_IND_INFORMAZIONE_COL_POSITIVO.eps}
-            \hfill
-            \\
-			\vspace{2.5cm}
-			\\
-			{{\color{bluepoli} \singlespacing \huge \bfseries \thesistitle \par}}	
-			\vspace{1.5cm}
-			{\color{bluepoli} \bfseries \Huge  {\textsc{RASD document \course}}\par}
-			\vspace{1.5 cm}
-			{\color{black}  {Authors:} \large \bfseries{Jacopo Piazzalunga, Mattia Piccinato, Gabriele Puglisi}}
+                    \includegraphics[trim={1.2cm 0 0 0},clip, width=0.7\textwidth]{Images/02_ING_IND_INFORMAZIONE_COL_POSITIVO.eps}
+                    \hfill
+                    \\
+    			\vspace{2.5cm}
+    			\\
+    			{{\color{bluepoli} \singlespacing \huge \bfseries \thesistitle \par}}	
+    			\vspace{1.5cm}
+    			{\color{black} \Large {Author:} \bfseries{\name}}
 			\end{minipage}
 			\\
 			\vspace*{\fill}
 			\\
 			\begin{minipage}{0.85\textwidth}
 			\normalsize{
-			Academic Year: {\academicyear}
+	               Academic Year: {\academicyear}
 			}
 			\end{minipage}
 	\end{titlepage}

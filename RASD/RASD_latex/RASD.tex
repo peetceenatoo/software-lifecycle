@@ -42,7 +42,6 @@
 \usetikzlibrary{}
 \graphicspath{{./Images/}} % Directory of the images
 \usepackage{caption} % Coloured captions
-\usepackage{xcolor} % Coloured captions
 \usepackage{amsthm,thmtools,xcolor} % Coloured "Theorem"
 \usepackage{float}
 
@@ -94,7 +93,6 @@
 %----------------------------------------------------------------------------
 
 \usepackage{geometry}
-\usepackage[dvipsnames]{xcolor}
 \usepackage{tabularx}
 \usepackage{booktabs,xltabular}
 
@@ -132,10 +130,10 @@
 \frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the preamble pages
 
 \puttitle{
-	RASD document, % Title of the thesis
-	name= Jacopo Piazzalunga, Mattia Piccinato, Gabriele Puglisi, % Author
-	academicyear={2023-2024},  % Academic Year
-} % These info will be put into your Title page 
+    title= RASD Document,
+    name= {Mattia Piccinato, Gabriele Puglisi, Jacopo Piazzalunga},
+    academicyear= {2023-24}
+ }
 
 %----------------------------------------------------------------------------
 %	PREAMBLE PAGES: ABSTRACT (inglese e italiano), EXECUTIVE SUMMARY
@@ -155,7 +153,7 @@
 
 %-------------------------------------------------------------------------
 %	MAIN TEXT
-%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------.
 
 \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
 \mainmatter % Begin numeric (1,2,3...) page numbering
@@ -189,15 +187,13 @@ The purpose of the project CodeKataBattle (CKB) is to develop a platform where S
 
 The main features which should be provided in order to achieve the aim of the project are:
 
+\begin{itemize}
 \item \textcolor{bluepoli}{Creating Challenges:} Educators can make coding challenges (Battles) that Students can join, alone or in teams (groups), within the context of a Tournament.
-
 \item \textcolor{bluepoli}{Using GitHub Actions for Code Submsissions:} Students are supposed to submit their code for a Battle in their GitHub repository, and the system must be informed of a new commit by a participating Student making use of GitHub Actions.
-
 \item \textcolor{bluepoli}{Checking Code both Automatically and Manually:} The platform assigns a score to Students' code automatically, without the intervention of any Educator. Optionally, Educators may also decide to evaluate the code themselves.
-
 \item \textcolor{bluepoli}{Rankings:} During each Battle, a live ranking of the involved teams is available, enabling participating Students to track their performance. Additionally, live Tournament rankings show how well each Student is performing in the Battles within a given Tournament.
-
 \item \textcolor{bluepoli}{Badges for Achievements:} At the end of every Tournament, Students who achieved good results may be awarded with a special Badges, which are ruled by the Educator who created the Tournament.
+\end{itemize}
 
 The main goal is to help Students practice coding, giving them feedback and comparing their results to others.
 
@@ -266,12 +262,14 @@ In this section some information about terminology is provided, in order to clar
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+\begin{itemize}
 \item \textcolor{bluepoli}{Battle:} A Code Kata, that is, a challenge in which teams of players need to solve a problem in a specific coding language and submit their code to get a score according to the rules of the Battle.
 \item \textcolor{bluepoli}{Tournament:} A competition composed of many Battles in which participants' overall score is the sum of all the scores obtained in every Battle they participated in, individually or in team with other players.
 \item \textcolor{bluepoli}{Student:} The User which takes part into the Tournaments of Battles.
 \item \textcolor{bluepoli}{Educator:} The User which organizes Tournaments of Battles to which the Students can participate and who manages every aspect about them.
 \item \textcolor{bluepoli}{Consolidation stage:} The Consolidation Stage is the phase of a Battle which starts as soon as the submission deadline expires, during which the Educators who manage the Tournament can eventually assign an additional score to every team, which will be summed to the score previously assigned by the platform.
 \item \textcolor{bluepoli}{Badge:} A Badge is an achievement marker related to a certain Tournament, obtained by Students if they satisfied the specific conditions defined by the Educator during the creation process of the Tournament.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -279,8 +277,10 @@ In this section some information about terminology is provided, in order to clar
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+\begin{itemize}
 \item \textcolor{bluepoli}{CK:} Code Kata, that is, a Battle.
 \item \textcolor{bluepoli}{CKB:} Code Kata Battle, that is, the name of the platform.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -288,11 +288,13 @@ In this section some information about terminology is provided, in order to clar
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+\begin{itemize}
 \item \textcolor{bluepoli}{WPn:} n-th World Phenomena
 \item \textcolor{bluepoli}{SPn:} n-th Shared Phenomena
 \item \textcolor{bluepoli}{Gn:} n-th Goal
 \item \textcolor{bluepoli}{Dn:} n-th Domain Assumption
 \item \textcolor{bluepoli}{Rn:} n-th Requirement
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -302,10 +304,12 @@ In this section some information about terminology is provided, in order to clar
 
 \section{Reference Documents}
 
+\begin{itemize}
 \item \textcolor{bluepoli}{Assignment document A.Y. 2023/2024}\\
 (”Requirement Engineering and Design Project: goal, schedule and rules”)
 \item \textcolor{bluepoli}{Software Engineering 2 A.Y. 2023/2024 Slides}\\
 (Lecture slides provided during the course)
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -313,12 +317,14 @@ In this section some information about terminology is provided, in order to clar
 
 This document is composed of six sections:
 
+\begin{itemize}
 \item \textcolor{bluepoli}{1st Chapter:} We begin by presenting the problem statement and outlining the system's objectives. In the scope subsection, we offer insights into the various real-world and shared phenomena that the system addresses. Finally, we provide essential resources for readers, including definitions and abbreviations, to facilitate a comprehensive understanding of this document.
 \item \textcolor{bluepoli}{2nd Chapter:} We offer a comprehensive overview of the system, including insights into User profiles and their primary functions. Additionally, we present domain diagrams to illustrate system components and describe various scenarios. Finally, we establish the key domain assumptions underpinning the system's operation
 \item \textcolor{bluepoli}{3rd Chapter:} We delineate the system's requirements, encompassing both functional and non-functional aspects. In addition, we present use case diagrams that illustrate system interactions, accompanied by detailed descriptions of each use case and related sequence diagrams. Lastly, we establish a clear mapping of these requirements to both system goals and use cases for comprehensive understanding.
 \item \textcolor{bluepoli}{4th Chapter:} We provide a formal analysis of the system to be with Alloy.
 \item \textcolor{bluepoli}{5th Chapter:} We provide an estimate of the effort spent by each group member.
 \item \textcolor{bluepoli}{6th Chapter:} We provide a list of the references used in this document.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -342,6 +348,7 @@ Students' scores from different Battles add up to give a total for the whole Tou
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+\begin{itemize}
 \item \textcolor{bluepoli}{1st Scenario: Signing up and logging in} User signs up, logs out and signs in: The User Mark opens the platform and starts the signing up procedure, fills the required data and completes the signign up procedure. Then he logs out to be sure that everything went fine, and a few seconds later he logs in again.
 \item \textcolor{bluepoli}{2nd Scenario: Creating a Tournament} Kevin the Educator creates a Tournament and sets the subscription deadline. He creates the Badges for the Tournament, specifying their title and rules by using the specific language, referring to existing variables in the system.
 \item \textcolor{bluepoli}{3rd Scenario: Giving permission to manage a Tournament} Kevin the Educator gives the permission to his colleague Lara to create further Battles within the context of the Tournament.
@@ -353,6 +360,7 @@ Students' scores from different Battles add up to give a total for the whole Tou
 \item \textcolor{bluepoli}{9th Scenario: Ending Battle} The submission deadline of a Battle expires. The Battle enters the Consolidation Stage. Kevin the Educator assigns the personal optional scores. Then the system assigns the score for every group in the Battle ranking, and the personal score for every Student. The system notifies all the participating Students as soon as the Battle ranking has been updated. The system updates the Tournament ranking adding the single Battle score, for each Student.
 \item \textcolor{bluepoli}{10th Scenario: Ending Tournament} Kevin the Educator ends a Tournament. Any running Battle is stopped. The system computes the scores for the last commits which were pushed and waiting to be computed and notifies all the Students. The personal scores are updated by the system. Badges are assigned to the Students by the system.
 \item \textcolor{bluepoli}{11th Scenario: Visualizing content} The User Michael visualizes the current Battle ranking before the submission deadline expires. He also visualizes the current list of Tournaments, picks one of them and visualizes its ranking. Finally, he picks the first Student in the Tournament ranking and visualizes their profile, in order to see their Badges.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -360,12 +368,12 @@ Students' scores from different Battles add up to give a total for the whole Tou
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\item The UML Class Diagram below represents a conceptual, high-level model of the software to be. Given its nature, it may model objects that will not be represented in the actual system that will be 
-developed. Moreover, at this level, it should not include any references to methods and other lowlevel details that will be detailed during the design phase. 
+\begin{itemize}
+\item The UML Class Diagram below represents a conceptual, high-level model of the software to be. Given its nature, it may model objects that will not be represented in the actual system that will be developed. Moreover, at this level, it should not include any references to methods and other low-level details that will be detailed during the design phase.\\
+\end{itemize}
 
-\\\\
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/ClassDiagram/ClassDiagram.png}\\
+\includegraphics[scale = 0.45]{Images/ClassDiagram/ClassDiagram.png}\\
 \centering
 \end{figure}
 
@@ -381,6 +389,7 @@ Qui\\
 
 The platform CKB offers several key functions:
 
+\begin{itemize}
 \item \textcolor{bluepoli}{Battles and Tournaments Creation} Educators can create coding challenges (Battles) within Tournaments, specifying details like descriptions, team sizes, deadlines, scoring configurations and, eventually, Badges.
 \item \textcolor{bluepoli}{Student Participation} On the other hand, Students can join such Tournaments and take part in Battles, individually or in teams. 
 \item \textcolor{bluepoli}{GitHub Integration} The system allows the Students to perform code submissions just by pushing their code on GitHub, thanks to automated workflows triggered by GitHub Actions service.
@@ -388,6 +397,7 @@ The platform CKB offers several key functions:
 \item \textcolor{bluepoli}{Scoring and Ranking} It continuously updates team rankings during Battles and provides overall Tournament rankings at the end of each Battle.
 \item \textcolor{bluepoli}{Badges and Recognition} Educators define Badges which can be obtained by Students, serving as recognition for accomplishments and participation to a certain Tournament.
 \item \textcolor{bluepoli}{Manual Optional Evaluation} Educators can manually evaluate Students' work and assign additional scores at the end of every Battle.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -430,8 +440,10 @@ The platform CKB offers several key functions:
 
 In the CKB platform, a User can be either a Student or an Educator, each with distinct roles and motivations.
 
+\begin{itemize}
 \item \textcolor{bluepoli}{Students} They join Battles to practice coding in a collaborative environment, aiming to enhance their programming skills through practical challenges, seeking to measure their performance against peers and track their progress. Students can achieve recognition by obtaining Badges within the context of a Tournament. Students are often notified about new activities that they may want to join, such as a new Tournament, or a new Battle within the context of a Tournament that they are enrolled in.
 \item \textcolor{bluepoli}{Educators} They set up and manage the coding challenges, individually or cooperating with other Educators. They act as facilitators, creating Battles within Tournaments to engage Students in practical exercises. Educators may want to personally evaluate Students' code submissions, in order to reward particularly brilliant solutions or to penalize major mistakes. Additionally, they are responsible for defining Badge criteria, which act as a motivating factor.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -472,89 +484,90 @@ The static analysis tools which provide a score based on the quality level of ea
 
 The system allows...
 
-\item Given these and the other purposes described above in this document, a suitable device is... as shown below.
-\\
+\begin{itemize}
+\item Given these and the other purposes described above in this document, a suitable device is... as shown below.\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{User Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\begin{itemize}
 \item The User Interface (UI) is divided into several sections dedicated to the different main functionalities, as shown in the following images.
-\item ---------- Qui
-\\
+\item ---------- Qui\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Hardware Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\begin{itemize}
 \item To use the system, both Educators and Students must use a suitable device.
-\item Due to the communication capabilities needed, a suitable device results once again being...
-\\
+\item Due to the communication capabilities needed, a suitable device results once again being...\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Software Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\item The system should integrate a NotificationService to keep up Users of any interesting event on the platform, an EmailService for the registration process, and proper static analysis tools as an Evaluator of the Students' code submissions.
-\\
+\begin{itemize}
+\item The system should integrate a NotificationService to keep up Users of any interesting event on the platform, an EmailService for the registration process, and proper static analysis tools as an Evaluator of the Students' code submissions.\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Communication Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\item The system requires a stable internet connection to work properly. This connection is used to exchange data between the Users and the central database which contains the information regarding ongoing Tournaments and Battles.
-\\
+\begin{itemize}
+\item The system requires a stable internet connection to work properly. This connection is used to exchange data between the Users and the central database which contains the information regarding ongoing Tournaments and Battles.\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Functional Requirements}
 
-In this section, all the Use Cases are listed attached to their corresponding Use Case Diagram. Then, the mapping between Goals, Domain Assumptions and Requirements is provided.
-\\
+In this section, all the Use Cases are listed attached to their corresponding Use Case Diagram. Then, the mapping between Goals, Domain Assumptions and Requirements is provided.\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Use Case Diagrams}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\\
 
 \begin{figure}[H]
 \textbf{EducatorSignUp}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/EducatorSignUpUseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/EducatorSignUpUseCaseDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 \begin{figure}[H]
 \textbf{StudentSignUp}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/StudentSignUpUseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/StudentSignUpUseCaseDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 \begin{figure}[H]
 \textbf{Educator}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/EducatorUseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/EducatorUseCaseDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 \begin{figure}[H]
 \textbf{Student}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/StudentUseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/StudentUseCaseDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 \begin{figure}[H]
 \textbf{User}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/UserUseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/UserUseCaseDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 \begin{figure}[H]
 \textbf{Evaluator}\par\medskip
-\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/CKB_Autonomous_UseCaseDiagram.png}
+\includegraphics[scale = 0.45]{Images/UseCaseDiagrams/CKB_Autonomous_UseCaseDiagram.png}\\
 \centering
 \end{figure}
 
-\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Use Cases}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\\
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -583,11 +596,9 @@ Exceptions & The Student was already registered\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentSignUpSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentSignUpSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -616,11 +627,9 @@ Exceptions & The Educator was already registered\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorSignUpSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/EducatorSignUpSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -645,11 +654,9 @@ Exceptions & The User filled wrong credentials\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/LogInSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/LogInSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -676,11 +683,9 @@ Exceptions & None\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/CreateTournamentSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/CreateTournamentSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -706,11 +711,9 @@ Exceptions & None\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorGrantsPermissionCollagueSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/EducatorGrantsPermissionCollagueSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -745,11 +748,9 @@ Exceptions & None\\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorCreatesBattleSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/EducatorCreatesBattleSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -774,11 +775,9 @@ Exceptions & The subscription deadline for the chosen Tournament is expired\\ [1
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentEnrollsInTournamentSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentEnrollsInTournamentSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -811,11 +810,9 @@ Exceptions & \begin{itemize}
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentEnrollsInBattleSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentEnrollsInBattleSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -836,11 +833,9 @@ Exceptions & The Students had already accepted the invite \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentAcceptsInviteSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentAcceptsInviteSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -864,11 +859,9 @@ Exceptions & The GitHub API call fails \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/BattleSubscDeadlineExpiredSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/BattleSubscDeadlineExpiredSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -891,11 +884,9 @@ Exceptions & The GitHub website is temporarly unavailable \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentSetUpRepoSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentSetUpRepoSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -928,11 +919,9 @@ Exceptions & \begin{itemize}
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentPushHandlerSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/StudentPushHandlerSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -954,11 +943,9 @@ Exceptions & None \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/BattleSubmDeadlineExpired.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/BattleSubmDeadlineExpired.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -986,11 +973,9 @@ Exceptions & None \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorEndsBattle.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/EducatorEndsBattle.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1018,11 +1003,9 @@ Exceptions & There is at least one Battle in the Tournament which is not finishe
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorClosesTournamentSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/EducatorClosesTournamentSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1047,11 +1030,9 @@ Exceptions & None \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesBattleRankingSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/UserVisualizesBattleRankingSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1072,11 +1053,9 @@ Exceptions & None \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesTournamentsSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/UserVisualizesTournamentsSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1099,11 +1078,9 @@ Exceptions & None \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesTournamentRankingSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/UserVisualizesTournamentRankingSeqDiagram.png}\\
 \centering
-\end{figure}\\
-
-\\
+\end{figure}
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1126,17 +1103,15 @@ Exceptions & The given query string is invalid \\ [1ex]
 \hline
 \end{xltabular}
 \begin{figure}[H]
-\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesStudentBadgesSeqDiagram.png}
+\includegraphics[scale = 0.45]{Images/SequenceDiagrams/UserVisualizesStudentBadgesSeqDiagram.png}\\
 \centering
-\end{figure}\\
+\end{figure}
 
-\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Mapping}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\\
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1190,9 +1165,6 @@ R26 & The system must notify every registered Student about the end of a Tournam
 \hline
 \end{xltabular}
 
-\\
-\\
-
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
 \multicolumn{2}{|c|}{G2}\\
@@ -1218,9 +1190,6 @@ R18 & The system must let Educators to end the Consolidation Stage of a Battle i
 R20 & The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.\\ [1ex]
 \hline
 \end{xltabular}
-
-\\
-\\
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1272,9 +1241,6 @@ R21 & The system must assign an achievements’ Badge for a given Tournament to 
 \hline
 \end{xltabular}
 
-\\
-\\
-
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
 \multicolumn{2}{|c|}{G4}\\
@@ -1318,9 +1284,6 @@ R22 & The system must allow every User to see the Badges which were ever obtaine
 \hline
 \end{xltabular}
 
-\\
-\\
-
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
 \multicolumn{2}{|c|}{G5}\\
@@ -1358,7 +1321,6 @@ R15 & The system must be provided of proper APIs to let registered Students perf
 \hline
 \end{xltabular}
 
-\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Performance Requirements}
@@ -1366,6 +1328,7 @@ R15 & The system must be provided of proper APIs to let registered Students perf
 Due to the non-critical nature of the system, too strict performance requirements are not needed. 
 However, in order to offer the best possible User experience, the system should provide:
 
+\begin{itemize}
 \item The system should let Educators create a Tournament within ... seconds.
 \item The system should let Educators create a Battle within ... seconds.
 \item The system should let Students join a Tournament within ... seconds
@@ -1376,8 +1339,8 @@ However, in order to offer the best possible User experience, the system should 
 \item The system should update the Tournament ranking within ... seconds
 \item The system should let Educators end the Consolidation Stage of a Battle within ... seconds.
 \item The system should let Educators end a Tournament within ... seconds.
-\item The system should let new Badges be available in the Students profiles within ... seconds
-\\
+\item The system should let new Badges be available in the Students profiles within ... seconds\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Software System Attributes}
@@ -1387,25 +1350,28 @@ In this section typically, the non-functional requirements and quality attribute
 \subsection{Reliability and Availability}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\begin{itemize}
 \item The system should offer its functionalities with an availability equal to 99.5\%, or more. In other words, the system must be inaccessible for less than two days every year. To achieve this goal, the system should provide a high redundancy for the most critical components.
-\item Furthermore, in order to guarantee better reliability performances, all the scheduled maintenance intervents on the system should be done during the night. 
-\\
+\item Furthermore, in order to guarantee better reliability performances, all the scheduled maintenance intervents on the system should be done during the night. \\
+\end{itemize} 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Security}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\begin{itemize}
 \item The connection between the application and the server must be safe. To keep a good level of security, the system should use the Transport Layer Security protocol. For this purpose, it is needed an SSL/TSL certificate.
-\item Moreover, all passwords must be encrypted.
-\\
+\item Moreover, all passwords must be encrypted.\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Maintainability}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\begin{itemize}
 \item The source code must be commented on as well as possible and the correlated documentation must be kept updated during the whole life cycle of the system. 
-\item Modularity and low coupling between components must be a focus during the designing and developing phases.
-\\
+\item Modularity and low coupling between components must be a focus during the designing and developing phases.\\
+\end{itemize}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % FOURTH CHAPTER
@@ -1414,44 +1380,47 @@ In this section typically, the non-functional requirements and quality attribute
 
 \section{Objectives of the analysis}
 
+\begin{itemize}
 \item In this section, a presentation of the formal modelling activity that has been done using the Alloy formal notation. The main goal of this activity is to formally describe the domain and properties of the system to be.
 \item In particular, the main objective of this activity is to model and formally represent Educators, Students, Tournaments, Battles and Badges, as well as the main constraints which regard such entities.
 \item In order to ensure straightforward comprehension of the following, each constraint and entity will be annotated in natural language, along with any predicates and assertions which have been verified.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Alloy Code}
 
-\item // -------------- Definition of auxiliar entities -------------- //
-\\
+\begin{itemize}
+\item // -------------- Definition of auxiliar entities -------------- //\\
+
 \item // Defined in order to model the deadlines
 \item sig Time \{\\
 timestamp: Int\\
 \}\{\\
 timestamp >= 0\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model any flag, such as whether a Battle is in the Consolidation Stage
 \item abstract sig Boolean \{\}
 \item one sig True extends Boolean \{\}
-\item one sig False extends Boolean \{\}
-\\
-\item // -------------- Definition of game components -------------- //
-\\
+\item one sig False extends Boolean \{\}\\
+
+\item // -------------- Definition of game components -------------- //\\
+
 \item // Defined in order to model the score of a team in a Battle and the score of a Student in a Tournament
 \item sig Score \{\\
 value: Int\\
 \}\{\\
 value >= 0\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model the rank of a team in a Battle and the rank of a Student in a Tournament
 \item sig Rank \{\\
 value: Int\\
 \}\{\\
 value >= 1\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model the Tournament
 \item sig Tournament \{\\
 managers: some Educator,\\
@@ -1461,8 +1430,8 @@ scores: Student -> one Score,\\
 ranks: Student -> one Rank,
 badges: set Badge,\\
 achievements: Student -> set BadgeRule\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model the Battle (unnecessary to model the programming language)
 \item sig Battle \{\\
 tournament: one Tournament,\\
@@ -1472,31 +1441,31 @@ ranks: Student -> one Rank,\\
 subscription\_deadline: one Time,\\
 submission\_deadline: one Time,\\
 consolidation\_stage: one Boolean\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model the Badge (unnecessary to model the title)
 \item sig BadgeRule \{\\
 \}
 \item sig Badge \{\\
 rule: one BadgeRule\\
-\}
-\\
-\item // -------------- Definition of actors -------------- //
-\\
+\}\\
+
+\item // -------------- Definition of actors -------------- //\\
+
 \item // Defined in order to model the nature of Student and Educator as Users
-\item abstract sig User \{\}
-\\
+\item abstract sig User \{\}\\
+
 \item // Defined in order to model the Student
 \item sig Student extends User \{\\
 badges: set Badge\\
-\}
-\\
+\}\\
+
 \item // Defined in order to model the Educator
 \item sig Educator extends User\{\\
-\}
-\\
-\item //  -------------- Facts -------------- //
-\\
+\}\\
+
+\item //  -------------- Facts -------------- //\\
+
 \item // Tournaments: A student must both have a score and a rank, if a student has higher score than another student than it has a lower rank (e.g. 1st is lower than 2nd), only achievements of Badges which relate to existing Badges for the Tournament are stored, a Student has one only score, a Student has one only rank
 \item fact TournamentFact \{\\
     all t1: Tournament | all s: Student | some sc: Score | some r: Rank | ( sc in s.(t1.scores) ) => ( r in s.(t1.ranks) ) and ( r in s.(t1.ranks) => sc in s.(t1.scores) )\\
@@ -1504,8 +1473,8 @@ badges: set Badge\\
     all t3: Tournament | all s3: Student | all b: Badge | ( b.rule in s3.(t3.achievements) ) => ( b in t3.badges )\\
     all t4: Tournament | all disj sc1, sc2: Score | some s: Student | ( sc1 in s.(t4.scores) ) => not ( sc2 in s.(t4.scores) )\\
     all t5: Tournament | all disj r1, r2: Rank | some s: Student | ( r1 in s.(t5.ranks) ) => not ( r2 in s.(t5.ranks) )\\
-\}
-\\
+\}\\
+
 \item // Battles: The subscription deadline must expire before the submission deadline, teams relationships are symmetrical, teams relationships are reflexive, if a Student s1 is in team with a Student s2 and not with a Student s3 then s2 is not in team with s3, Students in the same team have same score and rank, a Student has one only score, a Student has one only rank
 \item fact BattleFact \{\\
     all b: Battle | b.subscription\_deadline.timestamp < b.submission\_deadline.timestamp\\
@@ -1515,31 +1484,35 @@ badges: set Badge\\
     all b4: Battle | all s6, s7: Student | s7 in s6.(b4.teams) => ( ( s6.(b4.scores).value = s7.(b4.scores).value ) and ( s6.(b4.ranks).value = s7.(b4.scores).value ) )\\
     all b5: Battle | all disj sc1, sc2: Score | some s8: Student | ( sc1 in s8.(b5.scores) ) => ( not ( sc2 in s8.(b5.scores) ) )\\
     all b6: Battle | all disj r1, r2: Rank | some s9: Student | ( r1 in s9.(b6.ranks) ) => ( not ( r2 in s9.(b6.ranks) ) )\\
-\}
-\\
+\}\\
+
 \item // A student must have obtained the Badges in some Tournament
 \item fact studentObtainedBadges \{\\
 one t: Tournament | all s: Student, b: Badge | b in s.badges => b.rule in s.(t.achievements)\\
-\}
-\\
-\item // -------------- Predicates and assertions -------------- //
-\\
+\}\\
+\end{itemize}
+
+\begin{itemize}
+\item // -------------- Predicates and assertions -------------- //\\
+\end{itemize}
+
+\begin{itemize}
 \item //  1. A basic example
 \item pred show \{\\
 some b: Battle | some t: Tournament | b in t.battles\\
 \}
 \item run show
+\end{itemize}
 \begin{figure}[H]
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/1Model.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/1Model.png}\\
 \centering
 \end{figure}
 \begin{figure}[H]
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/1Outcome.png}
+\includegraphics[scale = 0.7]{Images/Alloy/1Outcome.png}\\
 \centering
 \end{figure}
-\\
-\\
-\\
+
+\begin{itemize}
 \item //  2. An example to show that a higher position in the ranking corresponds to a lower score
 \item pred RankingExample \{\\
     some disj b1, b2: Battle | some t: Tournament | b1 in t.battles and b2 in t.battles\\
@@ -1548,31 +1521,30 @@ some b: Battle | some t: Tournament | b in t.battles\\
     some sc1, sc2: Score | ( sc1. value = 5 ) and ( sc2.value = 6 )\\
 \}
 \item run RankingExample
+\end{itemize}
 \begin{figure}[H]
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table1.png}\\
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table2.png}\\
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Table3.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/2Table1.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/2Table2.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/2Table3.png}\\
 \centering
 \end{figure}
 \begin{figure}[H]
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/2Outcome.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/2Outcome.png}\\
 \centering
 \end{figure}
-\\
-\\
-\\
+
+\begin{itemize}
 \item //  3. Ensuring that Badges obtained by students must be existed in some Tournaments (in this model, Tournament can both represent both a running one or a finished one)
 \item assert ExistingBadges \{
     all b: Badge | all s: Student | some t: Tournament | ( b in s.badges ) => ( b in t.badges)\\
 \}
 \item check ExistingBadges
+\end{itemize}
 \begin{figure}[H]
-\includegraphics[scale = 0.7]{RASD_latex/Images/Alloy/3Outcome.png}\\
+\includegraphics[scale = 0.7]{Images/Alloy/3Outcome.png}\\
 \centering
 \end{figure}
-\\
-\\
-\\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % FIFTH CHAPTER
