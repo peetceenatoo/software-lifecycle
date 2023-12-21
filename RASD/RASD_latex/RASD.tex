@@ -469,60 +469,942 @@ The static analysis tools which provide a score based on the quality level of ea
 \chapter{Specific requirements}
 
 \section{External Interface Requirements}
-Qui\\
+
+The system allows...
+
+\item Given these and the other purposes described above in this document, a suitable device is... as shown below.
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{User Interfaces}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The User Interface (UI) is divided into several sections dedicated to the different main functionalities, as shown in the following images.
+\item ---------- Qui
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Hardware Interfaces}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item To use the system, both Educators and Students must use a suitable device.
+\item Due to the communication capabilities needed, a suitable device results once again being...
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Software Interfaces}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The system should integrate a NotificationService to keep up Users of any interesting event on the platform, an EmailService for the registration process, and proper static analysis tools as an Evaluator of the Students' code submissions.
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Communication Interfaces}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The system requires a stable internet connection to work properly. This connection is used to exchange data between the Users and the central database which contains the information regarding ongoing Tournaments and Battles.
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{Design Constraints}
-Qui\\
+\section{Functional Requirements}
+
+In this section, all the Use Cases are listed attached to their corresponding Use Case Diagram. Then, the mapping between Goals, Domain Assumptions and Requirements is provided.
+\\
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Use Case Diagrams}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\\
+
+\begin{figure}[H]
+\textbf{EducatorSignUp}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/EducatorSignUpUseCaseDiagram.png}
+\centering
+\end{figure}\\
+\begin{figure}[H]
+\textbf{StudentSignUp}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/StudentSignUpUseCaseDiagram.png}
+\centering
+\end{figure}\\
+\begin{figure}[H]
+\textbf{Educator}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/EducatorUseCaseDiagram.png}
+\centering
+\end{figure}\\
+\begin{figure}[H]
+\textbf{Student}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/StudentUseCaseDiagram.png}
+\centering
+\end{figure}\\
+\begin{figure}[H]
+\textbf{User}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/UserUseCaseDiagram.png}
+\centering
+\end{figure}\\
+\begin{figure}[H]
+\textbf{Evaluator}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/UseCaseDiagrams/CKB_Autonomous_UseCaseDiagram.png}
+\centering
+\end{figure}
+
+\\
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Use Cases}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{StudentsSignUp}\\
+\toprule
+Participating Actors & Student, EmailService, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & True\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student opens the “Sign up” page
+		      \item 2. CodeKataBattle shows the page to sign up
+		      \item 3. The Student fills the required informations and clicks “Sign Up” button
+		      \item 4. CodeKataBattle checks the information provided by the Student
+		      \item 5. CodeKataBattle registers the Student
+                \item 6. CodeKataBattle sends confirmation of signup and inform the Student to verify the account
+                \item 7. CodeKataBattle sends a notification to verify the account through the EmailService
+                \item 8. The Student verifies the account
+                \item 9. CodeKataBattle activates the Student’s account
+                \item 10. CodeKataBattle sends to the home page 
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Student successfully signed up and activated his account\\ [1ex]
+\hline
+Exceptions & The Student was already registered\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentSignUpSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{EducatorsSignUp}\\
+\toprule
+Participating Actors & Educator, EmailService, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & True\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Educator opens the “Sign up” page
+		      \item 2. CodeKataBattle shows the page to sign up
+		      \item 3. The Educator fills the required informations and clicks “Require An Educator Account” button
+		      \item 4. CodeKataBattle shows the form to require an Educator account
+		      \item 5. CodeKataBattle registers the Student
+                \item 6. CodeKataBattle sends confirmation of signup and inform the Educator to verify the account
+                \item 7. CodeKataBattle sends a notification to verify the account through the EmailService
+                \item 8. The Educator verifies the account
+                \item 9. CodeKataBattle activates the Educator’s account
+                \item 10. CodeKataBattle sends to the home page 
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Educator successfully signed up and obtained an Educator account\\ [1ex]
+\hline
+Exceptions & The Educator was already registered\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorSignUpSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{UserLogsIn}\\
+\toprule
+Participating Actors & User, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & User has an account\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The User opens CodeKataBattle
+		      \item 2. The User clicks the “Log in” button
+		      \item 3. CodeKataBattle shows the form to log in
+		      \item 4. The User fills the required informations and clicks “Log in ” button
+		      \item 5. CodeKataBattle verifies the credentials of the User
+                \item 6. CodeKataBattle logs in the User 
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The User successfully logged in\\ [1ex]
+\hline
+Exceptions & The User filled wrong credentials\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/LogInSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{CreateTournament}\\
+\toprule
+Participating Actors & Student, Educator, NotificationProvider, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & Educator is logged in\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Educator clicks on the “Create a new Tournament” button
+		      \item 2. CodeKataBattle shows the form to create a new Tournament
+		      \item 3. The Educator chooses a subscription deadline and fills the correct field
+		      \item 4. The Educator chooses whether to use Badges and eventually fills the relative fields
+		      \item 5. The Educator chooses to which other colleagues grant the permission to manage the Tournament
+                \item 6. The Educator clicks the “Create” button
+                \item 7. CodeKataBattle creates the Tournament
+                \item 8. CodeKataBattle notifies through the NotificationProvider all the Students subscribed to the platform of the creation of the Tournament
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Educator successfully created a new Tournament and CodeKataBattle successfully notifies all the subscribed Students\\ [1ex]
+\hline
+Exceptions & None\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/CreateTournamentSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{EducatorGrantsPermissionToColleagues}\\
+\toprule
+Participating Actors & Educator, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & The Educator is creating a Tournament\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. CodeKataBattle shows the Tournament’s details
+		      \item 2. The Educator clicks on the “Grant Permissions” button
+		      \item 3. CodeKataBattle shows the page to handle permissions for the Tournament
+		      \item 4. The Educator clicks on the “Add Educator” button
+		      \item 5. CodeKataBattle shows a form to grant other Educators permissions on the Tournament
+                \item 6. The Educator fills the requested information and clicks “Confirm” button
+                \item 7. CodeKataBattle recognizes the newly authorized Students
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Educator successfully granted permission to manage the Tournament to another Educator\\ [1ex]
+\hline
+Exceptions & None\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorGrantsPermissionCollagueSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{CreateBattle}\\
+\toprule
+Participating Actors & Student, Educator, NotificationProvider, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & The Educator is logged in and is granted the permission to manage a Tournament\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Educator clicks on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments that the Educator is allowed to manage
+		      \item 3. The Educator clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The Educator clicks on “Create a new Battle” button
+                \item 6. CodeKataBattle shows the form to create a new Battle
+                \item 7. The Educator uploads the problem
+                \item 8. The Educator uploads the CodeKata
+                \item 9. The Educator fills the minimum and maximum number of Students per team
+                \item 10. The Educator fills the minimum and maximum number of Students per team
+                \item 11. The Educator chooses a registration deadline 
+                \item 12. The Educator chooses a submission deadline
+                \item 13. The Educator chooses the scoring configuration
+                \item 14. The Educator clicks the “Create” button
+                \item 15. CodeKataBattle creates the Battle
+                \item 16. CodeKataBattle notifies through the NotificationProvider all the Students subscribed to the Tournament of the creation of the Battle
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Educator successfully created a new Battle in a Tournament and CodeKataBattle successfully notifies all the Students subscribed to the Tournament\\ [1ex]
+\hline
+Exceptions & None\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorCreatesBattleSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{StudentEnrollsInTournament}\\
+\toprule
+Participating Actors & Student, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & The Student is logged in and at least a Tournament has been created\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student clicks on the “All Tournaments” button
+		      \item 2. CodeKataBattle shows the list of all the Tournaments
+		      \item 3. The Student clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The Student clicks on “Subscribe” button
+                \item 6. CodeKataBattle performs the Student’s subscription
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Student successfully subscribed to the Tournament\\ [1ex]
+\hline
+Exceptions & The subscription deadline for the chosen Tournament is expired\\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentEnrollsInTournamentSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{StudentEnrollsInBattle}\\
+\toprule
+Participating Actors & Student, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & Student is logged in and subscribed to the Battle’s Tournament\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student clicks on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments the Student is enrolled in
+		      \item 3. The Student clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The Student clicks on the Battle he wants to enroll in
+                \item 6. CodeKataBattle shows the Battle’s details
+                \item 7. The Student clicks on the “Subscribe” button
+                \item 8. CodeKataBattle shows the form to specify the group composition
+                \item 9. The Student makes his choice and invites other Students
+                \item 10. CodeKataBattle performs the Student’s subscription
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Student successfully subscribed to the Battle and eventually invites other Students\\ [1ex]
+\hline
+Exceptions & \begin{itemize}
+                \item The subscription deadline for the chosen Battle is expired
+                \item The number of Students in the group is invalid
+                \item Some Students who are being invited are not enrolled in the Tournament
+                \end{itemize} \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentEnrollsInBattleSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{StudentAcceptsBattleInvitation}\\
+\toprule
+Participating Actors & Student, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & Student received an invite to join a group for a Battle\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student clicks on the “Join Group” button of the received invite 
+		      \item 2. CodeKataBattle registers the Student’s subscription to the Battle and the enrollment in the group
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Student successfully subscribed to the Battle and joined the team of the Student who invited him\\ [1ex]
+\hline
+Exceptions & The Students had already accepted the invite \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentAcceptsInviteSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{BattlesSubscriptionDeadlineExpiration}\\
+\toprule
+Participating Actors & GitHub, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & A Battle's subscription deadline has reached its expiration point\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. CodeKataBattle closes Battle’s subscription stage
+		      \item 2. CodeKataBattle creates the Battle’s GitHub repository
+                \item 3. CodeKataBattle pushes the CodeKata to the newly created repository
+                \item 4. CodeKataBattle shares with them the link to the GitHub repository
+                \item 5. CodeKataBattle starts registering submissions for the subscribed members
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Battle's subscription is closed, preventing further participation after the deadline and the GitHub repository associated with the Battle has been created\\ [1ex]
+\hline
+Exceptions & The GitHub API call fails \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/BattleSubscDeadlineExpiredSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{StudentSetsUpTheRepository}\\
+\toprule
+Participating Actors & GitHub, Student\\ [1ex]
+\hline
+Entry Condition & The Student is enrolled in the Battle and has a GitHub account\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student opens the link to the repository
+		      \item 2. The Student forks the repository
+                \item 3. The Student adds his team members as collaborators in the repository
+                \item 4. The Student sets up the “GitHub Action”
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Student successfully forked the Battle’s GitHub repository and set up the GitHub Action\\ [1ex]
+\hline
+Exceptions & The GitHub website is temporarly unavailable \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentSetUpRepoSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{CodeKataHandlesStudentsPush}\\
+\toprule
+Participating Actors & GitHub, Student, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & The Student is subscribed to the Battle and CodeKataBattle APIs got notified of a new commit for the Battle\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Student commits a new version of his code to the repository’s main branch
+		      \item 2. The GitHub Action set up in the initial phase notifies CodeKataBattle APIs of the new available source code
+                \item 3. CodeKataBattle checks the commit happened before the Battle’s submission deadline
+                \item 4. CodeKataBattle pulls the latest version of the source code from the Student’s repository's main branch
+                \item 5. CodeKataBattle analyzes and compiles the source code
+                \item 6. CodeKataBattle executes the Battle’s tests
+                \item 7. CodeKataBattle computes and registers the score of the latest commit
+                \item 8. CodeKataBattle compares the new scores with the previous best one of the group, in the case the former is better
+                \item 9. CodeKataBattle updates score of the group in the Battle and their ranking
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & CodeKataBattle handled the latest commit, it has evaluated it, and updated score and ranking\\ [1ex]
+\hline
+Exceptions & \begin{itemize}
+                \item The push fails
+                \item The deadline was already expired when the push occurred
+                \item The pull fails
+                \item The automated evaluation encounters an issue
+                \end{itemize} \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/StudentPushHandlerSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{BattleSubmissionDeadlineExpiration}\\
+\toprule
+Participating Actors & CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & A Battle's submission deadline has reached its expiration point\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. CodeKataBattle stops handling Students’ commits
+		      \item 2. CodeKataBattle processes all enqueued commits
+                \item 3. CodeKataBattle moves Battle to Consolidation Stage
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Battle scores and rankings are updated and it is in Consolidation Stage\\ [1ex]
+\hline
+Exceptions & None \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/BattleSubmDeadlineExpired.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{EducatorEndsBattle}\\
+\toprule
+Participating Actors & Student, Educator, NotificationProvider, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & A Battle is in Consolidation Stage\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Educator clicks on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments that the Educator is allowed to manage
+		      \item 3. The Educator clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The Educator picks a Battle
+                \item 6. The Educator eventually assigns manual further scores
+                \item 7. The Educator clicks on "End Battle" button
+                \item 8. CodeKataBattle ends the Battle
+                \item 9. CodeKataBattle notifies through the NotificationProvider all the Students who participated in the Battle
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Battle has finished, the Tournament's personal scores of the Students are updated and the Students have been notified\\ [1ex]
+\hline
+Exceptions & None \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorEndsBattle.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{EducatorClosesTournament}\\
+\toprule
+Participating Actors & Student, Educator, NotificationProvider, CodeKataBattle\\ [1ex]
+\hline
+Entry Condition & The Educator has the permission to manage the Tournament\\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The Educator clicks on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments that the Educator is allowed to manage
+		      \item 3. The Educator clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The Educator clicks on the “Close Tournament” button
+                \item 6. CodeKataBattle closes the Tournament
+                \item 7. CodeKataBattle computes the final Tournament ranking
+                \item 8. CodeKataBattle eventually assigns Badges to the Students
+                \item 9. CodeKataBattle notifies through the NotificationProvider all the Students who were subscribed to the Tournament
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The Tournament is closed, all involved Students have been notified and Badges have been assigned \\ [1ex]
+\hline
+Exceptions & There is at least one Battle in the Tournament which is not finished \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/EducatorClosesTournamentSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{UserVisualizesBattleRanking}\\
+\toprule
+Participating Actors & User, CodeKataBattle \\ [1ex]
+\hline
+Entry Condition & The Battle is started and the User is either an Educator who manages the Tournament of the Battle or a Students who is participating to the Battle \\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The User clicks on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments
+		      \item 3. The Educator clicks on a Tournament
+		      \item 4. CodeKataBattle shows the Tournament’s details
+		      \item 5. The User clicks on a Battle
+                \item 6. CodeKataBattle shows the Battle’s details
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The User visualizes the current ranking for the Battle \\ [1ex]
+\hline
+Exceptions & None \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesBattleRankingSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{UserVisualizesListTournaments}\\
+\toprule
+Participating Actors & User, CodeKataBattle \\ [1ex]
+\hline
+Entry Condition & User is logged in \\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The User click on the “All Tournaments” button
+		      \item 2. CodeKataBattle shows the list of the Tournaments
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The User visualizes the list of Tournaments \\ [1ex]
+\hline
+Exceptions & None \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesTournamentsSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{UserVisualizesTournamentRanking}\\
+\toprule
+Participating Actors & User, CodeKataBattle \\ [1ex]
+\hline
+Entry Condition & The Tournament has started and the User either an Educator who manages the Tournament or a Students who is subscribed to the Tournament \\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The User click on the “My Tournaments” button
+		      \item 2. CodeKataBattle shows the list of Tournaments
+                \item 3. The User clicks on a Tournament
+                \item 4. CodeKataBattle shows the Tournament’s details
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The User visualizes the current ranking \\ [1ex]
+\hline
+Exceptions & None \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesTournamentRankingSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{UserVisualizesStudentBadges}\\
+\toprule
+Participating Actors & User, CodeKataBattle \\ [1ex]
+\hline
+Entry Condition & True \\ [1ex]
+\hline
+Flow of Events & \begin{itemize}
+		      \item 1. The User looks for the Student’s profile through the “Search” field
+		      \item 2. CodeKataBattle shows the Students matching the query string
+                \item 3. The User clicks on a Student
+                \item 4. CodeKataBattle shows the Student’s profile details
+                \end{itemize} \\ [1ex]
+\hline
+Exit Condition & The User visualizes the Student's Badges \\ [1ex]
+\hline
+Exceptions & The given query string is invalid \\ [1ex]
+\hline
+\end{xltabular}
+\begin{figure}[H]
+\includegraphics[scale = 0.45]{RASD_latex/Images/SequenceDiagrams/UserVisualizesStudentBadgesSeqDiagram.png}
+\centering
+\end{figure}\\
+
+\\
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Mapping}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{G1}\\
+\toprule
+\textbf{G1} & \textbf{Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Code Kata Battles and take part in its Battles.}\\ [1ex]
+\hline
+D1 & The User must have a working Internet connection.\\ [1ex]
+\hline
+D2 & The Students who participate to a Battle properly set up the GitHub Action for code submissions.\\ [1ex]
+\hline
+D3 & The Users always receive every notification which is sent by the system.\\ [1ex]
+\hline
+D4 & The availability of the external tools utilized for the code evaluation process is consistent.\\ [1ex]
+\hline
+D5 & The availability of GitHub Actions service is consistent.\\ [1ex]
+\hline
+R1 & The system must allow an unregistered Educator to sign up.\\ [1ex]
+\hline
+R2 & The system must allow an unregistered Student to sign up.\\ [1ex]
+\hline
+R3 & The system must allow a registered User to log in.\\ [1ex]
+\hline
+R4 & The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.\\ [1ex]
+\hline
+R8 & The system must allow registered Educators to end the creation process of a Tournament that they started themselves.\\ [1ex]
+\hline
+R10 & The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R11 & The system must allow a registered Student to create a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R12 & The system must allow a registered Student to accept an invitation to a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R13 & The system must allow registered Students to see the list of ongoing Tournaments and join any of those if its subscription deadline is not expired yet.\\ [1ex]
+\hline
+R14 & The system must allow registered Students who are enrolled in a Battle to perform code submissions.\\ [1ex]
+\hline
+R17 & The system must set the Consolidation Stage of a Battle when its submission deadline expires.\\ [1ex]
+\hline
+R18 & The system must let Educators to end the Consolidation Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R20 & The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.\\ [1ex]
+\hline
+R23 & The system must notify every registered Student about the creation of a new Tournament.\\ [1ex]
+\hline
+R24 & The system must notify every registered Student about the creation of a new Battle within a Tournament they are enrolled in.\\ [1ex]
+\hline
+R25 & The system must notify every registered Student about the end of a Battle they are participating in.\\ [1ex]
+\hline
+R26 & The system must notify every registered Student about the end of a Tournament they are enrolled in.\\ [1ex]
+\hline
+\end{xltabular}
+
+\\
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{G2}\\
+\toprule
+\textbf{G2} & \textbf{Allows registered Educators to manage Tournaments for which they have been granted permission.}\\ [1ex]
+\hline
+D1 & The User must have a working Internet connection.\\ [1ex]
+\hline
+R1 & The system must allow an unregistered Educator to sign up.\\ [1ex]
+\hline
+R3 & The system must allow a registered User to log in.\\ [1ex]
+\hline
+R4 & The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.\\ [1ex]
+\hline
+R7 & The system must allow registered Educators to grant other registered Educators the permission to manage the Tournament, during the Tournament creation process.\\ [1ex]
+\hline
+R8 & The system must allow registered Educators to end the creation process of a Tournament that they started themselves.\\ [1ex]
+\hline
+R10 & The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R18 & The system must let Educators to end the Consolidation Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R20 & The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.\\ [1ex]
+\hline
+\end{xltabular}
+
+\\
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{G3}\\
+\toprule
+\textbf{G3} & \textbf{Allows registered Students who participate in a Tournament of Code Kata Battles to be rewarded of different achievements.}\\ [1ex]
+\hline
+D1 & The User must have a working Internet connection.\\ [1ex]
+\hline
+D2 & The Students who participate to a Battle properly set up the GitHub Action for code submissions.\\ [1ex]
+\hline
+D3 & The Users always receive every notification which is sent by the system.\\ [1ex]
+\hline
+D4 & The availability of the external tools utilized for the code evaluation process is consistent.\\ [1ex]
+\hline
+D5 & The availability of GitHub Actions service is consistent.\\ [1ex]
+\hline
+R1 & The system must allow an unregistered Educator to sign up.\\ [1ex]
+\hline
+R2 & The system must allow an unregistered Student to sign up.\\ [1ex]
+\hline
+R3 & The system must allow a registered User to log in.\\ [1ex]
+\hline
+R4 & The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.\\ [1ex]
+\hline
+R5 & The system must provide registered Educators of a list of Tournament-related statistics for the Badges definition, during the Tournament creation process.\\ [1ex]
+\hline
+R6 & The system must provide registered Educators of a specific language which lets them define the Badges, during the Tournament creation process.\\ [1ex]
+\hline
+R8 & The system must allow registered Educators to end the creation process of a Tournament that they started themselves.\\ [1ex]
+\hline
+R10 & The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R11 & The system must allow a registered Student to create a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R12 & The system must allow a registered Student to accept an invitation to a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R13 & The system must allow registered Students to see the list of ongoing Tournaments and join any of those if its subscription deadline is not expired yet.\\ [1ex]
+\hline
+R14 & The system must allow registered Students who are enrolled in a Battle to perform code submissions.\\ [1ex]
+\hline
+R17 & The system must set the Consolidation Stage of a Battle when its submission deadline expires.\\ [1ex]
+\hline
+R18 & The system must let Educators to end the Consolidation Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R20 & The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.\\ [1ex]
+\hline
+R21 & The system must assign an achievements’ Badge for a given Tournament to any Student who satisfied the conditions defined by the creator of the Tournament.\\ [1ex]
+\hline
+\end{xltabular}
+
+\\
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{G4}\\
+\toprule
+\textbf{G4} & \textbf{Allows registered Users to visualize information for which they have granted permission.}\\ [1ex]
+\hline
+D1 & The User must have a working Internet connection.\\ [1ex]
+\hline
+R1 & The system must allow an unregistered Educator to sign up.\\ [1ex]
+\hline
+R2 & The system must allow an unregistered Student to sign up.\\ [1ex]
+\hline
+R3 & The system must allow a registered User to log in.\\ [1ex]
+\hline
+R4 & The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.\\ [1ex]
+\hline
+\hline
+R8 & The system must allow registered Educators to end the creation process of a Tournament that they started themselves.\\ [1ex]
+\hline
+R10 & The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R11 & The system must allow a registered Student to create a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R12 & The system must allow a registered Student to accept an invitation to a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R13 & The system must allow registered Students to see the list of ongoing Tournaments and join any of those if its subscription deadline is not expired yet.\\ [1ex]
+\hline
+R16 & The system must update the Battle ranking when a valid code submission is performed.\\ [1ex]
+\hline
+R17 & The system must set the Consolidation Stage of a Battle when its submission deadline expires.\\ [1ex]
+\hline
+R18 & The system must let Educators to end the Consolidation Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R19 & The system must update Tournament ranking when a Battle exits the Consolidation Stage.\\ [1ex]
+\hline
+R20 & The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.\\ [1ex]
+\hline
+R21 & The system must assign an achievements’ Badge for a given Tournament to any Student who satisfied the conditions defined by the creator of the Tournament.\\ [1ex]
+R22 & The system must allow every User to see the Badges which were ever obtained by a given Student.\\ [1ex]
+\hline
+\end{xltabular}
+
+\\
+\\
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{G5}\\
+\toprule
+\textbf{G5} & \textbf{Automates code evaluation process using GitHub Actions and other external tools.}\\ [1ex]
+\hline
+D2 & The Students who participate to a Battle properly set up the GitHub Action for code submissions.\\ [1ex]
+\hline
+D4 & The availability of the external tools utilized for the code evaluation process is consistent.\\ [1ex]
+\hline
+D5 & The availability of GitHub Actions service is consistent.\\ [1ex]
+\hline
+R1 & The system must allow an unregistered Educator to sign up.\\ [1ex]
+\hline
+R2 & The system must allow an unregistered Student to sign up.\\ [1ex]
+\hline
+R3 & The system must allow a registered User to log in.\\ [1ex]
+\hline
+R4 & The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.\\ [1ex]
+\hline
+\hline
+R8 & The system must allow registered Educators to end the creation process of a Tournament that they started themselves.\\ [1ex]
+\hline
+R10 & The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.\\ [1ex]
+\hline
+R11 & The system must allow a registered Student to create a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R12 & The system must allow a registered Student to accept an invitation to a group for a Battle in a Tournament.\\ [1ex]
+\hline
+R13 & The system must allow registered Students to see the list of ongoing Tournaments and join any of those if its subscription deadline is not expired yet.\\ [1ex]
+\hline
+R14 & The system must allow registered Students who are enrolled in a Battle to perform code submissions.\\ [1ex]
+\hline
+R15 & The system must be provided of proper APIs to let registered Students perform code submissions through GitHub Actions.\\ [1ex]
+\hline
+\end{xltabular}
+
+\\
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Performance Requirements}
+
+Due to the non-critical nature of the system, too strict performance requirements are not needed. 
+However, in order to offer the best possible User experience, the system should provide:
+
+\item The system should let Educators create a Tournament within ... seconds.
+\item The system should let Educators create a Battle within ... seconds.
+\item The system should let Students join a Tournament within ... seconds
+\item The system should let Students join a Battle within ... seconds
+\item The system should receive a code submission by a Student within ... seconds
+\item The system should evaluate code submissions within ... seconds
+\item The system should update the Battle ranking within ... seconds
+\item The system should update the Tournament ranking within ... seconds
+\item The system should let Educators end the Consolidation Stage of a Battle within ... seconds.
+\item The system should let Educators end a Tournament within ... seconds.
+\item The system should let new Badges be available in the Students profiles within ... seconds
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Software System Attributes}
-Qui\\
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\subsection{Reliability}
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+In this section typically, the non-functional requirements and quality attributes of the system which should be provided are discussed. 
 
-\subsection{Availability}
+\subsection{Reliability and Availability}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The system should offer its functionalities with an availability equal to 99.5\%, or more. In other words, the system must be inaccessible for less than two days every year. To achieve this goal, the system should provide a high redundancy for the most critical components.
+\item Furthermore, in order to guarantee better reliability performances, all the scheduled maintenance intervents on the system should be done during the night. 
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Security}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The connection between the application and the server must be safe. To keep a good level of security, the system should use the Transport Layer Security protocol. For this purpose, it is needed an SSL/TSL certificate.
+\item Moreover, all passwords must be encrypted.
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Maintainability}
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\subsection{Portability}
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+\item The source code must be commented on as well as possible and the correlated documentation must be kept updated during the whole life cycle of the system. 
+\item Modularity and low coupling between components must be a focus during the designing and developing phases.
+\\
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % FOURTH CHAPTER
