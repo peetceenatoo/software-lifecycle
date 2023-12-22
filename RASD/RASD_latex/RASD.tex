@@ -1402,49 +1402,47 @@ In this section typically, the non-functional requirements and quality attribute
 
 \section{Objectives of the analysis}
 
-\begin{itemize}
-\item In this section, a presentation of the formal modelling activity that has been done using the Alloy formal notation. The main goal of this activity is to formally describe the domain and properties of the system to be.
-\item In particular, the main objective of this activity is to model and formally represent Educators, Students, Tournaments, Battles and Badges, as well as the main constraints which regard such entities.
-\item In order to ensure straightforward comprehension of the following, each constraint and entity will be annotated in natural language, along with any predicates and assertions which have been verified.
-\end{itemize}
+In this section, a presentation of the formal modelling activity that has been done using the Alloy formal notation. The main goal of this activity is to formally describe the domain and properties of the system to be.\\
+In particular, the main objective of this activity is to model and formally represent Educators, Students, Tournaments, Battles and Badges, as well as the main constraints which regard such entities.\\
+In order to ensure straightforward comprehension of the following, each constraint and entity will be annotated in natural language, along with any predicates and assertions which have been verified.\\
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Alloy Code}
 
-\begin{itemize}
-\item // -------------- Definition of auxiliar entities -------------- //\\
+// -------------- Definition of auxiliar entities -------------- //\\
 
-\item // Defined in order to model the deadlines
-\item sig Time \{\\
+// Defined in order to model the deadlines
+
+sig Time \{\\
 timestamp: Int\\
 \}\{\\
 timestamp >= 0\\
 \}\\
 
-\item // Defined in order to model any flag, such as whether a Battle is in the Consolidation Stage
-\item abstract sig Boolean \{\}
-\item one sig True extends Boolean \{\}
-\item one sig False extends Boolean \{\}\\
+// Defined in order to model any flag, such as whether a Battle is in the Consolidation Stage
+abstract sig Boolean \{\}
+one sig True extends Boolean \{\}
+one sig False extends Boolean \{\}\\
 
-\item // -------------- Definition of game components -------------- //\\
+// -------------- Definition of game components -------------- //\\
 
-\item // Defined in order to model the score of a team in a Battle and the score of a Student in a Tournament
-\item sig Score \{\\
+// Defined in order to model the score of a team in a Battle and the score of a Student in a Tournament
+sig Score \{\\
 value: Int\\
 \}\{\\
 value >= 0\\
 \}\\
 
-\item // Defined in order to model the rank of a team in a Battle and the rank of a Student in a Tournament
-\item sig Rank \{\\
+// Defined in order to model the rank of a team in a Battle and the rank of a Student in a Tournament
+sig Rank \{\\
 value: Int\\
 \}\{\\
 value >= 1\\
 \}\\
 
-\item // Defined in order to model the Tournament
-\item sig Tournament \{\\
+// Defined in order to model the Tournament
+sig Tournament \{\\
 managers: some Educator,\\
 subscription\_deadline: one Time,\\
 battles: set Battle,\\
@@ -1454,8 +1452,8 @@ badges: set Badge,\\
 achievements: Student -> set BadgeRule\\
 \}\\
 
-\item // Defined in order to model the Battle (unnecessary to model the programming language)
-\item sig Battle \{\\
+// Defined in order to model the Battle (unnecessary to model the programming language)
+sig Battle \{\\
 tournament: one Tournament,\\
 teams: Student -> some Student,\\
 scores: Student -> one Score,\\
@@ -1465,31 +1463,32 @@ submission\_deadline: one Time,\\
 consolidation\_stage: one Boolean\\
 \}\\
 
-\item // Defined in order to model the Badge (unnecessary to model the title)
-\item sig BadgeRule \{\\
+// Defined in order to model the Badge (unnecessary to model the title)
+sig BadgeRule \{\\
 \}
-\item sig Badge \{\\
+sig Badge \{\\
 rule: one BadgeRule\\
 \}\\
 
-\item // -------------- Definition of actors -------------- //\\
+// -------------- Definition of actors -------------- //\\
 
-\item // Defined in order to model the nature of Student and Educator as Users
-\item abstract sig User \{\}\\
+// Defined in order to model the nature of Student and Educator as Users
+abstract sig User \{\}\\
 
-\item // Defined in order to model the Student
-\item sig Student extends User \{\\
+// Defined in order to model the Student
+sig Student extends User \{\\
 badges: set Badge\\
 \}\\
 
-\item // Defined in order to model the Educator
-\item sig Educator extends User\{\\
+// Defined in order to model the Educator
+sig Educator extends User\{\\
 \}\\
 
-\item //  -------------- Facts -------------- //\\
+//  -------------- Facts -------------- //\\
 
-\item // Tournaments: A student must both have a score and a rank, if a student has higher score than another student than it has a lower rank (e.g. 1st is lower than 2nd), only achievements of Badges which relate to existing Badges for the Tournament are stored, a Student has one only score, a Student has one only rank
-\item fact TournamentFact \{\\
+// Tournaments: A Student must both have a score and a rank, if a Student has higher score than another Student than it has a lower rank (e.g. 1st is lower than 2nd), only achievements of Badges which relate to existing Badges for the Tournament are stored, a Student has one only score, a Student has one only rank
+fact TournamentFact \{\\
+
     all t1: Tournament | all s: Student | some sc: Score | some r: Rank | ( sc in s.(t1.scores) ) => ( r in s.(t1.ranks) ) and ( r in s.(t1.ranks) => sc in s.(t1.scores) )\\
     all t2: Tournament | all s1, s2: Student | ( ( s1.(t2.ranks).value < s2.(t2.ranks).value ) <=> ( s1.(t2.scores).value > s2.(t2.scores).value ) )\\
     all t3: Tournament | all s3: Student | all b: Badge | ( b.rule in s3.(t3.achievements) ) => ( b in t3.badges )\\
@@ -1497,8 +1496,9 @@ badges: set Badge\\
     all t5: Tournament | all disj r1, r2: Rank | some s: Student | ( r1 in s.(t5.ranks) ) => not ( r2 in s.(t5.ranks) )\\
 \}\\
 
-\item // Battles: The subscription deadline must expire before the submission deadline, teams relationships are symmetrical, teams relationships are reflexive, if a Student s1 is in team with a Student s2 and not with a Student s3 then s2 is not in team with s3, Students in the same team have same score and rank, a Student has one only score, a Student has one only rank
-\item fact BattleFact \{\\
+// Battles: The subscription deadline must expire before the submission deadline, teams relationships are symmetrical, teams relationships are reflexive, if a Student s1 is in team with a Student s2 and not with a Student s3 then s2 is not in team with s3, Students in the same team have same score and rank, a Student has one only score, a Student has one only rank\\
+
+fact BattleFact \{\\
     all b: Battle | b.subscription\_deadline.timestamp < b.submission\_deadline.timestamp\\
     all b1: Battle | all s1, s2: Student | s2 in s1.(b1.teams) <=> s1 in s2.(b1.teams)\\
     all b2: Battle | all s: Student | s in s.(b2.teams)\\
@@ -1508,23 +1508,21 @@ badges: set Badge\\
     all b6: Battle | all disj r1, r2: Rank | some s9: Student | ( r1 in s9.(b6.ranks) ) => ( not ( r2 in s9.(b6.ranks) ) )\\
 \}\\
 
-\item // A student must have obtained the Badges in some Tournament
-\item fact studentObtainedBadges \{\\
+// A Student must have obtained the Badges in some Tournament\\
+
+fact StudentObtainedBadges \{\\
 one t: Tournament | all s: Student, b: Badge | b in s.badges => b.rule in s.(t.achievements)\\
 \}\\
-\end{itemize}
 
-\begin{itemize}
-\item // -------------- Predicates and assertions -------------- //\\
-\end{itemize}
+// -------------- Predicates and assertions -------------- //\\
 
-\begin{itemize}
-\item //  1. A basic example
-\item pred show \{\\
+//  1. A basic example\\
+
+pred show \{\\
 some b: Battle | some t: Tournament | b in t.battles\\
-\}
-\item run show
-\end{itemize}
+\}\\
+run show\\
+
 \begin{figure}[H]
 \includegraphics[scale = 0.7]{Images/Alloy/1Model.png}\\
 \centering
@@ -1534,16 +1532,16 @@ some b: Battle | some t: Tournament | b in t.battles\\
 \centering
 \end{figure}
 
-\begin{itemize}
-\item //  2. An example to show that a higher position in the ranking corresponds to a lower score
-\item pred RankingExample \{\\
-    some disj b1, b2: Battle | some t: Tournament | b1 in t.battles and b2 in t.battles\\
-    some disj s3, s4: Student | some b3: Battle | ( not ( s3 in s4.(b3.teams) ) ) and ( s3.(b3.ranks).value != s4.(b3.ranks).value )\\
-    some r1, r2: Rank | r1.value = 1 and r2.value = 2\\
-    some sc1, sc2: Score | ( sc1. value = 5 ) and ( sc2.value = 6 )\\
-\}
-\item run RankingExample
-\end{itemize}
+//  2. An example to show that a higher position in the ranking corresponds to a lower score\\
+
+pred RankingExample \{\\
+some disj b1, b2: Battle | some t: Tournament | b1 in t.battles and b2 in t.battles\\
+some disj s3, s4: Student | some b3: Battle | ( not ( s3 in s4.(b3.teams) ) ) and ( s3.(b3.ranks).value != s4.(b3.ranks).value )\\
+some r1, r2: Rank | r1.value = 1 and r2.value = 2\\
+some sc1, sc2: Score | ( sc1. value = 5 ) and ( sc2.value = 6 )\\
+\}\\
+run RankingExample\\
+
 \begin{figure}[H]
 \includegraphics[scale = 0.7]{Images/Alloy/2Table1.png}\\
 \includegraphics[scale = 0.7]{Images/Alloy/2Table2.png}\\
@@ -1555,13 +1553,12 @@ some b: Battle | some t: Tournament | b in t.battles\\
 \centering
 \end{figure}
 
-\begin{itemize}
-\item //  3. Ensuring that Badges obtained by students must be existed in some Tournaments (in this model, Tournament can both represent both a running one or a finished one)
-\item assert ExistingBadges \{
-    all b: Badge | all s: Student | some t: Tournament | ( b in s.badges ) => ( b in t.badges)\\
-\}
-\item check ExistingBadges
-\end{itemize}
+//  3. Ensuring that Badges obtained by Students must be existed in some Tournaments (in this model, Tournament can both represent both a running one or a finished one)\\
+assert ExistingBadges \{\\
+all b: Badge | all s: Student | some t: Tournament | ( b in s.badges ) => ( b in t.badges)\\
+\}\\
+check ExistingBadges\\
+
 \begin{figure}[H]
 \includegraphics[scale = 0.7]{Images/Alloy/3Outcome.png}\\
 \centering
