@@ -174,9 +174,9 @@ The purpose of the project CodeKataBattle (CKB) is to develop a platform where S
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \begin{enumerate}
-    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Battles and take part in its Battles.
+    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Code Kata Battles and take part in its Battles.
     \item[\textcolor{bluepoli}{G2}] Allows registered Educators to manage Tournaments for which they have been granted permission.
-    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Battles to be rewarded of different achievements.
+    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Code Kata Battles to be rewarded of different achievements.
     \item[\textcolor{bluepoli}{G4}] Allows registered Users to visualize information for which they have granted permission.
     \item[\textcolor{bluepoli}{G5}] Automates code evaluation process using GitHub Actions and some static analysis tools.
 \end{enumerate}
@@ -225,11 +225,11 @@ The main goal is to help Students practice coding, giving them feedback and comp
     \item[\textcolor{bluepoli}{SP1}] The system notifies the Students about the creation of a Tournament.
     \item[\textcolor{bluepoli}{SP2}] The system notifies the groups about the creation of a Battle.
     \item[\textcolor{bluepoli}{SP3}] The system notifies the groups about the evaluation of a Battle.
-    \item[\textcolor{bluepoli}{SP4}] The system notifies the Students about the end of a Tournament.s
+    \item[\textcolor{bluepoli}{SP4}] The system notifies the Students about the end of a Tournament.
     \item[\textcolor{bluepoli}{SP5}] The system shows some information about a Battle.
     \item[\textcolor{bluepoli}{SP6}] The system shows some information about a Tournament.
     \item[\textcolor{bluepoli}{SP7}] The system shows some information about a Student.
-    \item[\textcolor{bluepoli}{SP8}] The system creates a GitHub repository containing the code Kata.
+    \item[\textcolor{bluepoli}{SP8}] The system creates a GitHub repository containing the code kata.
     \item[\textcolor{bluepoli}{SP9}] The system assigns the score to the code of a group.
     \item[\textcolor{bluepoli}{SP10}] The system assigns a Badge to a Student.
 \end{enumerate}
@@ -237,10 +237,10 @@ The main goal is to help Students practice coding, giving them feedback and comp
 \subsubsection{Controlled by World}
 
 \begin{enumerate}
-    \item[\textcolor{bluepoli}{SP11}] An Educator creates a Tournament of Battles.
+    \item[\textcolor{bluepoli}{SP11}] An Educator creates a Tournament of code kata Battles.
     \item[\textcolor{bluepoli}{SP12}] An Educator defines Badges (see section 1.3) for the Tournament.
     \item[\textcolor{bluepoli}{SP13}] An Educator gives permission to another Educator to manage a Tournament.
-    \item[\textcolor{bluepoli}{SP14}] An Educator creates a Battle.
+    \item[\textcolor{bluepoli}{SP14}] An Educator creates a code kata Battle.
     \item[\textcolor{bluepoli}{SP15}] A Student creates a group for a Battle.
     \item[\textcolor{bluepoli}{SP16}] A Student invites another Student to join the group they created.
     \item[\textcolor{bluepoli}{SP17}] A Student joins a group for a Battle.
@@ -298,7 +298,7 @@ In this section some information about terminology is provided, in order to clar
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{Revision history}
+\section{Revision History}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -319,8 +319,8 @@ This document is composed of six sections:
 
 \begin{itemize}
 \item \textcolor{bluepoli}{1st Chapter:} We begin by presenting the problem statement and outlining the system's objectives. In the scope subsection, we offer insights into the various real-world and shared phenomena that the system addresses. Finally, we provide essential resources for readers, including definitions and abbreviations, to facilitate a comprehensive understanding of this document.
-\item \textcolor{bluepoli}{2nd Chapter:} We offer a comprehensive overview of the system, including insights into User profiles and their primary functions. Additionally, we present domain diagrams to illustrate system components and describe various scenarios. Finally, we establish the key domain assumptions underpinning the system's operation
-\item \textcolor{bluepoli}{3rd Chapter:} We delineate the system's requirements, encompassing both functional and non-functional aspects. In addition, we present use case diagrams that illustrate system interactions, accompanied by detailed descriptions of each use case and related sequence diagrams. Lastly, we establish a clear mapping of these requirements to both system goals and use cases for comprehensive understanding.
+\item \textcolor{bluepoli}{2nd Chapter:} We offer a comprehensive overview of the system, including insights into User profiles and their primary functions. Additionally, we present Domain Diagrams to illustrate system components and describe various scenarios. Finally, we establish the key domain assumptions underpinning the system's operation
+\item \textcolor{bluepoli}{3rd Chapter:} We delineate the system's requirements, encompassing both functional and non-functional aspects. In addition, we present Use Case Diagrams that illustrate system interactions, accompanied by detailed descriptions of each use case and related Sequence Diagrams. Lastly, we establish a clear mapping of these requirements to both system goals and use cases for comprehensive understanding.
 \item \textcolor{bluepoli}{4th Chapter:} We provide a formal analysis of the system to be with Alloy.
 \item \textcolor{bluepoli}{5th Chapter:} We provide an estimate of the effort spent by each group member.
 \item \textcolor{bluepoli}{6th Chapter:} We provide a list of the references used in this document.
@@ -332,7 +332,7 @@ This document is composed of six sections:
 % --------------------------------------------------------------------------
 \chapter{Overall Description}
 
-\section{Product perspective}
+\section{Product Perspective}
 
 CKB is a platform meant to help Students practice coding through CKs. Educators set up these Battles for teams of Students to compete in coding exercises using different programming languages like Java or Python. Each CK has a description and tasks to complete, but Students must write the actual code themselves and make sure it passes certain tests before a deadline.
 
@@ -352,7 +352,7 @@ Students' scores from different Battles add up to give a total for the whole Tou
 \item \textcolor{bluepoli}{1st Scenario: Signing up and logging in} User signs up, logs out and signs in: The User Mark opens the platform and starts the signing up procedure, fills the required data and completes the signign up procedure. Then he logs out to be sure that everything went fine, and a few seconds later he logs in again.
 \item \textcolor{bluepoli}{2nd Scenario: Creating a Tournament} Kevin the Educator creates a Tournament and sets the subscription deadline. He creates the Badges for the Tournament, specifying their title and rules by using the specific language, referring to existing variables in the system.
 \item \textcolor{bluepoli}{3rd Scenario: Giving permission to manage a Tournament} Kevin the Educator gives the permission to his colleague Lara to create further Battles within the context of the Tournament.
-\item \textcolor{bluepoli}{4th Scenario: Creating a Battle in a Tournament} Kevin the Educator creates a first Battle for the Tournament and sets registration and submission deadlines, providing a brief textual description, the software project and the set of test cases; then, he sets minimum and maximum number of members per group and specifies the additional mandatory configurations for scoring and whether the manual evaluation is needed. All the Students in the platform are notified. 
+\item \textcolor{bluepoli}{4th Scenario: Creating a Battle in a Tournament} Kevin the Educator creates a first Battle for the Tournament and sets registration and submission deadlines, providing a brief textual description, the software project and the set of test cases; then, he sets minimum and maximum number of members per group and specifies the additional mandatory configurations for scoring and whether the manual evaluation is needed. All the Students on the platform are notified. 
 \item \textcolor{bluepoli}{5th Scenario: Joining a Tournament} Jim the Student subscribes to a certain Tournament Battle, forming a new group for an existing Battle. Right after, Jim invites Kyle, another Student, which accepts Jim’s invite to join his existing group.
 \item \textcolor{bluepoli}{6th Scenario: Starting Battle} The registration deadline of a Battle expires, then the system creates a GitHub repository and sends the link to all the registered Students.
 \item \textcolor{bluepoli}{7th Scenario: Forking the Battle repository}: Jim the Student forks the repository related to the Battle. He then sets up the automated workflow.
@@ -369,7 +369,8 @@ Students' scores from different Battles add up to give a total for the whole Tou
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \begin{itemize}
-\item The UML Class Diagram below represents a conceptual, high-level model of the software to be. Given its nature, it may model objects that will not be represented in the actual system that will be developed. Moreover, at this level, it should not include any references to methods and other low-level details that will be detailed during the design phase.\\
+\item The UML Class Diagram below represents a conceptual, high-level model of the software to be. Given its nature, it may model objects that will not be represented in the actual system that will be 
+developed. Moreover, at this level, it should not include any references to methods and other low-level details that will be detailed during the design phase. 11
 \end{itemize}
 
 \begin{figure}[H]
@@ -407,7 +408,7 @@ The subsequent section details the principal elements of the CodeKataBattle (CKB
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{Product functions}
+\section{Product Functions}
 
 The platform CKB offers several key functions:
 
@@ -431,7 +432,7 @@ The platform CKB offers several key functions:
     \item[\textcolor{bluepoli}{R1}] The system must allow an unregistered Educator to sign up.
     \item[\textcolor{bluepoli}{R2}] The system must allow an unregistered Student to sign up.
     \item[\textcolor{bluepoli}{R3}] The system must allow a registered User to log in.
-    \item[\textcolor{bluepoli}{R4}] The system must allow registered Educators to start the creation process of a Tournament of Battles.
+    \item[\textcolor{bluepoli}{R4}] The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.
     \item[\textcolor{bluepoli}{R5}] The system must provide registered Educators of a list of Tournament-related statistics for the Badges definition, during the Tournament creation process.
     \item[\textcolor{bluepoli}{R6}] The system must provide registered Educators of a specific language which lets them define the Badges, during the Tournament creation process.
     \item[\textcolor{bluepoli}{R7}] The system must allow registered Educators to grant other registered Educators the permission to manage the Tournament, during the Tournament creation process.
@@ -444,10 +445,10 @@ The platform CKB offers several key functions:
     \item[\textcolor{bluepoli}{R14}] The system must allow registered Students who are enrolled in a Battle to perform code submissions.
     \item[\textcolor{bluepoli}{R15}] The system must be provided of proper APIs to let registered Students perform code submissions through GitHub Actions.
     \item[\textcolor{bluepoli}{R16}] The system must update the Battle ranking when a valid code submission is performed.
-    \item[\textcolor{bluepoli}{R17}] The system must set the Consolidaton Stage of a Battle when its submission deadline expires.
-    \item[\textcolor{bluepoli}{R18}] The system must let Educators to end the Consolidaton Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.
-    \item[\textcolor{bluepoli}{R19}] The system must update Tournament ranking when a Battle exits the Consolidaton Stage.
-    \item[\textcolor{bluepoli}{R20}] The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidaton Stage.
+    \item[\textcolor{bluepoli}{R17}] The system must set the Consolidation Stage of a Battle when its submission deadline expires.
+    \item[\textcolor{bluepoli}{R18}] The system must let Educators to end the Consolidation Stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.
+    \item[\textcolor{bluepoli}{R19}] The system must update Tournament ranking when a Battle exits the Consolidation Stage.
+    \item[\textcolor{bluepoli}{R20}] The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the Consolidation Stage.
     \item[\textcolor{bluepoli}{R21}] The system must assign an achievements’ Badge for a given Tournament to any Student who satisfied the conditions defined by the creator of the Tournament.
     \item[\textcolor{bluepoli}{R22}] The system must allow every User to see the Badges which were ever obtained by a given Student.
     \item[\textcolor{bluepoli}{R23}] The system must notify every registered Student about the creation of a new Tournament.
@@ -458,7 +459,7 @@ The platform CKB offers several key functions:
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{User characteristics}
+\section{User Characteristics}
 
 In the CKB platform, a User can be either a Student or an Educator, each with distinct roles and motivations.
 
@@ -469,7 +470,7 @@ In the CKB platform, a User can be either a Student or an Educator, each with di
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{Assumptions, dependencies and constraints}
+\section{Assumptions, Dependencies, Constraints}
 
 This section serves as a comprehensive overview of critical factors which must be considered during the implementation of the platform. It consolidates the foundational assumptions made during project planning and highlights eventual dependencies.
 
@@ -493,7 +494,7 @@ This section serves as a comprehensive overview of critical factors which must b
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-The static analysis tools which provide a score based on the quality level of each code submission can either be implemented or integrated in the system. Similarly, the notification provider can either be implemented or integrated in the system. For the registration process, a verification email must be sent by the system to let Users successfully sign up, thus requiring the integration of an e-mail service.
+The static analysis tools which provide a score based on the quality level of each code submission can either be implemented or integrated in the system as Evaluator. Similarly, the NotificationProvider can either be implemented or integrated in the system. For the registration process, a verification email must be sent by the system through to let Users successfully sign up, thus requiring the integration of an EmailService.
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -504,45 +505,91 @@ The static analysis tools which provide a score based on the quality level of ea
 
 \section{External Interface Requirements}
 
-The system allows...
-
-\begin{itemize}
-\item Given these and the other purposes described above in this document, a suitable device is... as shown below.\\
-\end{itemize}
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+The system provides all the main functions described previously (see section 2.2) and lets Users access all the information they are granted permission for. Given such purposes, any personal computer is a suitable device to make use of all the CKB functionalities, allowing convenient acces through any web browser.
 
 \subsection{User Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The User Interface (UI) is divided into several sections dedicated to the different main functionalities, as shown in the following images.
-\item ---------- Qui\\
-\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/MainPage_Student.png}\\
+\caption{Home Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/TournamentPage_Student.png}\\
+\caption{Tournament Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/BattlePage_Student.png}\\
+\caption{Battle Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/Profile_Student.png}\\
+\caption{Profile Page (Student) }
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/MainPageEducator.png}\\
+\caption{Home Page (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/MainPageEducator-1.png}\\
+\caption{Badge definition for a tournament (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/TournamentPage_EducatorCreator.png}\\
+\caption{Tournament Page where the educator is the creator of the tournament (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{RASD_latex/Images/UI/BattlePage_EducatorCreator.png}\\
+\caption{Battle Page where the educator is the creator of the tournament (Educator)}
+\end{figure}
+
+
+
+
+
+
+
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Hardware Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item To use the system, both Educators and Students must use a suitable device.
-\item Due to the communication capabilities needed, a suitable device results once again being...\\
-\end{itemize}
+
+To use the system, both Educators and Students must use a suitable device. Due to the communication capabilities needed, any personal computer results once again being a suitable device for the User purpose. \\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Software Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The system should integrate a NotificationService to keep up Users of any interesting event on the platform, an EmailService for the registration process, and proper static analysis tools as an Evaluator of the Students' code submissions.\\
-\end{itemize}
+
+The system should integrate a NotificationService to keep up Users of any interesting event on the platform, an EmailService for the registration process, and proper static analysis tools as an Evaluator of the Students' code submissions.\\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Communication Interfaces}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The system requires a stable internet connection to work properly. This connection is used to exchange data between the Users and the central database which contains the information regarding ongoing Tournaments and Battles.\\
-\end{itemize}
+
+The system requires a stable internet connection to work properly. This connection is used to exchange data between the Users and the central database which contains the information regarding ongoing Tournaments and Battles.\\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Functional Requirements}
@@ -1127,13 +1174,14 @@ Exceptions & The given query string is invalid \\ [1ex]
 \begin{figure}[H]
 \includegraphics[scale = 0.45]{Images/SequenceDiagrams/UserVisualizesStudentBadgesSeqDiagram.png}\\
 \centering
-\end{figure}
+\end{figure}\
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Mapping}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\\
 
 \begin{xltabular}{\textwidth}{| l | X |}
 \toprule
@@ -1372,28 +1420,27 @@ In this section typically, the non-functional requirements and quality attribute
 \subsection{Reliability and Availability}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The system should offer its functionalities with an availability equal to 99.5\%, or more. In other words, the system must be inaccessible for less than two days every year. To achieve this goal, the system should provide a high redundancy for the most critical components.
-\item Furthermore, in order to guarantee better reliability performances, all the scheduled maintenance intervents on the system should be done during the night. \\
-\end{itemize} 
+
+The system should offer its functionalities with an availability equal to 99.5\%, or more. In other words, the system must be inaccessible for less than two days every year. To achieve this goal, the system should provide a high redundancy for the most critical components.\\
+Furthermore, in order to guarantee better reliability performances, all the scheduled maintenance actions on the system should be done during the night.\\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Security}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The connection between the application and the server must be safe. To keep a good level of security, the system should use the Transport Layer Security protocol. For this purpose, it is needed an SSL/TSL certificate.
-\item Moreover, all passwords must be encrypted.\\
-\end{itemize}
+
+The connection between the application and the server must be safe. To keep a good level of security, the system should use the Transport Layer Security protocol. For this purpose, it is needed an SSL/TSL certificate.
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \subsection{Maintainability}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\begin{itemize}
-\item The source code must be commented on as well as possible and the correlated documentation must be kept updated during the whole life cycle of the system. 
-\item Modularity and low coupling between components must be a focus during the designing and developing phases.\\
-\end{itemize}
+
+The source code must be commented on as well as possible and the correlated documentation must be kept updated during the whole life cycle of the system.\\
+Modularity and low coupling between components must be a focus during the designing and developing phases.\\
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % FOURTH CHAPTER
@@ -1566,9 +1613,61 @@ check ExistingBadges\\
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+
 % FIFTH CHAPTER
 % --------------------------------------------------------------------------
 \chapter{Effort spent}
+
+\section{Effort spent per unit}
+
+This section shows the amount of time that each member has spent to produce the document. Please notice that each unit is the result of coordinated work among all the members.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{| X | X | X |}
+\hline
+\textbf{UNIT} & \textbf{MEMBERS} & \textbf{HOURS} \\ [1ex]
+\hline
+SetUp & Puglisi & 1h \\ [1ex]
+\hline
+Scenarios & Piccinato & 3h \\ [1ex]
+\hline
+Use Cases & Piazzalunga, Piccinato & 8h \\ [1ex]
+\hline
+Phenomena & Puglisi, Piccinato & 5h \\ [1ex]
+\hline
+Goals & Puglisi, Piccinato & 2h \\ [1ex]
+\hline
+Domain Assumptions & Piccinato, Puglisi & 1h \\ [1ex]
+\hline
+Requirements & Piccinato, Puglisi & 7h \\ [1ex]
+\hline
+Mapping & Piccinato & 1h \\ [1ex]
+\hline
+Sequence Diagrams & Piazzalunga & 7h \\ [1ex]
+\hline
+Class Diagram & Piazzalunga & 3h \\ [1ex]
+\hline
+Use Case Diagrams & Piazzalunga & 2h \\ [1ex]
+\hline
+State Charts & Piazzalunga & 1h \\ [1ex]
+\hline
+UI Mockups & Puglisi & 15h \\ [1ex]
+\hline
+Alloy & Piccinato & 8h \\ [1ex]
+\hline
+Chapter 1 Redaction & Puglisi, Piccinato & 3h \\ [1ex]
+\hline
+Chapter 2 Redaction & Piccinato & 4h \\ [1ex]
+\hline
+Chapter 3 Redaction & Piccinato & 3h \\ [1ex]
+\hline
+Chapter 4 Redaction & Piccinato & 1h \\ [1ex]
+\hline
+Chapter 5 and 6 Redaction & Piccinato & 1h \\ [1ex]
+\hline
+\end{tabularx}
+\end{table}
 
 % SIXTH CHAPTER
 % --------------------------------------------------------------------------
