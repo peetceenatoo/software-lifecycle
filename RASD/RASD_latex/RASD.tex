@@ -382,7 +382,29 @@ Students' scores from different Battles add up to give a total for the whole Tou
 \subsection{State Charts}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-Qui\\
+
+The subsequent section details the principal elements of the CodeKataBattle (CKB) system and their progression through different phases. For this purpose, some UML State Charts are proposed.
+
+\begin{figure}[H]
+\textbf{Tournament}\par\medskip
+\includegraphics[scale = 0.45]{Images/StateCharts/TournamentStateDiagram.png}\\
+\centering
+\end{figure}
+
+\begin{itemize}
+\item The diagram in question outlines the potential phases of a Tournament. Initiated by an Educator, the Tournament promptly enters the 'Subscription' phase, allowing Students to register their participation. Following the closure of the subscription window, the system transitions the Tournament to the 'Ongoing' phase, wherein Battles are created and unfold. Upon the resolution of these contests, the Educator finalizes the Tournament, propelling it into the 'Ended' phase.
+\end{itemize}
+
+\begin{figure}[H]
+\textbf{Tournament}\par\medskip
+\includegraphics[scale = 0.45]{RASD_latex/Images/StateCharts/BattleStateDiagram.png}\\
+\centering
+\end{figure}
+
+\begin{itemize}
+\item The second state diagram offers an overview of the stages a Battle undergoes on the CKB platform. Once the Educator creates a Battle, it is set in "SUBSCRIPTION" state, where Students can form teams and register for the challenge. Following the end of the subscription deadline, the Battle transitions to the "RUNNING" state. This phase is characterized by active participation as Students develop solutions and submit their code before the submission deadline. After the submission deadline has passed, the platform moves the Battle into the "CONSOLIDATION" phase, which is a critical juncture where the platform assesses the submissions. Depending on the Battle's configuration, there may be a need for manual scoring by Educators. If so, the Educators review the submissions and assign additional scores. Once the manual evaluation is complete, or if no manual scoring is necessary, the Battle proceeds to the "ENDED" state, signaling its conclusion and the finalization of results and rankings.
+\end{itemize}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Product functions}
