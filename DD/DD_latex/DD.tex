@@ -1,0 +1,419 @@
+% Politecnico di Milano (PoliMi) - School of Industrial and Information Engineering
+%
+% Last Revision: October 2021
+%
+% Copyright 2021 Politecnico di Milano, Italy. NC-BY
+
+\documentclass{Configuration_Files/Template}
+
+%------------------------------------------------------------------------------
+%	REQUIRED PACKAGES AND  CONFIGURATIONS
+%------------------------------------------------------------------------------
+
+% CONFIGURATIONS
+\usepackage{parskip} % For paragraph layout
+\usepackage{setspace} % For using single or double spacing
+\usepackage{emptypage} % To insert empty pages
+\usepackage{multicol} % To write in multiple columns (executive summary)
+\setlength\columnsep{15pt} % Column separation in executive summary
+\setlength\parindent{0pt} % Indentation
+\raggedbottom  
+
+% PACKAGES FOR TITLES
+\usepackage{titlesec}
+% \titlespacing{\section}{left spacing}{before spacing}{after spacing}
+\titlespacing{\section}{0pt}{3.3ex}{2ex}
+\titlespacing{\subsection}{0pt}{3.3ex}{1.65ex}
+\titlespacing{\subsubsection}{0pt}{3.3ex}{1ex}
+\usepackage{color}
+
+% PACKAGES FOR LANGUAGE AND FONT
+\usepackage[english]{babel} % The document is in English  
+\usepackage[utf8]{inputenc} % UTF8 encoding
+\usepackage[T1]{fontenc} % Font encoding
+\usepackage[11pt]{moresize} % Big fonts
+
+% PACKAGES FOR IMAGES
+\usepackage{graphicx}
+\usepackage{transparent} % Enables transparent images
+\usepackage{eso-pic} % For the background picture on the title page
+\usepackage{subfig} % Numbered and caption subfigures using \subfloat.
+\usepackage{tikz} % A package for high-quality hand-made figures.
+\usetikzlibrary{}
+\graphicspath{{./Images/}} % Directory of the images
+\usepackage{caption} % Coloured captions
+\usepackage{amsthm,thmtools,xcolor} % Coloured "Theorem"
+\usepackage{float}
+
+% STANDARD MATH PACKAGES
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage[overload]{empheq} % For braced-style systems of equations.
+\usepackage{fix-cm} % To override original LaTeX restrictions on sizes
+
+% PACKAGES FOR TABLES
+\usepackage{tabularx}
+\usepackage{longtable} % Tables that can span several pages
+\usepackage{colortbl}
+
+% PACKAGES FOR ALGORITHMS (PSEUDO-CODE)
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% PACKAGES FOR REFERENCES & BIBLIOGRAPHY
+\usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=black]{hyperref} % Adds clickable links at references
+\usepackage{cleveref}
+\usepackage[square, numbers, sort&compress]{natbib} % Square brackets, citing references with numbers, citations sorted by appearance in the text and compressed
+\bibliographystyle{abbrvnat} % You may use a different style adapted to your field
+
+% OTHER PACKAGES
+\usepackage{pdfpages} % To include a pdf file
+\usepackage{afterpage}
+\usepackage{lipsum} % DUMMY PACKAGE
+\usepackage{fancyhdr} % For the headers
+\fancyhf{}
+
+% Input of configuration file. Do not change config.tex file unless you really know what you are doing. 
+\input{Configuration_Files/config}
+
+%----------------------------------------------------------------------------
+%	NEW COMMANDS DEFINED
+%----------------------------------------------------------------------------
+
+% EXAMPLES OF NEW COMMANDS
+\newcommand{\bea}{\begin{eqnarray}} % Shortcut for equation arrays
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\e}[1]{\times 10^{#1}}  % Powers of 10 notation
+
+%----------------------------------------------------------------------------
+%	ADD YOUR PACKAGES (be careful of package interaction)
+%----------------------------------------------------------------------------
+
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{booktabs,xltabular}
+
+%----------------------------------------------------------------------------
+%	ADD YOUR DEFINITIONS AND COMMANDS (be careful of existing commands)
+%----------------------------------------------------------------------------
+
+% Set uniform margins
+\geometry{
+  left=0.8in,
+  right=0.8in,
+  top=1in,
+  bottom=1in,
+  includehead,
+  includefoot
+}
+
+%----------------------------------------------------------------------------
+%	BEGIN OF YOUR DOCUMENT
+%----------------------------------------------------------------------------
+
+\begin{document}
+
+\fancypagestyle{plain}{%
+\fancyhf{} % Clear all header and footer fields
+\fancyhead[RO,RE]{\thepage} %RO=right odd, RE=right even
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+
+%----------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------
+
+\pagestyle{empty} % No page numbers
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the preamble pages
+
+\puttitle{
+    title= RASD Document,
+    name= {Mattia Piccinato, Gabriele Puglisi, Jacopo Piazzalunga},
+    academicyear= {2023-24}
+ }
+
+%----------------------------------------------------------------------------
+%	PREAMBLE PAGES: ABSTRACT (inglese e italiano), EXECUTIVE SUMMARY
+%----------------------------------------------------------------------------
+\startpreamble
+\setcounter{page}{1} % Set page counter to 1
+
+%----------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES/SYMBOLS
+%----------------------------------------------------------------------------
+
+% TABLE OF CONTENTS
+\thispagestyle{empty}
+\tableofcontents % Table of contents 
+\thispagestyle{empty}
+\cleardoublepage
+
+%-------------------------------------------------------------------------
+%	MAIN TEXT
+%-------------------------------------------------------------------------.
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+
+% FIRST CHAPTER
+% --------------------------------------------------------------------------
+\chapter{Introduction}
+
+\section{Purpose}
+
+The purpose of the project CodeKataBattle (CKB) is to develop a platform where Students can practice coding together. Educators set up challenges (called Battles) within Tournaments, and Students work in teams to solve them. The platform checks their code automatically, giving scores based on how well it works, how quickly they finish, and how good their code quality is. Educators may optionally give extra scores by checking the work themselves, in a so-called Consolidation Stage which starts right after the end of every Battle. Students get ranked in Tournaments based on their scores obtained in teams, and can earn Badges for some achievements, in order to make learning programming more fun and competitive.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Goals}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{G1}] Allows registered Students who enrolled according to the right modalities to participate in a Tournament of Code Kata Battles and take part in its Battles.
+    \item[\textcolor{bluepoli}{G2}] Allows registered Educators to manage Tournaments for which they have been granted permission.
+    \item[\textcolor{bluepoli}{G3}] Allows registered Students who participate in a Tournament of Code Kata Battles to be rewarded of different achievements.
+    \item[\textcolor{bluepoli}{G4}] Allows registered Users to visualize information for which they have granted permission.
+    \item[\textcolor{bluepoli}{G5}] Automates code evaluation process using GitHub Actions and some static analysis tools.
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Scope}
+
+The main features which should be provided in order to achieve the aim of the project are:
+
+\begin{itemize}
+\item \textcolor{bluepoli}{Creating Challenges:} Educators can make coding challenges (Battles) that Students can join, alone or in teams (groups), within the context of a Tournament.
+\item \textcolor{bluepoli}{Using GitHub Actions for Code Submsissions:} Students are supposed to submit their code for a Battle in their GitHub repository, and the system must be informed of a new commit by a participating Student making use of GitHub Actions.
+\item \textcolor{bluepoli}{Checking Code both Automatically and Manually:} The platform assigns a score to Students' code automatically, without the intervention of any Educator. Optionally, Educators may also decide to evaluate the code themselves.
+\item \textcolor{bluepoli}{Rankings:} During each Battle, a live ranking of the involved teams is available, enabling participating Students to track their performance. Additionally, live Tournament rankings show how well each Student is performing in the Battles within a given Tournament.
+\item \textcolor{bluepoli}{Badges for Achievements:} At the end of every Tournament, Students who achieved good results may be awarded with a special Badges, which are ruled by the Educator who created the Tournament.
+\end{itemize}
+
+The main goal is to help Students practice coding, giving them feedback and comparing their results to others.
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Definitions}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{itemize}
+\item \textcolor{bluepoli}{Battle:} A Code Kata, that is, a challenge in which teams of players need to solve a problem in a specific coding language and submit their code to get a score according to the rules of the Battle.
+\item \textcolor{bluepoli}{Tournament:} A competition composed of many Battles in which participants' overall score is the sum of all the scores obtained in every Battle they participated in, individually or in team with other players.
+\item \textcolor{bluepoli}{Student:} The User which takes part into the Tournaments of Battles.
+\item \textcolor{bluepoli}{Educator:} The User which organizes Tournaments of Battles to which the Students can participate and who manages every aspect about them.
+\item \textcolor{bluepoli}{Consolidation stage:} The Consolidation Stage is the phase of a Battle which starts as soon as the submission deadline expires, during which the Educators who manage the Tournament can eventually assign an additional score to every team, which will be summed to the score previously assigned by the platform.
+\item \textcolor{bluepoli}{Badge:} A Badge is an achievement marker related to a certain Tournament, obtained by Students if they satisfied the specific conditions defined by the Educator during the creation process of the Tournament.
+\end{itemize}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Acronyms}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{itemize}
+\item \textcolor{bluepoli}{CK:} Code Kata, that is, a Battle.
+\item \textcolor{bluepoli}{CKB:} Code Kata Battle, that is, the name of the platform.
+\end{itemize}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\subsection{Abbreviations}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{itemize}
+\item \textcolor{bluepoli}{WPn:} n-th World Phenomena
+\item \textcolor{bluepoli}{SPn:} n-th Shared Phenomena
+\item \textcolor{bluepoli}{Gn:} n-th Goal
+\item \textcolor{bluepoli}{Dn:} n-th Domain Assumption
+\item \textcolor{bluepoli}{Rn:} n-th Requirement
+\end{itemize}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Revision History}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Reference Documents}
+
+\begin{itemize}
+\item \textcolor{bluepoli}{Assignment document A.Y. 2023/2024}\\
+(”Requirement Engineering and Design Project: goal, schedule and rules”)
+\item \textcolor{bluepoli}{Software Engineering 2 A.Y. 2023/2024 Slides}\\
+(Lecture slides provided during the course)
+\end{itemize}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Document Structure}
+
+This document is composed of six sections:
+
+\begin{itemize}
+\item \textcolor{bluepoli}{1st Chapter:} We begin by presenting the problem statement and outlining the system's objectives. In the scope subsection, we offer insights into the various real-world and shared phenomena that the system addresses. Finally, we provide essential resources for readers, including definitions and abbreviations, to facilitate a comprehensive understanding of this document.
+\item \textcolor{bluepoli}{2nd Chapter:} We offer a panoramic view of the system's architecture, starting with a comprehensive overview that articulates the high-level components and their interconnections. Subsequently, it delves into the component view, the deployment view and the runtime view. Furthermore, it details component interfaces, elucidates chosen architectural styles and patterns, and encapsulates additional design decisions made during the system's architectural conception.
+\item \textcolor{bluepoli}{3rd Chapter:} We provide an overview of the user interface, as it was presented already in the RASD document.
+\item \textcolor{bluepoli}{4th Chapter:} We elucidate the correlation between the delineated requirements in the RASD document and the corresponding design elements articulated in this document, mapping how each requirement aligns with the design components.
+\item \textcolor{bluepoli}{5th Chapter:} We delineate the procedural steps and order of operations necessary to bring the design to fruition while ensuring functionality and coherence.
+\item \textcolor{bluepoli}{6th Chapter:} We provide an estimate of the effort spent by each group member.
+\item \textcolor{bluepoli}{7th Chapter:} We provide a list of the references used in this document.
+\end{itemize}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+% SECOND CHAPTER
+% --------------------------------------------------------------------------
+\chapter{Overall Description}
+
+\section{Overview: High-level Components and Interaction}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Component View}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Deployment View}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Runtime View}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Component Interfaces}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Selected Architectural Styles and Patterns}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Other Design Decisions}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+
+% THIRD CHAPTER
+% --------------------------------------------------------------------------
+\chapter{User Interface Design}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/MainPage_Student.png}\\
+\caption{Home Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/TournamentPage_Student.png}\\
+\caption{Tournament Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/BattlePage_Student.png}\\
+\caption{Battle Page (Student)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/Profile_Student.png}\\
+\caption{Profile Page (Student) }
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/MainPageEducator.png}\\
+\caption{Home Page (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/MainPageEducator-1.png}\\
+\caption{Badge definition for a tournament (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/TournamentPage_EducatorCreator.png}\\
+\caption{Tournament Page where the educator is the creator of the tournament (Educator)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.25]{DD_latex/Images/UI/BattlePage_EducatorCreator.png}\\
+\caption{Battle Page where the educator is the creator of the tournament (Educator)}
+\end{figure}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+% FOURTH CHAPTER
+% --------------------------------------------------------------------------
+\chapter{Requirements Traceability}
+
+% FIFTH CHAPTER
+% --------------------------------------------------------------------------
+\chapter{Implemenation, Integration and Testing Plan}
+
+\section{Development Process and Approach}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Implementation Plan}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Integration Plan}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{System Testing}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+% SIXTH CHAPTER
+% --------------------------------------------------------------------------
+\chapter{Effort Spent}
+
+\section{Effort Spent per Unit}
+
+This section shows the amount of time that each member has spent to produce the document. Please notice that each unit is the result of coordinated work among all the members.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{| X | X | X |}
+\hline
+\textbf{UNIT} & \textbf{MEMBERS} & \textbf{HOURS} \\ [1ex]
+\hline
+SetUp & Piccinato & 1h \\ [1ex]
+\hline
+\end{tabularx}
+\end{table}
+
+% SEVENTH CHAPTER
+% --------------------------------------------------------------------------
+\chapter{References}
+
+\section{References and Tools}
+
+\begin{enumerate}
+    \item GitHub: https://www.github.com
+    \item GitHub Actions: https://github.com/features/actions
+    \item The UI Mockups have been made with: https://www.figma.com
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\end{document}
