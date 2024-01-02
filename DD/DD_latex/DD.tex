@@ -274,11 +274,31 @@ This document is composed of six sections:
 % --------------------------------------------------------------------------
 \chapter{Overall Description}
 
+The purpose of this section was to present and analyze the architecture of the S2B system in a top- down manner. We first introduced the overall architecture and then provided a diagram of the system’s components, focusing on the ckbSP subcomponent. Next, we used an ER diagram to describe the system’s logical data and presented the system’s deployment view, including the layers and tiers involved. We also used sequence diagrams to depict important runtime views and class diagrams to analyze the component interfaces. Finally, we discussed the architectural design choices and the reasons behind them.
+
 \section{Overview: High-level Components and Interaction}
+
+The figure shown below represents a high-level description of the components which make up the System. In this document the presentation layer and the Client (e.g. the Browser) will be referred to as the Frontend, while the Application Layer and the Data Layer will be referred to as the Backend.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.5]{DD_latex/Images/diagrams/overview.png}\\
+\end{figure}
+
+
+A web interface will be used to access the service. A single page application (SPA) will be developed for educators and students to use the system. An SPA is a good choice for this type of application because it allows for a lot of interaction without the need for frequent page reloads, which can provide a faster and more seamless user experience. The overall architecture of the system is divided into different layers, with the application servers interacting with a database management system and using APIs to retrieve and store data. The application servers are designed to be stateless according to REST standards, and the system includes firewalls to enhance security.
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Component View}
+
+In this section we show the components of the S2B and their relationships. The following sections will explain the interaction between interfaces and details on each method of interfaces with REST endpoints, if any.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.6]{DD_latex/Images/diagrams/Component_view.png}\\
+\caption{Component Diagram of the CodeKataBattle System}
+\end{figure}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
