@@ -305,6 +305,25 @@ In this section we show the components of the S2B and their relationships. The f
 
 This component is responsible for communication with a Database Management System (DBMS). It follows the Adapter design pattern, allowing other components to interact with the DBMS without needing to write any SQL code themselves.
 
+\subsection{ckbSP}
+
+The ckbSP subsystem implements CKB's logic. It provides all the system's features, interacting with the other components.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.6]{DD_latex/Images/diagrams/ComponentViewCKBSP.png}\\
+\caption{Component Diagram of the ckbSP subsystem}
+\end{figure}
+
+\begin{enumerate}
+    \item[\textcolor{bluepoli}{Account Manager}] This component handles the operations needed to manage each User's account, and to view the Students' profiles.
+    \item[\textcolor{bluepoli}{Battle Manager}] This component handles the operations needed to manage a Battle, to view any information about it and to subscribe.
+    \item[\textcolor{bluepoli}{Tournament Manager}] This component handles the operations needed to manage a Tournament, to view any information about it and to subscribe.
+    \item[\textcolor{bluepoli}{Autentication Manager}] This component handles signup, login and logout operations.
+    \item[\textcolor{bluepoli}{Evaluator}] This component is responsible for automatically computing the score of Students' code when a commit is performed. 
+    \item[\textcolor{bluepoli}{Notification Manager}] This component is responsible for the notification dispatch.
+\end{enumerate}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Deployment View}
