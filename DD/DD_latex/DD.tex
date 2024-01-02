@@ -301,6 +301,10 @@ In this section we show the components of the S2B and their relationships. The f
 \caption{Component Diagram of the CodeKataBattle System}
 \end{figure}
 
+\subsection{Query Manager}
+
+This component is responsible for communication with a Database Management System (DBMS). It follows the Adapter design pattern, allowing other components to interact with the DBMS without needing to write any SQL code themselves.
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Deployment View}
