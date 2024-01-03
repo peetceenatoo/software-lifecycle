@@ -324,6 +324,24 @@ The ckbSP subsystem implements CKB's logic. It provides all the system's feature
     \item \textcolor{bluepoli}{Notification Manager} This component is responsible for the notification dispatch.
 \end{enumerate}
 
+\subsection{Logical Description of Data}
+
+In this section the ER diagram of CKB's data is shown. An ER diagram is a graphical representation of the structure of a database, showing the relationships between entities and their attributes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.3]{DD_latex/Images/diagrams/ER_Diagram.png}\\
+\caption{ER Diagram of the ckbSP subsystem}
+\end{figure}
+
+Additional constraints and triggers must be established in the database management system to ensure data coherence and consistency.
+
+When a battle deadline is reached and its status changes, a trigger should be implemented. This trigger will verify that each group meets the minimum required number of Students. Groups failing to meet this requirement will be automatically unsubscribed from the Battle.
+
+Furthermore, constraints are necessary to maintain role-specific restrictions. Educators must not be included in Battle subscriptions and invitations, and students should not be allowed to manage Tournaments.
+
+Another important constraint is to prevent Users from being enrolled in the same Battle under different groups. This combination of triggers and constraints is crucial for upholding data integrity and consistency in the system.
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Deployment View}
