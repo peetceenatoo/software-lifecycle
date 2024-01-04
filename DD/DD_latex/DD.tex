@@ -377,6 +377,24 @@ The web server resides in the DMZ and functions as the primary interface for use
 
 \section{Selected Architectural Styles and Patterns}
 
+\begin{enumerate}
+    \item \textcolor{bluepoli}{Three-Tier} The 3-tier architecture divides the system into three logical layers: presentation (Web Server), business logic (Application Server), and data storage (Database). Each tier has specific functions, ensuring separation of concerns and efficient management of the system. It allows scalability, simplifies maintenance and enhancing control and security. 
+    \item \textcolor{bluepoli}{RESTful APIs} RESTful APIs (Representational State Transfer) follow a design paradigm based on specific principles for creating web services. They use standard HTTP methods (GET, POST, PUT, DELETE) and are stateless, allowing easy data exchange between systems. It provides seamless integration with various platforms and systems, it is simple to implement and reduces server load.
+    \item \textcolor{bluepoli}{On-Cloud} The system is hosted on cloud infrastructure, leveraging services provided by any cloud provider. This offers on-demand scalability, cost efficiency and ensures high availability.
+\end{enumerate}
+
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
+
+\section{Other Design Decisions}
+
+\subsection{Scale-out} 
+
+The decision to implement a scale out design in the software was taken to enhance its ability to scale, its availability, and its performance. This design approach enables the system to expand its capacity to cope with increased demand by adding more resources, such as servers or machines, as needed. This can be more cost-effective than upgrading individual components and avoids the need for downtime. The scale out design also improves the system’s reliability by providing redundant resources that can take over if
+any component fails. In addition, the design allows for flexibility, as resources can be added or removed as required. Lastly, the scale out design improves the system’s performance by allowing workloads to be processed in parallel rather than sequentially.
+
+\subsection{Relational Database}
+
+We selected a relational database for our system design because it is effective at storing structured data, enforcing data integrity, and providing fast query performance. It can also scale to handle large amounts of data and support many concurrent users. The database allows us to store and retrieve information efficiently, while also ensuring that the data is accurate and consistent.
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Other Design Decisions}
