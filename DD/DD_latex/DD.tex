@@ -462,6 +462,345 @@ We selected a relational database for our system design because it is effective 
 % --------------------------------------------------------------------------
 \chapter{Requirements Traceability}
 
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R1}\\
+\toprule
+\textbf{R1} & \textbf{The system must allow an unregistered Educator to sign up.}\\ [1ex]
+\hline
+C1 & Account Manager\\ [1ex]
+\hline
+C4 & Authentication Manager\\ [1ex]
+\hline
+C6 & Notification Manager\\ [1ex]
+\hline
+C7 & Query Manager\\ [1ex]
+\hline
+E4 & Email Service Provider\\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R2}\\
+\toprule
+\textbf{R2} & \textbf{The system must allow an unregistered Student to sign up.}\\ [1ex]
+\hline
+C1 & Account Manager\\ [1ex]
+\hline
+C4 & Authentication Manager\\ [1ex]
+\hline
+C6 & Notification Manager\\ [1ex]
+\hline
+C7 & Query Manager\\ [1ex]
+\hline
+E4 & Email Service Provider\\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R3}\\
+\toprule
+\textbf{R3} & \textbf{The system must allow a registered User to log in.}\\ [1ex]
+\hline
+C1 & Account Manager\\ [1ex]
+\hline
+C4 & Authentication Manager\\ [1ex]
+\hline
+C7 & Query Manager\\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R4}\\
+\toprule
+\textbf{R4} & \textbf{The system must allow registered Educators to start the creation process of a Tournament of Code Kata Battles.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R5}\\
+\toprule
+\textbf{R5} & \textbf{The system must provide registered Educators of a list of Tournament-related statistics for the Badges definition, during the Tournament creation process.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R6}\\
+\toprule
+\textbf{R6} & \textbf{The system must provide registered Educators of a specific language which lets them define the Badges, during the Tournament creation process.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R7}\\
+\toprule
+\textbf{R7} & \textbf{The system must allow registered Educators to grant other registered Educators the permission to manage the Tournament, during the Tournament creation process.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R8}\\
+\toprule
+\textbf{R8} & \textbf{The system must allow registered Educators to end the creation process of a Tournament that they started themselves.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R9}\\
+\toprule
+\textbf{R9} & \textbf{The system must be able to send notifications to every registered User.}\\ [1ex]
+\hline
+C6 & Notification Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E5 & Notification Service \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R10}\\
+\toprule
+\textbf{R10} & \textbf{The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.}\\ [1ex]
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R11}\\
+\toprule
+\textbf{R11} & \textbf{The system must allow a registered Student to create a group for a Battle in a Tournament.}\\ [1ex]
+C2 & Battle Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R12}\\
+\toprule
+\textbf{R12} & \textbf{The system must allow a registered Student to accept an invitation to a group for a Battle in a Tournament.}\\ [1ex]
+C2 & Battle Manager \\ [1ex]
+\hline
+C6 & Notification Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E5 & Notification Service \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R13}\\
+\toprule
+\textbf{R13} & \textbf{The system must allow registered Students to see the list of ongoing Tournaments and join any of those if its subscription deadline is not expired yet.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R14}\\
+\toprule
+\textbf{R14} & \textbf{The system must allow registered Students who are enrolled in a Battle to perform code submissions.}\\ [1ex]
+\hline
+C5 & Evaluator \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E1 & GitHub API \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R15}\\
+\toprule
+\textbf{R15} & \textbf{The system must be provided of proper APIs to let registered Students perform code submissions through GitHub Actions.}\\ [1ex]
+\hline
+C2 & Battle Manager \\ [1ex]
+\hline
+C5 & Evaluator \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E1 & GitHub API \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R16}\\
+\toprule
+\textbf{R16} & \textbf{The system must update the Battle ranking when a valid code submission is performed.}\\ [1ex]
+\hline
+C2 & Battle Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R17}\\
+\toprule
+\textbf{R17} & \textbf{The system must set the consolidation stage of a Battle when its submission deadline expires.}\\ [1ex]
+\hline
+C2 & Battle Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R18}\\
+\toprule
+\textbf{R18} & \textbf{The system must let Educators to end the consolidation stage of a Battle if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.}\\ [1ex]
+\hline
+C2 & Battle Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R19}\\
+\toprule
+\textbf{R19} & \textbf{The system must update Tournament ranking when a Battle exits the consolidation stage.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R20}\\
+\toprule
+\textbf{R20} & \textbf{The system must let Educators who are either the creator of the Tournament or who have been granted the permission to by the latter to close a Tournament if and only if there is no Battle such that either their subscription or submission deadline is not expired yet or such that they are still in the consolidation stage.}\\ [1ex]
+\hline
+C3 & Tournament Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R21}\\
+\toprule
+\textbf{R21} & \textbf{The system must assign an achievements’ Badge for a given Tournament to any student who satisfied the conditions defined by the creator of the Tournament.}\\ [1ex]
+\hline
+C1 & Account Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R22}\\
+\toprule
+\textbf{R22} & \textbf{The system must allow every User to see the Badges which were ever obtained by a given Student.}\\ [1ex]
+\hline
+C2 & Account Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R23}\\
+\toprule
+\textbf{R23} & \textbf{The system must notify every registered Student about the creation of a new Tournament.}\\ [1ex]
+\hline
+C6 & Notification Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E5 & Notification Service \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R24}\\
+\toprule
+\textbf{R24} & \textbf{The system must notify every registered Student about the creation of a new Battle within a Tournament they are enrolled in.}\\ [1ex]
+\hline
+C6 & Notification Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E5 & Notification Service \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R25}\\
+\toprule
+\textbf{R25} & \textbf{The system must notify every registered Student about the end of a Battle they are participating in.}\\ [1ex]
+\hline
+C1 & \\ [1ex]
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{| l | X |}
+\toprule
+\multicolumn{2}{|c|}{R26}\\
+\toprule
+\textbf{R26} & \textbf{The system must notify every registered Student about the end of a Tournament they are enrolled in.}\\ [1ex]
+\hline
+C6 & Notification Manager \\ [1ex]
+\hline
+C7 & Query Manager \\ [1ex]
+\hline
+E5 & Notification Service \\ [1ex]
+\hline
+\end{xltabular}
+
 % FIFTH CHAPTER
 % --------------------------------------------------------------------------
 \chapter{Implemenation, Integration and Testing Plan}
