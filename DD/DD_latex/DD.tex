@@ -347,6 +347,24 @@ Another important constraint is to prevent Users from being enrolled in the same
 
 \section{Deployment View}
 
+The system adopts a robust 3-tier architecture hosted on cloud infrastructure, meticulously designed to optimize performance, scalability, and security.
+
+The entire architecture is hosted on a cloud provider. This offers several advantages compared to traditional in-house hosting, such as:
+\begin{enumerate}
+\item Scalability and Flexibility - the ability to add or remove resources such as virtual machines, performance cores, or memory as needed, and the use of load balancing services, allows the servers to adapt to changes in traffic or workload.
+\item Security - services like live monitoring and firewalls help to protect the application server against data breaches and other security threats.
+\item Cost-efficiency - the pay-as-you-go model of a cloud provider allows to only pay for the resources that are actually used, which can help to lower the overall costs.
+\end{enumerate}
+These features make a cloud provider an ideal choice for hosting large, high-traffic applications. The chosen cloud provider will need to offer all of these features in order to meet our needs.
+
+The web server resides in the DMZ and functions as the primary interface for user interaction, managing HTTP requests and delivering web pages. The application server executes the core application logic, processing user requests and handling business operations. Load balancers are implemented to evenly distribute incoming traffic across multiple instances of Web and Application Servers.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.4]{DD_latex/Images/diagrams/Deployment_view.png}\\
+\caption{Component Diagram of the ckbSP subsystem}
+\end{figure}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Runtime View}
