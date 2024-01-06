@@ -805,23 +805,89 @@ E5 & Notification Service \\ [1ex]
 \hline
 \end{xltabular}
 
+\newpage
+
 % FIFTH CHAPTER
 % --------------------------------------------------------------------------
 \chapter{Implemenation, Integration and Testing Plan}
 
 \section{Development Process and Approach}
 
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
-
-\section{Implementation Plan}
+The system will be implemented, integrated, and tested using a bottom-up approach, taking into account the dependencies between components of the system. This strategy will be used for both the server and client sides, which will be developed and tested at the same time. Incremental integration testing will be applied to try to find and fix bugs as soon as possible during the development cycle. Since Entity Manager and external services are assumed to be reliable, they don't need unit testing.
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-\section{Integration Plan}
+\section{Implementation \& Integeration Plan}
+
+This section will describe the implementation and integration plan of both sides of our system.
+
+\subsection{Server Side}
+
+In the first step, the Model is implemented and unit tested. The model, which makes use of the EntityManager, is responsible for all the interactions with the database.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.65]{DD_latex/Images/diagrams/ImplementationPlan_SS_First.png}\\
+\caption{Implementation and testing of the Model}
+\end{figure}
+
+In the second step, the controllers are implemented and unit tested using Drivers and Stubs for not yet implemented or external modules. Integration tests with the Model are done as well.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.65]{DD_latex/Images/diagrams/ImplementationPlan_SS_Second.png}\\
+\caption{Implementation and testing of the controllers}
+\end{figure}
+
+In the third step, the Evaluator is implemented and unit tested using Drivers and Stubs for not yet implemented or external modules. Integration tests between the controllers are done at this stage.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.55]{DD_latex/Images/diagrams/ImplementationPlan_SS_Third.png}\\
+\caption{Implementation and testing of the Evaluator}
+\end{figure}
+
+Once all the components have been implemented and unit tested, full integration tests with Drivers and Stubs for external services are done. As the last step, integration tests with the real services take place.
+
+\subsection{Client Side}
+
+Each component of the View is rigorously unit tested using a stub of the REST API, enabling parallel development of the frontend and backend.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.55]{DD_latex/Images/diagrams/ImplementationPlan_CS.png}\\
+\caption{View testing using API Stub}
+\end{figure}
+
+\subsection{Final Integration Test}
+
+Once the backend and the frontend have been implemented, final tests can take place.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.55]{DD_latex/Images/diagrams/ImplementationPlan_Full.png}\\
+\caption{View testing using CKB Backend}
+\end{figure}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
+\newpage
+\section{Technologies}
 
-\section{System Testing}
+\subsection{Development Technologies}
+
+\begin{itemize}
+    \item \textcolor{bluepoli}{Server Side Components}: Server-side components will be developed using Java, utilizing the widely-used Spring framework. This framework facilitates the efficient and straightforward development of REST web applications through JakartaEE and TomEE APIs. Our decision to choose this framework is primarily influenced by the extensive range of robust and well-documented Spring libraries available. These libraries provide developers with the tools needed to effortlessly implement state-of-the-art paradigms.
+    \item \textcolor{bluepoli}{Client Side Components}: The front end of the web app will be developed using JavaScript and the React framework. This approach allows us to build encapsulated components and later compose them to create complex user interfaces. Each component can be developed and maintained independently, thus enhancing the reusability, testability, and separation of the application's codebase. This modular structure makes it easier to manage and scale applications while also facilitating collaboration among team members, as different components of the application can be worked on simultaneously without significant overlap.
+    \item \textcolor{bluepoli}{Database}: In order to efficiently and easily access, persist, and manage data mapping between Java objects and a relational database, without the need for manually writing SQL code, we have decided to utilize the Java Persistence API (JPA). Any relational DBMS supporting those APIs, such as MySQL or PostgreSQL, can be used.
+    \item \textcolor{bluepoli}{Token-based Authentication and Authorization}: The authentication and authorization will be implemented using the JSON Web Token (JWT) standard. These tokens are sent to the users each time they log in and must be included with each request that requires authentication or authorization. In a JWT, the token itself contains all the relevant information about the user, digitally signed using a secret, which makes it trustworthy and stateless. The server's memory doesn't need to store session information about each user, as all necessary data is contained in the token. This is particularly useful for scalability, as it reduces the load on the server and is ideal for distributed systems. To keep the system secure, tokens should be carefully transmitted using secure protocols such as HTTPS and stored carefully locally.
+\end{itemize}
+
+\subsection{Testing Technologies}
+\begin{itemize}
+    \item \textcolor{bluepoli}{JUnit}: JUnit provides a modern foundation for developer-side testing on the JVM. It will be used for unit and integration testing of server side classes.
+    \item \textcolor{bluepoli}{Jest}: Jest is a JavaScript Testing Framework with a focus on simplicity. It will be used for unit and integration testing of client side codebase.
+    \item \textcolor{bluepoli}{Postman}: Postman is an API platform for building and using APIs. It will be used to efficiently test the REST API endpoints while the front-end is still under development.
+\end{itemize}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
