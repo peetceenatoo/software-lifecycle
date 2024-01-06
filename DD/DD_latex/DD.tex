@@ -373,6 +373,162 @@ The web server resides in the DMZ and functions as the primary interface for use
 
 \section{Component Interfaces}
 
+\subsection{APIs}
+
+\subsubsection{POST api/user/login}
+\begin{description}
+    \item[Request Body:] User: Object
+    \item[200 Response:] UserObject + token
+    \item[400 Response:] String (“eMail not valid, “Password must contain at least 8 characters (at least one uppercase), at least 1 special symbol and at least 1 number”)
+    \item[401 Response:] error: String (“Email or Password are wrong”)
+    \item[410 Response:] error: String (“User not verified. Register a new account.”)
+\end{description}
+
+\subsubsection{GET api/tournaments/ongoing}
+\begin{description}
+    \item[200 Response:] ongoingTournaments: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/created}
+\begin{description}
+    \item[200 Response:] createdTournaments: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/enrolled}
+\begin{description}
+    \item[200 Response:] enrolledTournaments: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}}
+\begin{description}
+    \item[200 Response:] tournament: Object
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles}
+\begin{description}
+    \item[200 Response:] battles: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/ongoing}
+\begin{description}
+    \item[200 Response:] ongoingBattles: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/enrolled}
+\begin{description}
+    \item[200 Response:] enrolledBattles: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/ended}
+\begin{description}
+    \item[200 Response:] endedBattles: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/consolidationStage}
+\begin{description}
+    \item[200 Response:] consolidationStageBattles: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/ranking}
+\begin{description}
+    \item[200 Response:] ranking: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}}
+\begin{description}
+    \item[200 Response:] submissions: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}/submissions}
+\begin{description}
+    \item[200 Response:] Battle: Object
+    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}/ranking}
+\begin{description}
+    \item[200 Response:] ranking: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{POST api/tournaments/\{tournamentId\}/battles/\{battleId\}/commit/}
+\begin{description}
+    \item[Request Body:] commit Object
+    \item[400 Response:] error: String(“Missing values”, “Values not valid”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{POST api/tournaments/create}
+\begin{description}
+    \item[Request Body:] educatorId: int, tournamentName: String, registrationDeadline: Date, badges: Array of Objects, educatorsInvited: Array of Strings
+    \item[200 Response:] message: String "Tournament created successfully."
+    \item[400 Response:] error: String("Missing values", "Values not valid")
+\end{description}
+
+\subsubsection{POST api/tournaments/\{tournamentId\}/create-battle}
+\begin{description}
+    \item[Request Body:] educatorId: int, BattleName: String, registrationDeadline: Date, endBattleDeadline: Date, minGroupSize: int, maxGroupSize: int, codingLanguage: String, codeKata: Object
+    \item[200 Response:] message: String "Battle created successfully."
+    \item[400 Response:] error: String("Missing values", "Values not valid")
+\end{description}
+
+\subsubsection{GET api/tournaments/enrolled/search}
+\begin{description}
+    \item[Request Parameters:] nameTournament: String
+    \item[200 Response:] enrolledTournaments: Array of Objects
+\end{description}
+
+\subsubsection{GET api/tournaments/ongoing/search}
+\begin{description}
+    \item[Request Parameters:] nameTournament: String
+    \item[200 Response:] ongoingTournaments: Array of Objects
+\end{description}
+
+\subsubsection{GET api/profile/search}
+\begin{description}
+    \item[Request Parameters:] usernameProfile: String
+\end{description}
+
+\subsubsection{PUT api/profile/personal-data}
+\begin{description}
+    \item[Request Body:] User: Object
+    \item[200 Response:] message: "Data updated successfully"
+    \item[400 Response:] error: String("Missing values", "Values not valid")
+\end{description}
+
+\subsubsection{GET api/profile/\{profileId\}}
+\begin{description}
+    \item[200 Response:] profile: object
+    \item[400 Response:] error: String (“Invalid or missing profileId”)
+\end{description}
+
+\subsubsection{GET api/profile/\{profileId\}/badges}
+\begin{description}
+    \item[200 Response:] badges: array of objects
+    \item[400 Response:] error: String (“Invalid or missing profileId”)
+\end{description}
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 \section{Selected Architectural Styles and Patterns}
