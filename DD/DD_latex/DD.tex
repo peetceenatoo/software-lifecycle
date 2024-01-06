@@ -400,6 +400,10 @@ We selected a relational database for our system design because it is effective 
 
 The authentication and authorization will be implemented using a token-based process. These tokens are sent to the user each time they log in and must be included with each request that requires authentication or authorization.
 
+\subsection{Distributed MVC Pattern}
+
+Our decision to implement the Distributed MVC pattern was driven by the need for a modular and maintainable software architecture. This pattern divides the application into three core components: Model, View, and Controller. The Model manages the data and business logic, the View presents this data to users, and the Controller acts as an intermediary, processing user input and system responses. This division enhances the clarity and organization of our codebase, allowing for simultaneous development of distinct parts of the system. The distributed aspect of this pattern particularly aids in handling complex, scalable applications by facilitating efficient data processing and user interface management across different systems or networks.
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % THIRD CHAPTER
