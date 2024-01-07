@@ -453,15 +453,15 @@ The web server resides in the DMZ and functions as the primary interface for use
 
 \subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}}
 \begin{description}
-    \item[200 Response:] submissions: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[200 Response:] Battle: Object
+    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
 \subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}/submissions}
 \begin{description}
-    \item[200 Response:] Battle: Object
-    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
+    \item[200 Response:] submissions: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
