@@ -287,7 +287,6 @@ The figure shown below represents a high-level description of the components whi
 \includegraphics[scale = 0.5]{Images/diagrams/overview.png}\\
 \end{figure}
 
-
 A web interface will be used to access the service. A single page application (SPA) will be developed for educators and students to use the system. An SPA is a good choice for this type of application because it allows for a lot of interaction without the need for frequent page reloads, which can provide a faster and more seamless user experience. The overall architecture of the system is divided into different layers, with the application servers interacting with a database management system and using APIs to retrieve and store data. The application servers are designed to be stateless according to REST standards, and the system includes firewalls to enhance security.
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
@@ -302,7 +301,7 @@ In this section we show the components of the S2B and their relationships. The f
 \caption{Component Diagram of the CodeKataBattle System}
 \end{figure}
 
-\subsection{Query Manager}
+\subsection{Entity Manager}
 
 This component is responsible for communication with a Database Management System (DBMS). It follows the Adapter design pattern, allowing other components to interact with the DBMS without needing to write any SQL code themselves.
 
@@ -312,17 +311,18 @@ The ckbSP subsystem implements CKB's logic. It provides all the system's feature
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.6]{Images/diagrams/ComponentViewCKBSP.png}\\
+\includegraphics[scale = 0.3]{Images/diagrams/ComponentViewCKBSP.png}\\
 \caption{Component Diagram of the ckbSP subsystem}
 \end{figure}
 
 \begin{enumerate}
-  \item \textcolor{bluepoli}{Account Manager} This component handles the operations needed to manage each User's account, and to view the Students' profiles. It allows Users to login, using the Authentication Manager's interface.
+    \item \textcolor{bluepoli}{Account Manager} This component handles the operations needed to manage each User's account, and to view the Students' profiles. It allows Users to login, using the Authentication Manager's interface.
     \item \textcolor{bluepoli}{Battle Manager} This component handles the operations needed to manage a Battle, to view any information about it and to subscribe.
     \item \textcolor{bluepoli}{Tournament Manager} This component handles the operations needed to manage a Tournament, to view any information about it and to subscribe.
     \item \textcolor{bluepoli}{Authentication Manager} This component handles signup, login and logout operations.
     \item \textcolor{bluepoli}{Evaluator} This component is responsible for automatically computing the score of Students' code when a commit is performed. 
     \item \textcolor{bluepoli}{Notification Manager} This component is responsible for the notification dispatch.
+    \item \textcolor{bluepoli}{Model} This component facilitates the interaction with and representation of CKBsp data.
 \end{enumerate}
 
 \subsection{Logical Description of Data}
@@ -351,9 +351,9 @@ The system adopts a robust 3-tier architecture hosted on cloud infrastructure, m
 
 The entire architecture is hosted on a cloud provider. This offers several advantages compared to traditional in-house hosting, such as:
 \begin{enumerate}
-\item Scalability and Flexibility - the ability to add or remove resources such as virtual machines, performance cores, or memory as needed, and the use of load balancing services, allows the servers to adapt to changes in traffic or workload.
-\item Security - services like live monitoring and firewalls help to protect the application server against data breaches and other security threats.
-\item Cost-efficiency - the pay-as-you-go model of a cloud provider allows to only pay for the resources that are actually used, which can help to lower the overall costs.
+    \item Scalability and Flexibility - the ability to add or remove resources such as virtual machines, performance cores, or memory as needed, and the use of load balancing services, allows the servers to adapt to changes in traffic or workload.
+    \item Security - services like live monitoring and firewalls help to protect the application server against data breaches and other security threats.
+    \item Cost-efficiency - the pay-as-you-go model of a cloud provider allows to only pay for the resources that are actually used, which can help to lower the overall costs.
 \end{enumerate}
 These features make a cloud provider an ideal choice for hosting large, high-traffic applications. The chosen cloud provider will need to offer all of these features in order to meet our needs.
 
@@ -621,7 +621,6 @@ The diagram represented down below shows the process of a User update their own 
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-
 \section{Component Interfaces}
 
 \begin{figure}[H]
@@ -815,163 +814,6 @@ The diagram represented down below shows the process of a User update their own 
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
-
-\subsubsection{POST api/user/login}
-\begin{description}
-    \item[Request Body:] User: Object
-    \item[200 Response:] UserObject + token
-    \item[400 Response:] String (“eMail not valid, “Password must contain at least 8 characters (at least one uppercase), at least 1 special symbol and at least 1 number”)
-    \item[401 Response:] error: String (“Email or Password are wrong”)
-    \item[410 Response:] error: String (“User not verified. Register a new account.”)
-\end{description}
-
-\subsubsection{GET api/tournaments/ongoing}
-\begin{description}
-    \item[200 Response:] ongoingTournaments: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/created}
-\begin{description}
-    \item[200 Response:] createdTournaments: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/enrolled}
-\begin{description}
-    \item[200 Response:] enrolledTournaments: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}}
-\begin{description}
-    \item[200 Response:] tournament: Object
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles}
-\begin{description}
-    \item[200 Response:] battles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/ongoing}
-\begin{description}
-    \item[200 Response:] ongoingBattles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/enrolled}
-\begin{description}
-    \item[200 Response:] enrolledBattles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/ended}
-\begin{description}
-    \item[200 Response:] endedBattles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/consolidationStage}
-\begin{description}
-    \item[200 Response:] consolidationStageBattles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/ranking}
-\begin{description}
-    \item[200 Response:] ranking: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}}
-\begin{description}
-    \item[200 Response:] Battle: Object
-    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}/submissions}
-\begin{description}
-    \item[200 Response:] submissions: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/\{battleId\}/ranking}
-\begin{description}
-    \item[200 Response:] ranking: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId or BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{POST api/tournaments/\{tournamentId\}/battles/\{battleId\}/commit/}
-\begin{description}
-    \item[Request Body:] commit Object
-    \item[400 Response:] error: String(“Missing values”, “Values not valid”)
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
-\subsubsection{POST api/tournaments/create}
-\begin{description}
-    \item[Request Body:] educatorId: int, tournamentName: String, registrationDeadline: Date, badges: Array of Objects, educatorsInvited: Array of Strings
-    \item[200 Response:] message: String "Tournament created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{POST api/tournaments/\{tournamentId\}/create-battle}
-\begin{description}
-    \item[Request Body:] educatorId: int, BattleName: String, registrationDeadline: Date, endBattleDeadline: Date, minGroupSize: int, maxGroupSize: int, codingLanguage: String, codeKata: Object
-    \item[200 Response:] message: String "Battle created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{GET api/tournaments/enrolled/search}
-\begin{description}
-    \item[Request Parameters:] nameTournament: String
-    \item[200 Response:] enrolledTournaments: Array of Objects
-\end{description}
-
-\subsubsection{GET api/tournaments/ongoing/search}
-\begin{description}
-    \item[Request Parameters:] nameTournament: String
-    \item[200 Response:] ongoingTournaments: Array of Objects
-\end{description}
-
-\subsubsection{GET api/profile/search}
-\begin{description}
-    \item[Request Parameters:] usernameProfile: String
-\end{description}
-
-\subsubsection{PUT api/profile/personal-data}
-\begin{description}
-    \item[Request Body:] User: Object
-    \item[200 Response:] message: "Data updated successfully"
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{GET api/profile/\{profileId\}}
-\begin{description}
-    \item[200 Response:] profile: object
-    \item[400 Response:] error: String (“Invalid or missing profileId”)
-\end{description}
-
-\subsubsection{GET api/profile/\{profileId\}/badges}
-\begin{description}
-    \item[200 Response:] badges: array of objects
-    \item[400 Response:] error: String (“Invalid or missing profileId”)
-\end{description}
-
-{\color{bluepoli}\rule{\linewidth}{0.1pt}}
-
 \section{Selected Architectural Styles and Patterns}
 
 \begin{enumerate}
@@ -1075,7 +917,9 @@ C4 & Authentication Manager\\ [1ex]
 \hline
 C6 & Notification Manager\\ [1ex]
 \hline
-C7 & Query Manager\\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E4 & Email Service Provider\\ [1ex]
 \hline
@@ -1093,7 +937,9 @@ C4 & Authentication Manager\\ [1ex]
 \hline
 C6 & Notification Manager\\ [1ex]
 \hline
-C7 & Query Manager\\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E4 & Email Service Provider\\ [1ex]
 \hline
@@ -1109,7 +955,9 @@ C1 & Account Manager\\ [1ex]
 \hline
 C4 & Authentication Manager\\ [1ex]
 \hline
-C7 & Query Manager\\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1121,7 +969,9 @@ C7 & Query Manager\\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1133,7 +983,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1145,7 +997,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1157,7 +1011,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1169,7 +1025,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1181,7 +1039,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C6 & Notification Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E5 & Notification Service \\ [1ex]
 \hline
@@ -1194,7 +1054,9 @@ E5 & Notification Service \\ [1ex]
 \textbf{R10} & \textbf{The system must allow a registered Educator to create a Battle in a Tournament if and only if he is the creator of the Tournament or if he was granted the permission to by the latter.}\\ [1ex]
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1205,7 +1067,9 @@ C7 & Query Manager \\ [1ex]
 \textbf{R11} & \textbf{The system must allow a registered Student to create a group for a Battle in a Tournament.}\\ [1ex]
 C2 & Battle Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1218,7 +1082,9 @@ C2 & Battle Manager \\ [1ex]
 \hline
 C6 & Notification Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E5 & Notification Service \\ [1ex]
 \hline
@@ -1232,7 +1098,9 @@ E5 & Notification Service \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1244,7 +1112,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C5 & Evaluator \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E1 & GitHub API \\ [1ex]
 \hline
@@ -1260,7 +1130,9 @@ C2 & Battle Manager \\ [1ex]
 \hline
 C5 & Evaluator \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E1 & GitHub API \\ [1ex]
 \hline
@@ -1274,7 +1146,9 @@ E1 & GitHub API \\ [1ex]
 \hline
 C2 & Battle Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1286,7 +1160,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C2 & Battle Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1298,7 +1174,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C2 & Battle Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1310,7 +1188,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1322,7 +1202,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C3 & Tournament Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1334,7 +1216,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C1 & Account Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1346,7 +1230,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C2 & Account Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 \end{xltabular}
 
@@ -1358,7 +1244,9 @@ C7 & Query Manager \\ [1ex]
 \hline
 C6 & Notification Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E5 & Notification Service \\ [1ex]
 \hline
@@ -1372,7 +1260,9 @@ E5 & Notification Service \\ [1ex]
 \hline
 C6 & Notification Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E5 & Notification Service \\ [1ex]
 \hline
@@ -1396,13 +1286,13 @@ C1 & \\ [1ex]
 \hline
 C6 & Notification Manager \\ [1ex]
 \hline
-C7 & Query Manager \\ [1ex]
+C7 & Model \\ [1ex]
+\hline
+C8 & Entity Manager \\ [1ex]
 \hline
 E5 & Notification Service \\ [1ex]
 \hline
 \end{xltabular}
-
-\newpage
 
 % FIFTH CHAPTER
 % --------------------------------------------------------------------------
@@ -1467,7 +1357,7 @@ Once the backend and the frontend have been implemented, final tests can take pl
 \end{figure}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
-\newpage
+
 \section{Technologies}
 
 \subsection{Development Technologies}
@@ -1490,7 +1380,6 @@ Once the backend and the frontend have been implemented, final tests can take pl
 
 % SIXTH CHAPTER
 % --------------------------------------------------------------------------
-
 \chapter{Effort Spent}
 
 \section{Effort Spent per Unit}
@@ -1531,7 +1420,6 @@ Chapter 5 & Piazzalunga & 4h \\ [1ex]
 
 % SEVENTH CHAPTER
 % --------------------------------------------------------------------------
-
 \chapter{References}
 
 \section{References and Tools}
