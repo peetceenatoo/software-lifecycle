@@ -45,7 +45,7 @@ public class UserService {
             throw new UsernameAlreadyExistsException(String.format("User with the username '%s' already exists.", userDTO.getUsername()));
         }
 
-        User user = userAssembler.toEntity(userDTO);
+        User user = userAssembler.toEntity(userDTO); //modelMapper not able to map Role, thus using an assembler
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         User savedUser = userRepository.save(user);
