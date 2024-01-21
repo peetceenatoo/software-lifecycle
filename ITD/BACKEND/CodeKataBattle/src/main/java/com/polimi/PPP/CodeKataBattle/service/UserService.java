@@ -1,6 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.Assemblers.UserAssembler;
+import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.EmailAlreadyExistsException;
@@ -56,6 +57,14 @@ public class UserService {
         User user = userRepository.findByUsername(username).orElse(null);
         if (user != null) {
             return modelMapper.map(user, UserDTO.class);
+        }
+        return null;
+    }
+
+    public RoleDTO findRoleByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return modelMapper.map(user.getRole(), RoleDTO.class);
         }
         return null;
     }

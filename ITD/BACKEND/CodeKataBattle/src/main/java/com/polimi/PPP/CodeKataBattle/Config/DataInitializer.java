@@ -20,7 +20,7 @@ public class DataInitializer {
     CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
             // Check if the user already exists to avoid duplicates
-            if (userRepository.findByUsername("testuser") == null) {
+            if (userRepository.findByUsername("testuser").isEmpty()) {
                 // Create a new role or fetch an existing one
                 Role userRole = roleRepository.findByName("USER");
                 if (userRole == null) {

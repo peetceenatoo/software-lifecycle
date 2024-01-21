@@ -43,7 +43,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        String token = JwtHelper.generateToken(request.getEmail());
+        String token = JwtHelper.generateToken(request.getEmail(), userService.findRoleByEmail(request.getEmail()));
         return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token));
     }
 
