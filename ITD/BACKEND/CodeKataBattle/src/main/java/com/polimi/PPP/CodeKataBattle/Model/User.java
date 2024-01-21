@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,6 +40,7 @@ public class User {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
+
     @Column(name = "link_bio")
     private String linkBio;
 
@@ -46,5 +49,12 @@ public class User {
     @JoinColumn(name = "role_id") // role_id is the foreign key in the users table
     private Role role;
 
-    // Other fields and methods...
+    @ManyToMany()
+    @JoinTable(
+            name = "users_tournaments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tournament_id"))
+    private Set<Tournament> tournaments;
+
+
 }
