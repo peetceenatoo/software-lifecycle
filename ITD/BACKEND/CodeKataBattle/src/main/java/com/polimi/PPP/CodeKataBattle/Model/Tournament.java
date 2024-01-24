@@ -29,7 +29,8 @@ public class Tournament {
     private Date deadline;
 
     @Column(nullable = false, length = 256)
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private TournamentStateEnum state;
 
 
     @ManyToMany(mappedBy = "tournaments")

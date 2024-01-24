@@ -28,7 +28,8 @@ public class Battle {
     private String codeKataPath;
 
     @Column(nullable = false, length = 256)
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private BattleStateEnum state;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Subsription Deadline is mandatory")
