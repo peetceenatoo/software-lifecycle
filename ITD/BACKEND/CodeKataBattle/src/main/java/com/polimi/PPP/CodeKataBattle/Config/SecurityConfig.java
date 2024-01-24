@@ -48,8 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
 //            authorization on endpoints
-                        .requestMatchers("/api/student/**").hasAuthority(RoleEnunm.ROLE_STUDENT.name())
-                        .requestMatchers("/api/educator/**").hasAuthority(RoleEnunm.ROLE_EDUCATOR.name())
+//                        .requestMatchers("/api/student/**").hasAuthority(RoleEnunm.ROLE_STUDENT.name())
+//                        .requestMatchers("/api/educator/**").hasAuthority(RoleEnunm.ROLE_EDUCATOR.name())
 //            our private endpoints
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
