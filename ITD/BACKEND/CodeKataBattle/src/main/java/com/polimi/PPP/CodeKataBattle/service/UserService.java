@@ -61,6 +61,22 @@ public class UserService {
         return null;
     }
 
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return modelMapper.map(user, UserDTO.class);
+        }
+        return null;
+    }
+
+    public UserDTO findById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            return modelMapper.map(user, UserDTO.class);
+        }
+        return null;
+    }
+
     public RoleDTO findRoleByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null) {

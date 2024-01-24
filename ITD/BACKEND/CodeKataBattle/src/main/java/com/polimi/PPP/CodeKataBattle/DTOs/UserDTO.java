@@ -15,5 +15,6 @@ public class UserDTO {
     private String email;
     private String username;
     private String linkBio;
+    private Role role;
     // Add other fields as necessary, but avoid sensitive information like passwords
 }

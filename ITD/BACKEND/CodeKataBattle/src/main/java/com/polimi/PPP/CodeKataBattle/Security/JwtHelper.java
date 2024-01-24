@@ -3,12 +3,14 @@ package com.polimi.PPP.CodeKataBattle.Security;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRoleException;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.persistence.Lob;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -27,13 +29,13 @@ import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
-
+@NoArgsConstructor
 public class JwtHelper {
 
-    private static final String PRIVATE_KEY_PATH = "RSAKeys/CKB_private.key";
-    private static final String PUBLIC_KEY_PATH = "RSAKeys/CKB_public.key";
+    private final String PRIVATE_KEY_PATH = "RSAKeys/CKB_private.key";
+    private final String PUBLIC_KEY_PATH = "RSAKeys/CKB_public.key";
 
-    private static PrivateKey getPrivateKey() throws Exception {
+    private PrivateKey getPrivateKey() throws Exception {
         InputStream inputStream = new ClassPathResource(PRIVATE_KEY_PATH).getInputStream();
         byte[] keyBytes = inputStream.readAllBytes();
         String privateKeyPEM = new String(keyBytes)
@@ -47,7 +49,7 @@ public class JwtHelper {
         return kf.generatePrivate(spec);
     }
 
-    private static PublicKey getPublicKey() throws Exception {
+    private PublicKey getPublicKey() throws Exception {
         InputStream inputStream = new ClassPathResource(PUBLIC_KEY_PATH).getInputStream();
         byte[] keyBytes = inputStream.readAllBytes();
         String publicKeyPEM = new String(keyBytes)
@@ -61,15 +63,16 @@ public class JwtHelper {
         return kf.generatePublic(spec);
     }
 
-    private static final int MINUTES = 60;
+    private final int MINUTES = 60;
 
-    public static String generateToken(String email, RoleDTO role) {
+    public String generateToken(String username, Long userId, RoleEnunm role) {
         var now = Instant.now();
 
         try{
             return Jwts.builder()
-                    .subject(email)
-                    .claim("role", role.getName())
+                    .subject(username)
+                    .claim("userId", userId)
+                    .claim("role", role.name())
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)
@@ -80,22 +83,15 @@ public class JwtHelper {
 
     }
 
-    public static String extractUsername(String token) {
-        return getTokenBody(token).getSubject();
+    public Long extractUserId(String token) {
+        return Long.parseLong(getTokenBody(token).getSubject());
     }
 
-    public static RoleDTO extractRole(String token) {
-        RoleDTO role = new RoleDTO();
-        role.setName(getTokenBody(token).get("role", String.class));
-        return role;
+    public Boolean validateToken(String token) {
+        return !isTokenExpired(token);
     }
 
-    public static Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
-
-    private static Claims getTokenBody(String token) {
+    private Claims getTokenBody(String token) {
 
         try{
             return Jwts.parser()
@@ -109,7 +105,7 @@ public class JwtHelper {
 
     }
 
-    private static boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         Claims claims = getTokenBody(token);
         return claims.getExpiration().before(new Date());
     }

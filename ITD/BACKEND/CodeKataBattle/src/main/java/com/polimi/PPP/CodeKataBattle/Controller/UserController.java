@@ -23,10 +23,12 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtHelper jwtHelper;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtHelper jwtHelper) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.jwtHelper = jwtHelper;
     }
 
     @GetMapping("/by-username/{username}")
@@ -43,7 +45,8 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        String token = JwtHelper.generateToken(request.getEmail(), userService.findRoleByEmail(request.getEmail()));
+        UserDTO userDTO = userService.findByEmail(request.getEmail());
+        String token = this.jwtHelper.generateToken(request.getEmail(), userDTO.getId() , userDTO.getRole().getName());
         return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token));
     }
 

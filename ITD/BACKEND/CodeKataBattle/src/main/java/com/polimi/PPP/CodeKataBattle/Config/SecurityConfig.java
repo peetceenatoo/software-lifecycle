@@ -1,7 +1,9 @@
 package com.polimi.PPP.CodeKataBattle.Config;
 
-    // Spring Secuirty config for jwt token authentication and authorization
+// Spring Secuirty config for jwt token authentication and authorization
 
+import com.polimi.PPP.CodeKataBattle.Filters.JWTAuthenticationFilter;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +17,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JWTAuthenticationFilter jwtAuthenticationFilter ) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -42,9 +47,12 @@ public class SecurityConfig {
 //            our public endpoints
                         .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+//            authorization on endpoints
+                        .requestMatchers("/api/student/**").hasAuthority(RoleEnunm.ROLE_STUDENT.name())
+                        .requestMatchers("/api/educator/**").hasAuthority(RoleEnunm.ROLE_EDUCATOR.name())
 //            our private endpoints
                         .anyRequest().authenticated())
-                .authenticationManager(authenticationManager)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
