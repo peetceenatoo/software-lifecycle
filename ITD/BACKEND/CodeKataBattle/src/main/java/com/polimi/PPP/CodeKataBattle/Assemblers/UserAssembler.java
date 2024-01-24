@@ -33,12 +33,17 @@ public class UserAssembler {
         user.setUsername(dto.getUsername());
         user.setLinkBio(dto.getLinkBio());
 
+        if (dto.getRoleName() != null) {
+            Role role = null;
+            try{
+                role = roleRepository.findByName(RoleEnunm.valueOf(dto.getRoleName())).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
+            }catch (IllegalArgumentException ex){
+                throw new IllegalArgumentException("Invalid role provided");
+            }
 
-        if (dto.getRoleId() != null) {
-            Role role = roleRepository.findById(dto.getRoleId()).orElse(null);
             user.setRole(role);
-        } else if (dto.getRoleName() != null) {
-            Role role = roleRepository.findByName(RoleEnunm.valueOf(dto.getRoleName()));
+        }else if (dto.getRoleId() != null) {
+            Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
             user.setRole(role);
         }
 

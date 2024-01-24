@@ -20,15 +20,20 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
+
+            for (RoleEnunm role : RoleEnunm.values()) {
+                if (!roleRepository.existsByName(role)) {
+                    Role newRole = new Role();
+                    newRole.setName(role);
+                    roleRepository.save(newRole);
+                }
+            }
+
             // Check if the user already exists to avoid duplicates
             if (userRepository.findByUsername("testuser").isEmpty()) {
-                // Create a new role or fetch an existing one
-                Role userRole = roleRepository.findByName(RoleEnunm.ROLE_EDUCATOR);
-                if (userRole == null) {
-                    userRole = new Role();
-                    userRole.setName(RoleEnunm.ROLE_EDUCATOR);
-                    roleRepository.save(userRole);
-                }
+
+                // Get the user role
+                Role userRole = roleRepository.findByName(RoleEnunm.ROLE_STUDENT).get();
 
                 // Create a new user
                 User fakeUser = new User();

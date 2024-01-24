@@ -30,20 +30,36 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
-        if (token == null || !jwtHelper.validateToken(token)) {
-            //Invalid token, respond with 401 Unauthorized
-            throw new InvalidTokenException("Invalid token provided");
+
+        String requestURI = request.getRequestURI();
+
+        // Skip filter for public endpoints
+        if (request.getMethod().equals("POST") && ("/api/users/signup".equals(requestURI) || "/api/users/login".equals(requestURI))) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        Long userId = jwtHelper.extractUserId(token);
+        try{
 
-        if (userId == null) {
-            throw new InvalidUsernameException("Invalid userId provided in the token");
+            String token = resolveToken(request);
+            if (token == null || !jwtHelper.validateToken(token)) {
+                //Invalid token, respond with 401 Unauthorized
+                throw new InvalidTokenException("Invalid token provided");
+            }
+
+            Long userId = jwtHelper.extractUserId(token);
+
+            if (userId == null) {
+                throw new InvalidUserIdException("Invalid userId provided in the token");
+            }
+
+            Authentication auth = getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }catch(Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
+            return;
         }
-
-        Authentication auth = getAuthentication(token);
-        SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(request, response);
     }

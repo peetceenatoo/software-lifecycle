@@ -31,19 +31,9 @@ public class UserController {
         this.jwtHelper = jwtHelper;
     }
 
-    @GetMapping("/by-username/{username}")
-    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
-        UserDTO userDTO = userService.findByUsername(username);
-
-        if (userDTO != null) {
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
+        log.warn("User {} logging in with password {}", request.getEmail(), request.getPassword());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDTO userDTO = userService.findByEmail(request.getEmail());
         String token = this.jwtHelper.generateToken(userDTO.getId());

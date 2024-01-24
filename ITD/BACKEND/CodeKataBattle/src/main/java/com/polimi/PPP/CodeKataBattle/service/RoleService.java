@@ -27,7 +27,7 @@ public class RoleService {
     private ModelMapper modelMapper;
 
     public RoleDTO findByName(RoleEnunm name) {
-        Role role = roleRepository.findByName(name);
+        Role role = roleRepository.findByName(name).orElse(null);
         if (role != null) {
             return modelMapper.map(role, RoleDTO.class);
         }
