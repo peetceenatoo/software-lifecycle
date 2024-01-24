@@ -1,6 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.Config;
 
 import com.polimi.PPP.CodeKataBattle.Model.Role;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
@@ -22,10 +23,10 @@ public class DataInitializer {
             // Check if the user already exists to avoid duplicates
             if (userRepository.findByUsername("testuser").isEmpty()) {
                 // Create a new role or fetch an existing one
-                Role userRole = roleRepository.findByName("USER");
+                Role userRole = roleRepository.findByName(RoleEnunm.ROLE_EDUCATOR);
                 if (userRole == null) {
                     userRole = new Role();
-                    userRole.setName("USER");
+                    userRole.setName(RoleEnunm.ROLE_EDUCATOR);
                     roleRepository.save(userRole);
                 }
 

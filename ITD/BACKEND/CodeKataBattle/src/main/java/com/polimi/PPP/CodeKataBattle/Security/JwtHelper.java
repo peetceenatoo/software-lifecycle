@@ -2,6 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Security;
 
 
 import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRoleException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

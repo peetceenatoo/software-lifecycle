@@ -4,6 +4,7 @@ import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Model.Role;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
@@ -25,7 +26,7 @@ public class RoleService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RoleDTO findByName(String name) {
+    public RoleDTO findByName(RoleEnunm name) {
         Role role = roleRepository.findByName(name);
         if (role != null) {
             return modelMapper.map(role, RoleDTO.class);
