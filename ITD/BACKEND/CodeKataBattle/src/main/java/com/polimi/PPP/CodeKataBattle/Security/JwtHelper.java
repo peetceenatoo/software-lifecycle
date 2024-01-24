@@ -65,14 +65,12 @@ public class JwtHelper {
 
     private final int MINUTES = 60;
 
-    public String generateToken(String username, Long userId, RoleEnunm role) {
+    public String generateToken(Long userId) {
         var now = Instant.now();
 
         try{
             return Jwts.builder()
-                    .subject(username)
-                    .claim("userId", userId)
-                    .claim("role", role.name())
+                    .subject(String.valueOf(userId))
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)

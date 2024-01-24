@@ -46,7 +46,7 @@ public class UserController {
     public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDTO userDTO = userService.findByEmail(request.getEmail());
-        String token = this.jwtHelper.generateToken(request.getEmail(), userDTO.getId() , userDTO.getRole().getName());
+        String token = this.jwtHelper.generateToken(userDTO.getId());
         return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token));
     }
 
