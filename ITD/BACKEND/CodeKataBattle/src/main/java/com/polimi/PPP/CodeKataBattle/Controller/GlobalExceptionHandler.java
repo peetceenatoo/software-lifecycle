@@ -1,7 +1,6 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
-import com.polimi.PPP.CodeKataBattle.Exceptions.EmailAlreadyExistsException;
-import com.polimi.PPP.CodeKataBattle.Exceptions.UsernameAlreadyExistsException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.*;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<Object> handleInvalidRoleException(InvalidRoleException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(InvalidUserEmailException.class)
+    public ResponseEntity<Object> handleInvalidUserEmailException(InvalidUserEmailException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(InvalidUserIdException.class)
+    public ResponseEntity<Object> handleInvalidUserIdException(InvalidUserIdException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -41,8 +57,8 @@ public class GlobalExceptionHandler {
     // A helper class for consistent API error responses
     @Getter
     static class ApiError {
-        private HttpStatus status;
-        private String message;
+        private final HttpStatus status;
+        private final String message;
 
         public ApiError(HttpStatus status, String message) {
             this.status = status;
