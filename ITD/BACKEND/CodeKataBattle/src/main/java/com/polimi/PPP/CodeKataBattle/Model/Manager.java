@@ -17,7 +17,7 @@ public class Manager {
     @ManyToOne
     @MapsId("tournamentId")
     @JoinColumn(name = "tournament_id")
-    private Battle battle;
+    private Tournament tournament;
 
     @ManyToOne
     @MapsId("userId")
