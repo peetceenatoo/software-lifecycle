@@ -2,7 +2,13 @@ package com.polimi.PPP.CodeKataBattle.DTOs;
 
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class BattleDTO {
     private Long id;
     private String name;
