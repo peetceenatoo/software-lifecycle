@@ -1,7 +1,8 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
-import com.polimi.PPP.CodeKataBattle.Repository.*;
+import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

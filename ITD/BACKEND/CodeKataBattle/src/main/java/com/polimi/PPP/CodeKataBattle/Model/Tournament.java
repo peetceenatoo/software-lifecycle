@@ -32,11 +32,11 @@ public class Tournament {
     @Enumerated(EnumType.STRING)
     private TournamentStateEnum state;
 
-
     @ManyToMany(mappedBy = "tournaments")
     private Set<User> users;
 
     @OneToMany(mappedBy = "tournament")
     private Set<Battle> battles;
+
 
 }

@@ -9,29 +9,29 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "BattleInvites")
+@Table(name = "BattleInvites",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"battle_id", "user_id", "invited_user_id"})
+)
 public class BattleInvite {
 
-        @EmbeddedId
-        BattleInviteKey id;
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
+        private Long id;
 
         @ManyToOne
-        @MapsId("battleId")
-        @JoinColumn(name = "battle_id")
+        @JoinColumn(name = "battle_id", nullable = false)
         private Battle battle;
 
         @ManyToOne
-        @MapsId("userId")
-        @JoinColumn(name = "user_id")
+        @JoinColumn(name = "user_id", nullable = false)
         private User user;
 
         @ManyToOne
-        @MapsId("invitedUserId")
-        @JoinColumn(name = "invited_user_id")
+        @JoinColumn(name = "invited_user_id", nullable = true)
         private User InvitedUser;
 
-        @Column(nullable = false)
-        private boolean accepted;
+        @Enumerated(EnumType.STRING)
+        private BattleInviteStateEnum state;
 }
 
 

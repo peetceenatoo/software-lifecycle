@@ -1,4 +1,4 @@
-package com.polimi.PPP.CodeKataBattle.Repository;
+package com.polimi.PPP.CodeKataBattle.Repositories;
 
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import org.springframework.data.jpa.repository.JpaRepository;

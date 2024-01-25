@@ -40,7 +40,6 @@ public class User {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-
     @Column(name = "link_bio")
     private String linkBio;
 
@@ -55,6 +54,5 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tournament_id"))
     private Set<Tournament> tournaments;
-
 
 }

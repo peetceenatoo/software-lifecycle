@@ -44,6 +44,7 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
+			<version>8.2.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -87,6 +88,11 @@
 			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
 			<version>0.12.3</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>github-api</artifactId>
+			<version>1.318</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

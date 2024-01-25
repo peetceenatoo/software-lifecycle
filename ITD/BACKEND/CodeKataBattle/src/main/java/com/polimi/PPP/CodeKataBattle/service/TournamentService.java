@@ -2,7 +2,9 @@ package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Model.*;
-import com.polimi.PPP.CodeKataBattle.Repository.*;
+import com.polimi.PPP.CodeKataBattle.Repositories.*;
+import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +21,18 @@ public class TournamentService {
     private BattleRepository battleRepository;
 
     @Autowired
-    private ManagerRepository managerRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public TournamentDTO getTournament(Long tournamentId) {
+    public TournamentDTO getTournamentById(Long tournamentId) {
         return modelMapper.map(tournamentRepository.findById(tournamentId).orElse(null), TournamentDTO.class);
     }
 
-    public List<TournamentDTO> getTournaments(String state) {
+    public List<TournamentDTO> getTournaments(TournamentStateEnum state) {
         if (state != null) {
-            return tournamentRepository.findByState(TournamentStateEnum.valueOf(state))
+            return tournamentRepository.findByState(state)
                                        .stream()
                                        .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))
                                        .collect(Collectors.toList());
@@ -45,8 +44,9 @@ public class TournamentService {
     }
 
     public List<TournamentDTO> getCreatedTournaments(Long educatorId) {
-        return managerRepository.findByUserId(educatorId).stream()
-            .map(manager -> getTournament(manager.getTournament().getId()))
+
+        return tournamentRepository.findByUsers_Id(educatorId).stream()
+            .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))
             .collect(Collectors.toList());
     }
 
@@ -57,28 +57,24 @@ public class TournamentService {
     }
 
     @Transactional
-    public TournamentDTO createTournament(Long educatorId, String tournamentName, Date registrationDeadline, List<String> educatorsInvited) {
-        // Validate inputs and business logic
-        if (tournamentName == null || registrationDeadline == null || educatorsInvited.isEmpty()) {
-            throw new IllegalArgumentException("Missing values");
-        }
-
+    public TournamentDTO createTournament(TournamentCreationDTO tournamentDTO) {
+        // Input validation done in the controller
         Tournament tournament = new Tournament();
-        tournament.setName(tournamentName);
-        tournament.setDeadline(registrationDeadline);
+        modelMapper.map(tournamentDTO, tournament);
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
-
         Tournament savedTournament = tournamentRepository.save(tournament);
 
         // Handle association with educators
-        for (String username : educatorsInvited) {
-            User educator = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Values not valid"));
-            Manager manager = new Manager();
-            manager.setId(new ManagerKey(savedTournament.getId(), educator.getId()));
-            manager.setTournament(savedTournament);
-            manager.setUser(educator);
-            managerRepository.save(manager);
+        for (Long id : tournamentDTO.getEducatorsInvited()) {
+            User educator = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("EducatorId not valid"));
+            educator.getTournaments().add(savedTournament);
+            userRepository.save(educator);
+
+            savedTournament.getUsers().add(educator);
         }
+
+        // Save tournament
+        savedTournament = tournamentRepository.save(savedTournament);
 
         return modelMapper.map(savedTournament, TournamentDTO.class);
     }
@@ -107,6 +103,9 @@ public class TournamentService {
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         tournament.getUsers().add(user);
+        user.getTournaments().add(tournament);
+
+        userRepository.save(user);
         tournamentRepository.save(tournament);
     }
 

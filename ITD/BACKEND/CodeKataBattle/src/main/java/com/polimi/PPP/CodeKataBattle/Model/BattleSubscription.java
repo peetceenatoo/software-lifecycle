@@ -10,23 +10,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "BattleSubscriptions")
+@Table(name = "BattleSubscriptions",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"battle_id", "user_id"}))
 public class BattleSubscription {
 
-    @EmbeddedId
-    BattleSubscriptionKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("battleId")
     @JoinColumn(name = "battle_id")
     private Battle battle;
 
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
-    private boolean accepted;
+    private Long groupId;
 
 }
