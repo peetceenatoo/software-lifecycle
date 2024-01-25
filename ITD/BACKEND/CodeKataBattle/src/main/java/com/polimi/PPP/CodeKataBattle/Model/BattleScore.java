@@ -1,10 +1,16 @@
 package com.polimi.PPP.CodeKataBattle.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "BattleScores")
 public class BattleScore {
     @Id
     private Long id;
@@ -21,4 +27,10 @@ public class BattleScore {
     @Lob
     @Column(nullable = true)
     private String logScoring;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submission_fk")
+    private Submission submission;
+
+
 }
