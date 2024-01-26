@@ -47,7 +47,6 @@ public class Battle {
     @NotBlank(message = "Min Students in Group is mandatory")
     private int minStudentsInGroup;
 
-
     @Column(nullable = false)
     @NotBlank(message = "Manual Scoring option is mandatory")
     private boolean manualScoringRequires;
@@ -58,7 +57,5 @@ public class Battle {
     @ManyToOne
     @JoinColumn(name="tournament_fk")
     private Tournament tournament;
-
-
 
 }

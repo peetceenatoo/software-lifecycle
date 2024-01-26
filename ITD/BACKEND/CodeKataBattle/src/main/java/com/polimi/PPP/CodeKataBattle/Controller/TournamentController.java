@@ -28,6 +28,9 @@ public class TournamentController extends AuthenticatedController{
     @Qualifier("emailProvider")
     private NotificationProvider notificationProvider;
 
+    @Autowired
+    private BattleService battleService;
+
     @GetMapping("/{tournamentId}")
     public ResponseEntity<?> getTournament(@PathVariable Long tournamentId) {
         TournamentDTO tournament = tournamentService.getTournamentById(tournamentId);
@@ -68,7 +71,6 @@ public class TournamentController extends AuthenticatedController{
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
 
         return ResponseEntity.ok(tournament);
-
     }
 
     @GetMapping("/search/{keyword}")
@@ -79,11 +81,20 @@ public class TournamentController extends AuthenticatedController{
 
     @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<?> getRankingTournament(@PathVariable Long tournamentId) {
-
         return ResponseEntity.ok(tournamentService.getTournamentRanking(tournamentId));
     }
 
+    @GetMapping("/{tournamentId}/battles")
+    public ResponseEntity<?> getBattles(@PathVariable Long tournamentId) {
+        return ResponseEntity.ok(battleService.getBattlesByTournamentId(tournamentId));
+    }
 
+    @GetMapping("/{tournamentId}/battles/enrolled")
+    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
+    public ResponseEntity<?> getEnrolledBattles(@PathVariable Long tournamentId) {
+        UserDTO authenticatedUser = this.getAuthenticatedUser();
+        return ResponseEntity.ok(battleService.getEnrolledBattlesByTournamentId(tournamentId, authenticatedUser.getId()));
+    }
 
     @PostMapping("/close")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
