@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.service;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.EmailAlreadyExistsException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.UsernameAlreadyExistsException;
 import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,6 @@ public class UserServiceTest {
         assertEquals(newStudent.getLinkBio(), createdUser.getLinkBio());
         assertEquals(RoleEnum.ROLE_STUDENT, createdUser.getRole().getName());
 
-        assertThrows(EmailAlreadyExistsException.class, () -> {
-            userService.createUser(newStudent);
-        });
-
         UserCreationDTO newEducator = new UserCreationDTO(/* set user details */);
 
         newEducator.setEmail("first.edu@email.com");
@@ -63,6 +60,14 @@ public class UserServiceTest {
         assertEquals(newEducator.getSurname(), createdEducator.getSurname());
         assertEquals(newEducator.getLinkBio(), createdEducator.getLinkBio());
         assertEquals(RoleEnum.ROLE_EDUCATOR, createdEducator.getRole().getName());
+
+        assertThrows(EmailAlreadyExistsException.class, () -> {
+            userService.createUser(newStudent);
+        });
+        newStudent.setEmail("different@gmail.com");
+        assertThrows(UsernameAlreadyExistsException.class, () -> {
+            userService.createUser(newStudent);
+        });
 
     }
 
