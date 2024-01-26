@@ -26,6 +26,10 @@ public class TournamentService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public Boolean hasUserRightsOnTournament(Long userId, Long tournamentId){
+        return tournamentRepository.hasUserRightsOnTournament(userId, tournamentId);
+    }
+
     public TournamentDTO getTournamentById(Long tournamentId) {
         return modelMapper.map(tournamentRepository.findById(tournamentId).orElse(null), TournamentDTO.class);
     }
@@ -102,12 +106,38 @@ public class TournamentService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        if (tournament.getState() != TournamentStateEnum.SUBSCRIPTION) {
+            throw new IllegalStateException("Tournament is not in subscription phase");
+        }
+
         tournament.getUsers().add(user);
         user.getTournaments().add(tournament);
 
         userRepository.save(user);
         tournamentRepository.save(tournament);
     }
+
+    public List<TournamentRankingDTO> getTournamentRanking(Long tournamentId){
+        List<TournamentRankingDTO> ranking = tournamentRepository.calculateStudentRankingForTournament(tournamentId);
+        return ranking;
+    }
+
+    public List<TournamentDTO> searchTournamentsByKeyword(String keyword) {
+
+        Long id = -1L;
+        try {
+            id = Long.parseLong(keyword);
+        } catch (NumberFormatException e) {
+            // Do nothing
+        }
+
+        List<Tournament> tournaments = tournamentRepository.findByNameContainingIgnoreCaseOrIdIs(keyword, id);
+        return tournaments.stream()
+                          .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))
+                          .collect(Collectors.toList());
+    }
+
+
 
     // Other methods corresponding to the TournamentController's endpoints
 }

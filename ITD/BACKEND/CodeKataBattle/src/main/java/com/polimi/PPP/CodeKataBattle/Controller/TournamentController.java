@@ -1,6 +1,8 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidActionException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRightsForActionException;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class TournamentController extends AuthenticatedController{
 
     @GetMapping
     public ResponseEntity<List<TournamentDTO>> getTournaments(@RequestParam(required = false) TournamentStateEnum state) {
+        UserDTO user = this.getAuthenticatedUser();
         List<TournamentDTO> tournaments = tournamentService.getTournaments(state);
         return ResponseEntity.ok(tournaments);
     }
@@ -68,20 +71,30 @@ public class TournamentController extends AuthenticatedController{
 
     }
 
-    /*@GetMapping("/{tournamentId}/ranking")
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<?> searchTournament(@PathVariable String keyword) {
+        List<TournamentDTO> tournaments = tournamentService.searchTournamentsByKeyword(keyword);
+        return ResponseEntity.ok(tournaments);
+    }
+
+    @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<?> getRankingTournament(@PathVariable Long tournamentId) {
+
+
         return ResponseEntity.ok(tournamentService.getTournamentRanking(tournamentId));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchTournament(@RequestParam String keyword) {
-        List<TournamentDTO> tournaments = tournamentService.searchTournamentsByKeyword(keyword);
-        return ResponseEntity.ok(tournaments);
-    }*/
+
 
     @PostMapping("/close")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
     public ResponseEntity<?> closeTournament(@RequestBody Long tournamentId) {
+
+        //Preauthorize already checking if the user is an educator
+        //Checking if he manages the tournament is enough
+        UserDTO authenticatedUser = this.getAuthenticatedUser();
+        if (!tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
+            throw new InvalidRightsForActionException("Not authorized to close this tournament.");
 
         tournamentService.closeTournament(tournamentId);
         return ResponseEntity.ok("Tournament closed successfully.");
@@ -93,9 +106,9 @@ public class TournamentController extends AuthenticatedController{
     public ResponseEntity<?> enrollInTournament(@RequestBody Long tournamentId) {
 
         UserDTO authenticatedUser = this.getAuthenticatedUser();
-        if (authenticatedUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
+        if (tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
+            throw new InvalidActionException("Already enrolled in this tournament.");
+
         tournamentService.enrollUserInTournament(tournamentId, authenticatedUser.getId());
         return ResponseEntity.ok("Enrollment successful.");
 

@@ -19,6 +19,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(InvalidActionException.class)
+    public ResponseEntity<Object> handleInvalidActionException(InvalidActionException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(InvalidRightsForActionException.class)
+    public ResponseEntity<Object> handleInvalidRightsForActionException(InvalidRightsForActionException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(InvalidRoleException.class)
     public ResponseEntity<Object> handleInvalidRoleException(InvalidRoleException ex) {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
