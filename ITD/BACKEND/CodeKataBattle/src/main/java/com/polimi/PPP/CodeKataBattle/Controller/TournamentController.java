@@ -22,12 +22,6 @@ public class TournamentController extends AuthenticatedController{
     @Autowired
     private TournamentService tournamentService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private BattleService battleService;
-
     @GetMapping("/{tournamentId}")
     public ResponseEntity<?> getTournament(@PathVariable Long tournamentId) {
         TournamentDTO tournament = tournamentService.getTournamentById(tournamentId);
@@ -79,7 +73,6 @@ public class TournamentController extends AuthenticatedController{
 
     @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<?> getRankingTournament(@PathVariable Long tournamentId) {
-
 
         return ResponseEntity.ok(tournamentService.getTournamentRanking(tournamentId));
     }
