@@ -23,5 +23,11 @@ public class BattleService {
                                .collect(Collectors.toList());
     }
 
+    public List<BattleDTO> getEnrolledBattlesByTournamentId(Long tournamentId, Long userId) {
+        return battleRepository.findBattlesByTournamentIdAndUserId(tournamentId, userId).stream()
+                .map(battle -> modelMapper.map(battle, BattleDTO.class))
+                .collect(Collectors.toList());
+    }
+
     // Additional methods as needed
 }
