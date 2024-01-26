@@ -2,7 +2,6 @@ package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserEmailException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserIdException;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

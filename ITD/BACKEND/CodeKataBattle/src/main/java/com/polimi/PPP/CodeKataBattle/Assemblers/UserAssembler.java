@@ -3,7 +3,7 @@ package com.polimi.PPP.CodeKataBattle.Assemblers;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Model.Role;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class UserAssembler {
         if (dto.getRoleName() != null) {
             Role role = null;
             try{
-                role = roleRepository.findByName(RoleEnunm.valueOf(dto.getRoleName())).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
+                role = roleRepository.findByName(RoleEnum.valueOf(dto.getRoleName())).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
             }catch (IllegalArgumentException ex){
                 throw new IllegalArgumentException("Invalid role provided");
             }

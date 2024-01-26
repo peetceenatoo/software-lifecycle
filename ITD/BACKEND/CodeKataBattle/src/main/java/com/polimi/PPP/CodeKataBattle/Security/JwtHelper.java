@@ -1,25 +1,14 @@
 package com.polimi.PPP.CodeKataBattle.Security;
 
 
-import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRoleException;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import jakarta.persistence.Lob;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.crypto.SecretKey;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;

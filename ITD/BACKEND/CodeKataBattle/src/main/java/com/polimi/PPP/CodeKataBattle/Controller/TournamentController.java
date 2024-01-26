@@ -1,7 +1,6 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;

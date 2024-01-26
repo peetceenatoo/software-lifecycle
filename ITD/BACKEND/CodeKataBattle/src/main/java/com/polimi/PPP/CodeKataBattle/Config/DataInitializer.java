@@ -1,7 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.Config;
 
 import com.polimi.PPP.CodeKataBattle.Model.Role;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
@@ -21,7 +21,7 @@ public class DataInitializer {
     CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
 
-            for (RoleEnunm role : RoleEnunm.values()) {
+            for (RoleEnum role : RoleEnum.values()) {
                 if (!roleRepository.existsByName(role)) {
                     Role newRole = new Role();
                     newRole.setName(role);
@@ -33,7 +33,7 @@ public class DataInitializer {
             if (userRepository.findByUsername("testuser").isEmpty()) {
 
                 // Get the user role
-                Role userRole = roleRepository.findByName(RoleEnunm.ROLE_STUDENT).get();
+                Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT).get();
 
                 // Create a new user
                 User fakeUser = new User();

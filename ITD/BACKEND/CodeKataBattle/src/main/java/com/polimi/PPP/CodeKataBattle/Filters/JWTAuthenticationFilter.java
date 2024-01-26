@@ -1,10 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.Filters;
 
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRoleException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserIdException;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUsernameException;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnunm;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.UserIdAuthenticationToken;
 import jakarta.servlet.FilterChain;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {

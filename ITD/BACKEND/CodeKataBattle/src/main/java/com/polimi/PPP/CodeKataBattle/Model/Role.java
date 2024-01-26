@@ -18,7 +18,7 @@ public class Role {
 
     @Column(nullable = false,unique = true, length = 50)
     @Enumerated(EnumType.STRING)
-    private RoleEnunm name;
+    private RoleEnum name;
 
     // No need to define the inverse side of the relationship if it's not needed
     // Other fields and methods...

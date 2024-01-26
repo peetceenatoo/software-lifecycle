@@ -1,6 +1,6 @@
 package com.polimi.PPP.CodeKataBattle.Model;
 
-public enum RoleEnunm {
+public enum RoleEnum {
     ROLE_STUDENT,
     ROLE_EDUCATOR
 }
