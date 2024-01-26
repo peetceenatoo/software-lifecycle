@@ -2,7 +2,9 @@ package com.polimi.PPP.CodeKataBattle.Filters;
 
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserIdException;
+import com.polimi.PPP.CodeKataBattle.Model.JWTTokenUseCase;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
+import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.Security.UserIdAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,13 +37,47 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Extracting and validating the token from the header
+        String token = null;
         try{
-
-            String token = resolveToken(request);
+            token = resolveToken(request);
             if (token == null || !jwtHelper.validateToken(token)) {
                 //Invalid token, respond with 401 Unauthorized
                 throw new InvalidTokenException("Invalid token provided");
             }
+        }catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
+            return;
+        }
+
+        // Extracting the useCase from the token
+        String useCaseString = jwtHelper.extractUseCase(token);
+        if (useCaseString == null ){
+            throw new InvalidTokenException("Invalid useCase provided in the token");
+        }
+        JWTTokenUseCase useCase = null;
+        try{
+            useCase = JWTTokenUseCase.valueOf(useCaseString);
+        }catch(Exception e) {
+            throw new InvalidTokenException("Invalid useCase provided in the token");
+        }
+
+        // Checking if the token is valid for the request
+        if(useCase == JWTTokenUseCase.SUBMISSION){
+            if (!request.getMethod().equals("POST") || !requestURI.startsWith("api/battles/") || !requestURI.endsWith("/commit")){
+                throw new InvalidTokenException("Invalid token for the request");
+            }
+        }
+        if(useCase == JWTTokenUseCase.USER){
+            if (requestURI.startsWith("api/battles/") && requestURI.endsWith("/commit")){
+                throw new InvalidTokenException("Invalid token for the request");
+            }
+        }
+
+
+        // Generating the context for the requests
+        try{
 
             Long userId = jwtHelper.extractUserId(token);
 
@@ -49,8 +85,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 throw new InvalidUserIdException("Invalid userId provided in the token");
             }
 
-            Authentication auth = getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            if (useCase == JWTTokenUseCase.USER) {
+                Authentication auth = getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } else if (useCase == JWTTokenUseCase.SUBMISSION) {
+                Authentication auth = getSubmissionAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
         }catch(Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
@@ -72,6 +113,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         // Extract information from token (e.g., username, roles)
         Long userId = jwtHelper.extractUserId(token);
         return new UserIdAuthenticationToken(userId);
+    }
+
+    private Authentication getSubmissionAuthentication(String token) {
+        // Extract information from token (e.g., username, roles)
+        Long userId = jwtHelper.extractUserId(token);
+        Long battleId = jwtHelper.extractBattleId(token);
+        String repositoryUrl = jwtHelper.extractRepositoryUrl(token);
+        return new SubmissionAuthenticationToken(userId, battleId, repositoryUrl);
     }
 
 

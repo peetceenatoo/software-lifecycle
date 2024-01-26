@@ -1,6 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.Security;
 
 
+import com.polimi.PPP.CodeKataBattle.Model.JWTTokenUseCase;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
@@ -60,6 +62,7 @@ public class JwtHelper {
         try{
             return Jwts.builder()
                     .subject(String.valueOf(userId))
+                    .claim("useCase", JWTTokenUseCase.USER.name())
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)
@@ -70,12 +73,43 @@ public class JwtHelper {
 
     }
 
+    public String generateSubmissionToken(Long battleId, Long userId, String repositoryUrl, LocalDateTime submissionDeadline) {
+        var now = Instant.now();
+
+        try{
+            return Jwts.builder()
+                    .claim("battleId", battleId)
+                    .subject(String.valueOf(userId))
+                    .claim("repositoryUrl", repositoryUrl)
+                    .claim("useCase", JWTTokenUseCase.SUBMISSION.name())
+                    .issuedAt(Date.from(now))
+                    .expiration(Date.from(submissionDeadline.atZone(java.time.ZoneId.systemDefault()).toInstant()))
+                    .signWith(getPrivateKey(), Jwts.SIG.RS256)
+                    .compact();
+        }catch (Exception e){
+            throw new RuntimeException("Error creating submissions token");
+        }
+
+    }
+
+    public String extractUseCase(String token) {
+        return getTokenBody(token).get("useCase", String.class);
+    }
+
+    public Long extractBattleId(String token) {
+        return Long.parseLong(getTokenBody(token).get("battleId", String.class));
+    }
+
     public Long extractUserId(String token) {
         return Long.parseLong(getTokenBody(token).getSubject());
     }
 
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
+    }
+
+    public String extractRepositoryUrl(String token) {
+        return getTokenBody(token).get("repositoryUrl", String.class);
     }
 
     private Claims getTokenBody(String token) {
