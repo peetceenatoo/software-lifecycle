@@ -14,8 +14,13 @@ public class BattleController extends AuthenticatedController {
         Long battleId = submissionAuth.getBattleId();
         String repositoryUrl = submissionAuth.getRepositoryUrl();
         Long userId = submissionAuth.getUserId();
-        submissionService.createSubmission(battleId, userId(), repositoryUrl, commitHash);
-        return ResponseEntity.ok("Commit registered successfully.");
+
+        try {
+            submissionService.createSubmission(battleId, userId, repositoryUrl, commitHash);
+            return ResponseEntity.ok("Commit registered successfully.");
+        } catch (InvalidBattleStateException | UserNotSubscribedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     private SubmissionAuthenticationToken getCommitToken() {

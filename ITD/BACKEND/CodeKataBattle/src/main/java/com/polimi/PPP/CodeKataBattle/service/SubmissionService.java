@@ -7,9 +7,27 @@ public class SubmissionService {
     private SubmissionRepository submissionRepository;
 
     @Autowired
-    private UserRepository userRepository; // Assuming this exists
+    private BattleRepository battleRepository;
 
-    public void createSubmission(Long battleId, Long userId, String repositoryUrl, String commitHash) {
+    @Autowired
+    private BattleSubscriptionRepository battleSubscriptionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public void createSubmission(Long battleId, Long userId, String repositoryUrl, String commitHash) throws InvalidBattleStateException, UserNotSubscribedException {
+        Battle battle = battleRepository.findById(battleId)
+                .orElseThrow(() -> new EntityNotFoundException("Battle not found"));
+
+        if (battle.getState() != BattleStateEnum.ONGOING) {
+            throw new InvalidBattleStateException("Battle is not in the ONGOING state.");
+        }
+
+        boolean isSubscribed = battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, userId);
+        if (!isSubscribed) {
+            throw new UserNotSubscribedException("User is not subscribed to this battle.");
+        }
+
         Submission submission = new Submission();
         submission.setTimestamp(new Timestamp(System.currentTimeMillis()));
         submission.setProcessed(false);
@@ -17,8 +35,6 @@ public class SubmissionService {
         submission.setCommitHash(commitHash);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        Battle battle = battleRepository.findById(battleId).orElseThrow(() -> new EntityNotFoundException("Battle not found"));
-
         submission.setUser(user);
         submission.setBattle(battle);
 
