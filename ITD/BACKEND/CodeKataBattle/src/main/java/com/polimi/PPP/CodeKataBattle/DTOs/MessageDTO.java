@@ -2,11 +2,10 @@ package com.polimi.PPP.CodeKataBattle.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class Message {
+public class MessageDTO {
 
     private String body;
     private String title;

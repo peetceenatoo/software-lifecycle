@@ -1,7 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.Utilities;
 
-import com.polimi.PPP.CodeKataBattle.DTOs.Message;
+import com.polimi.PPP.CodeKataBattle.DTOs.MessageDTO;
 
 public interface NotificationProvider {
-    void sendNotification(Message message, String destination);
+    void sendNotification(MessageDTO messageDTO, String destination);
 }

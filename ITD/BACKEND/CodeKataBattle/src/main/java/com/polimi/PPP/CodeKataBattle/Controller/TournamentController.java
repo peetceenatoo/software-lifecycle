@@ -4,8 +4,10 @@ import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidActionException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRightsForActionException;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,10 @@ public class TournamentController extends AuthenticatedController{
 
     @Autowired
     private TournamentService tournamentService;
+
+    @Autowired
+    @Qualifier("emailProvider")
+    private NotificationProvider notificationProvider;
 
     @GetMapping("/{tournamentId}")
     public ResponseEntity<?> getTournament(@PathVariable Long tournamentId) {

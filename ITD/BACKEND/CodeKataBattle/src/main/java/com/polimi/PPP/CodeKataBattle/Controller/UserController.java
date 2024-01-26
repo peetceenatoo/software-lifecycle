@@ -1,13 +1,13 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
-import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.UserLoggedDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.UserLoginDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
+import com.polimi.PPP.CodeKataBattle.Utilities.EmailProvider;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,10 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtHelper jwtHelper;
+
+    @Autowired
+    @Qualifier("emailProvider")
+    private NotificationProvider notificationProvider;
 
     public UserController(UserService userService, AuthenticationManager authenticationManager, JwtHelper jwtHelper) {
         this.userService = userService;
