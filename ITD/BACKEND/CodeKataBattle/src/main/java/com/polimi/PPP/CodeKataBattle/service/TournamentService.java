@@ -43,7 +43,7 @@ public class TournamentService {
                                    .collect(Collectors.toList());
     }
 
-    public List<TournamentDTO> getCreatedTournaments(Long educatorId) {
+    public List<TournamentDTO> getManagedTournaments(Long educatorId) {
 
         return tournamentRepository.findByUsers_Id(educatorId).stream()
             .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))

@@ -39,11 +39,11 @@ public class TournamentController extends AuthenticatedController{
     }
 
 
-    @GetMapping("/created")
+    @GetMapping("/managed")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
-    public ResponseEntity<?> getCreatedTournaments() {
+    public ResponseEntity<?> getManagedTournaments() {
         UserDTO user = this.getAuthenticatedUser();
-        List<TournamentDTO> createdTournaments = tournamentService.getCreatedTournaments(user.getId());
+        List<TournamentDTO> createdTournaments = tournamentService.getManagedTournaments(user.getId());
         return ResponseEntity.ok(createdTournaments);
     }
 
