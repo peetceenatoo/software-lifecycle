@@ -1,6 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.BattleScore;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleScoreRepository;
@@ -44,7 +45,7 @@ public class BattleService {
             battleScoreRepository.save(battleScore);
             return Optional.of("Success");
         } else {
-            return Optional.empty();
+            throw new InvalidArgumentException("Invalid submission id");
         }
     }
 }

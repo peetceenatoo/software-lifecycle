@@ -19,6 +19,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(InvalidBattleStateException.class)
+    public ResponseEntity<Object> handleInvalidBattleStateException(InvalidBattleStateException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<Object> handleInvalidArgumentException(InvalidArgumentException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(UserNotSubscribedException.class)
+    public ResponseEntity<Object> handleUserNotSubscribedException(UserNotSubscribedException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(InvalidActionException.class)
     public ResponseEntity<Object> handleInvalidActionException(InvalidActionException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());

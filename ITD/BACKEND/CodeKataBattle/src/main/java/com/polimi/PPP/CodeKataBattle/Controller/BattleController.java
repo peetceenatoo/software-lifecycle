@@ -37,19 +37,16 @@ public class BattleController extends AuthenticatedController {
         Long userId = submissionAuth.getUserId();
 
         if( !Objects.equals(bId, battleId) )
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request.");
-        try {
-            submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
-            return ResponseEntity.ok("Commit registered successfully.");
-        } catch (InvalidBattleStateException | UserNotSubscribedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+            throw new InvalidTokenException("Invalid token for the battle.");
+
+        submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
+        return ResponseEntity.ok("Commit registered successfully.");
     }
 
     @PostMapping("/correctScore")
     public ResponseEntity<?> correctScore(@RequestBody ScoreCorrectionDTO correctionDTO) {
         Optional<String> result = battleService.correctScore(correctionDTO.getSubmissionId(), correctionDTO.getCorrection());
-        return result.<ResponseEntity<?>>map(s -> ResponseEntity.ok(Map.of("message", s))).orElseGet(() -> ResponseEntity.badRequest().body(Map.of("message", "Invalid parameters")));
+        return ResponseEntity.ok(result);
     }
 
     private SubmissionAuthenticationToken getCommitToken() {
