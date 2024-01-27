@@ -16,8 +16,13 @@ import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.Base64;
 import java.util.Date;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+
 
 @Slf4j
 @NoArgsConstructor
@@ -92,12 +97,52 @@ public class JwtHelper {
 
     }
 
+    public String generateInviteToken(Long battleInviteId){
+        var now = Instant.now();
+
+        try{
+            return Jwts.builder()
+                    .subject(String.valueOf(battleInviteId))
+                    .claim("useCase", JWTTokenUseCase.BATTLE_INVITE.name())
+                    .issuedAt(Date.from(now))
+                    .expiration(Date.from(now.plus(1, DAYS))) // 1 Day
+                    .signWith(getPrivateKey(), Jwts.SIG.RS256)
+                    .compact();
+        }catch (Exception e){
+            throw new RuntimeException("Error creating invite token");
+        }
+    }
+
+    public Long extractBattleInviteId(String token) {
+
+        Claims tokenBody = getTokenBody(token);
+
+        if(tokenBody.get("useCase", String.class).equals(JWTTokenUseCase.BATTLE_INVITE.name()))
+            return Long.parseLong(tokenBody.getSubject());
+        else
+            throw new AccessDeniedException("Access denied: Invalid token use case");
+    }
+
     public String extractUseCase(String token) {
         return getTokenBody(token).get("useCase", String.class);
     }
+    public String extractRepositoryUrl(String token) {
+        Claims tokenBody = getTokenBody(token);
+
+        if(tokenBody.get("useCase", String.class).equals(JWTTokenUseCase.SUBMISSION.name()))
+            return tokenBody.get("repositoryUrl", String.class);
+        else
+            throw new AccessDeniedException("Access denied: Invalid token use case");
+    }
 
     public Long extractBattleId(String token) {
-        return Long.parseLong(getTokenBody(token).get("battleId", String.class));
+        Claims tokenBody = getTokenBody(token);
+
+        if(tokenBody.get("useCase", String.class).equals(JWTTokenUseCase.SUBMISSION.name()))
+            return Long.parseLong(tokenBody.get("battleId", String.class));
+
+        else
+            throw new AccessDeniedException("Access denied: Invalid token use case");
     }
 
     public Long extractUserId(String token) {
@@ -108,9 +153,6 @@ public class JwtHelper {
         return !isTokenExpired(token);
     }
 
-    public String extractRepositoryUrl(String token) {
-        return getTokenBody(token).get("repositoryUrl", String.class);
-    }
 
     private Claims getTokenBody(String token) {
 
