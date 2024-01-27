@@ -54,6 +54,9 @@ public class Battle {
     @Column(length = 256)
     private String repositoryLink;
 
+    @Column(length = 256)
+    private String testRepositoryLink;
+
     @ManyToOne
     @JoinColumn(name="tournament_fk")
     private Tournament tournament;
