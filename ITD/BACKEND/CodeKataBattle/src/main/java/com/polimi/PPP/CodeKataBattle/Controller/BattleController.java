@@ -1,4 +1,20 @@
-// ... [existing imports]
+package com.polimi.PPP.CodeKataBattle.Controller;
+
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.UserNotSubscribedException;
+import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
+import com.polimi.PPP.CodeKataBattle.service.SubmissionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/battles")

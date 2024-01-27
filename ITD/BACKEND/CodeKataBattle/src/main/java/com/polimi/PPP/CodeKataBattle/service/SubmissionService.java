@@ -1,4 +1,20 @@
-// ... [existing imports]
+package com.polimi.PPP.CodeKataBattle.service;
+
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.UserNotSubscribedException;
+import com.polimi.PPP.CodeKataBattle.Model.Battle;
+import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
+import com.polimi.PPP.CodeKataBattle.Model.Submission;
+import com.polimi.PPP.CodeKataBattle.Model.User;
+import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.SubmissionRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 
 @Service
 public class SubmissionService {
