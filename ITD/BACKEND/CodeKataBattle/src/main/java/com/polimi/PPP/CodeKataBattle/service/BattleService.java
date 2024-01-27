@@ -2,9 +2,12 @@ package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
+import com.polimi.PPP.CodeKataBattle.Model.Battle;
 import com.polimi.PPP.CodeKataBattle.Model.BattleScore;
+import com.polimi.PPP.CodeKataBattle.Model.BattleSubscription;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleScoreRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,9 @@ public class BattleService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private BattleSubscriptionRepository battleSubscriptionRepository;
 
     public List<BattleDTO> getBattlesByTournamentId(Long tournamentId) {
         return battleRepository.findByTournamentId(tournamentId).stream()
@@ -48,4 +54,34 @@ public class BattleService {
             throw new InvalidArgumentException("Invalid submission id");
         }
     }
+
+    //EDUCATOR
+    public Optional<BattleDTO> getBattleByIdEducator(Long battleId, Long userId) {
+        Optional<Battle> battleOpt = battleRepository.findById(battleId);
+        if (battleOpt.isPresent()) {
+            Battle battle = battleOpt.get();
+            if (battle.getTournament().getUsers().stream().anyMatch(user -> user.getId().equals(userId))) {
+                return Optional.of(modelMapper.map(battle, BattleDTO.class));
+            }
+        }
+        return Optional.empty();
+    }
+
+    //STUDENT
+    public Optional<BattleStudentDTO> getBattleByIdStudent(Long battleId, Long userId) {
+        Optional<BattleSubscription> battleSubscriptionOpt = battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, userId);
+        if (battleSubscriptionOpt.isPresent()) {
+            BattleSubscription battleSubscription = battleSubscriptionOpt.get();
+            BattleStudentDTO battleStudentDTO = new BattleStudentDTO();
+            battleStudentDTO.setBattle(modelMapper.map(battleSubscription.getBattle(), BattleDTO.class));
+            battleStudentDTO.setGroupId(battleSubscription.getGroupId());
+            battleStudentDTO.setUserId(battleSubscription.getUser().getId());
+            return Optional.of(battleStudentDTO);
+        }
+
+        return Optional.empty();
+    }
+
+
+
 }

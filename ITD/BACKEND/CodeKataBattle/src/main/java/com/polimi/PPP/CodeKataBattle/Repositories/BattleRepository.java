@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BattleRepository extends JpaRepository<Battle, Long> {
@@ -17,4 +18,5 @@ public interface BattleRepository extends JpaRepository<Battle, Long> {
             "WHERE t.id = :tournamentId AND bs.user.id = :userId")
     List<Battle> findBattlesByTournamentIdAndUserId(@Param("tournamentId") Long tournamentId, @Param("userId") Long userId);
 
+    //Optional<Battle> findById(Long battleId);
 }
