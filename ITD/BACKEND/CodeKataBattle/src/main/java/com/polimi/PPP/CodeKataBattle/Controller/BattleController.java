@@ -4,10 +4,9 @@ import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.BattleStudentDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.ScoreCorrectionDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
-import com.polimi.PPP.CodeKataBattle.Exceptions.UserNotSubscribedException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.*;
 import com.polimi.PPP.CodeKataBattle.Model.Battle;
+import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.Role;
 import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
@@ -70,17 +69,36 @@ public class BattleController extends AuthenticatedController {
             if (battle.isPresent()) {
                 return ResponseEntity.ok(battle.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Battle not found");
+                throw new InvalidArgumentException("Battle not found");
             }
         }else {
             Optional<BattleStudentDTO> battle = battleService.getBattleByIdStudent(battleId, user.getId());
             if (battle.isPresent()) {
                 return ResponseEntity.ok(battle.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Battle not found");
+                throw new InvalidArgumentException("Battle not found");
             }
         }
 
+    }
+
+    @PostMapping("/{battleId}/closeBattle")
+    public ResponseEntity<?> closeBattle(@PathVariable Long battleId) {
+        UserDTO user = this.getAuthenticatedUser();
+        if (user.getRole().getName() == RoleEnum.ROLE_EDUCATOR) {
+            Optional<BattleDTO> battle = battleService.getBattleByIdEducator(battleId, user.getId());
+            if (battle.isPresent()) {
+                if(battle.get().getState() != BattleStateEnum.CONSOLIDATION) {
+                    throw new InvalidBattleStateException("Battle is not in consolidation state");
+                }
+                battleService.closeBattle(battleId);
+                return ResponseEntity.ok("Battle closed");
+            } else {
+                throw new InvalidArgumentException("Battle not found");
+            }
+        } else {
+            throw new InvalidRightsForActionException("You are not authorized to close this battle");
+        }
     }
 
 }

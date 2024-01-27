@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 @Service
 public class BattleService {
 
@@ -55,7 +55,6 @@ public class BattleService {
         }
     }
 
-    //EDUCATOR
     public Optional<BattleDTO> getBattleByIdEducator(Long battleId, Long userId) {
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
         if (battleOpt.isPresent()) {
@@ -67,7 +66,6 @@ public class BattleService {
         return Optional.empty();
     }
 
-    //STUDENT
     public Optional<BattleStudentDTO> getBattleByIdStudent(Long battleId, Long userId) {
         Optional<BattleSubscription> battleSubscriptionOpt = battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, userId);
         if (battleSubscriptionOpt.isPresent()) {
@@ -82,6 +80,15 @@ public class BattleService {
         return Optional.empty();
     }
 
+
+    public void closeBattle(Long battleId) {
+        Optional<Battle> battleOpt = battleRepository.findById(battleId);
+        if (battleOpt.isPresent()) {
+            Battle battle = battleOpt.get();
+            battle.setState(BattleStateEnum.ENDED);
+            battleRepository.save(battle);
+        }
+    }
 
 
 }
