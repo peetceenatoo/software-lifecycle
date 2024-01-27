@@ -36,5 +36,4 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     List<TournamentRankingDTO> calculateStudentRankingForTournament(@Param("tournamentId") Long tournamentId);
 
 
-    // Other custom methods if needed
 }

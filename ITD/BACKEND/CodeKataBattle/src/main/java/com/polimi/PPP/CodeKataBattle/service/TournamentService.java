@@ -137,7 +137,4 @@ public class TournamentService {
                           .collect(Collectors.toList());
     }
 
-
-
-    // Other methods corresponding to the TournamentController's endpoints
 }

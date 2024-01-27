@@ -35,5 +35,4 @@ public class RoleService {
         return null;
     }
 
-    // Other service methods
 }

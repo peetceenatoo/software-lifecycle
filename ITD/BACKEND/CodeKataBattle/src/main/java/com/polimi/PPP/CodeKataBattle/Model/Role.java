@@ -21,7 +21,7 @@ public class Role {
     private RoleEnum name;
 
     // No need to define the inverse side of the relationship if it's not needed
-    // Other fields and methods...
+
 }
 
 

@@ -82,7 +82,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // ... other exception handlers ...
 
     // A helper class for consistent API error responses
     @Getter

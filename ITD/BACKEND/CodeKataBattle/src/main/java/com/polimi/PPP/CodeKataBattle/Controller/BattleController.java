@@ -47,5 +47,4 @@ public class BattleController extends AuthenticatedController {
         return (SubmissionAuthenticationToken) auth;
     }
 
-    // ... [other methods and controller code]
 }
