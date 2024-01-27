@@ -1,11 +1,14 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
+import com.polimi.PPP.CodeKataBattle.Model.BattleScore;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.BattleScoreRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -13,6 +16,9 @@ public class BattleService {
 
     @Autowired
     private BattleRepository battleRepository;
+
+    @Autowired
+    private BattleScoreRepository battleScoreRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -29,5 +35,16 @@ public class BattleService {
                 .collect(Collectors.toList());
     }
 
-    // Additional methods as needed
+    public Optional<String> correctScore(Long submissionId, int correction) {
+        Optional<BattleScore> battleScoreOpt = battleScoreRepository.findBySubmissionId(submissionId);
+
+        if (battleScoreOpt.isPresent()) {
+            BattleScore battleScore = battleScoreOpt.get();
+            battleScore.setManualCorrection(correction);
+            battleScoreRepository.save(battleScore);
+            return Optional.of("Success");
+        } else {
+            return Optional.empty();
+        }
+    }
 }
