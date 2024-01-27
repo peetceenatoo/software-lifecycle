@@ -85,11 +85,17 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 throw new InvalidUserIdException("Invalid userId provided in the token");
             }
 
+            Authentication auth;
+
             if (useCase == JWTTokenUseCase.USER) {
-                Authentication auth = getAuthentication(token);
+                auth = getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } else if (useCase == JWTTokenUseCase.SUBMISSION) {
-                Authentication auth = getSubmissionAuthentication(token);
+                try{
+                    auth = getSubmissionAuthentication(token);
+                }catch (Exception e) {
+                    throw new InvalidTokenException("Invalid token for the request");
+                }
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }catch(Exception e) {
