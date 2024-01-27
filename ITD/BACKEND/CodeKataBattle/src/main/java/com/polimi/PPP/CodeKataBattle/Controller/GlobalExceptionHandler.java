@@ -61,6 +61,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(MissingEnvironmentVariableExcpetion.class)
+    public ResponseEntity<Object> handleMissingEnvironmentVariableExcpetion(MissingEnvironmentVariableExcpetion ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(ErrorInConnectingToGitHubException.class)
+    public ResponseEntity<Object> handleErrorInConnectingToGitHubException(ErrorInConnectingToGitHubException ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex) {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
