@@ -10,11 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/battles")
@@ -25,14 +24,16 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> registerCommit(@RequestBody String commitHash) {
+    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @PathVariable Long battleId) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
-        Long battleId = submissionAuth.getBattleId();
+        Long bId = submissionAuth.getBattleId();
         String repositoryUrl = submissionAuth.getRepositoryUrl();
         Long userId = submissionAuth.getUserId();
 
+        if( !Objects.equals(bId, battleId) )
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request.");
         try {
-            submissionService.createSubmission(battleId, userId, repositoryUrl, commitHash);
+            submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
             return ResponseEntity.ok("Commit registered successfully.");
         } catch (InvalidBattleStateException | UserNotSubscribedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
