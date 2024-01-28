@@ -37,7 +37,9 @@ public class DeadlineScheduler {
     public void init(){
 
         //TODO: we should correctly handle changes of deadlines and reschedule the tasks
-        // as well as immediately processing eventual past deadlines after a crash/restart
+        // .
+        // Immediate processing of past deadlines after a crash/restart happens automatically thanks to
+        // how Spirng's TaskScheduler works
 
         log.info("Scheduling existing battles and tournaments");
         scheduleExistingBattles();
@@ -50,7 +52,8 @@ public class DeadlineScheduler {
         // The task should call the battleService to start the tournament
         List<TournamentDTO> tournaments = tournamentService.getTournamentsToSchedule();
         for (TournamentDTO tournament : tournaments) {
-            scheduleNewTournament(tournament);        }
+            scheduleNewTournament(tournament);
+        }
 
     }
 
