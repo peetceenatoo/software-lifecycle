@@ -3,7 +3,6 @@ package com.polimi.PPP.CodeKataBattle.Utilities;
 import com.polimi.PPP.CodeKataBattle.Exceptions.ErrorInConnectingToGitHubException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.MissingEnvironmentVariableExcpetion;
 import jakarta.annotation.PostConstruct;
-import org.kohsuke.github.GHContentBuilder;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;

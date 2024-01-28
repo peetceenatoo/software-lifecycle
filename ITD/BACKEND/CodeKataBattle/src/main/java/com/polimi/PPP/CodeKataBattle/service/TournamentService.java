@@ -60,6 +60,16 @@ public class TournamentService {
             .collect(Collectors.toList());
     }
 
+    public List<TournamentDTO> getTournamentsToSchedule() {
+        return tournamentRepository.findByState(TournamentStateEnum.SUBSCRIPTION).stream()
+                                   .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))
+                                   .collect(Collectors.toList());
+    }
+
+    public void updateStateForTournament(Long tournamentId, TournamentStateEnum newState) {
+        tournamentRepository.updateStateForTournament(tournamentId, newState);
+    }
+
     @Transactional
     public TournamentDTO createTournament(TournamentCreationDTO tournamentDTO) {
         // Input validation done in the controller
