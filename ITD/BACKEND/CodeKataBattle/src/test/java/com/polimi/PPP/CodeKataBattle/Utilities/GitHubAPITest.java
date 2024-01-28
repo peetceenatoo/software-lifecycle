@@ -10,7 +10,7 @@ class GitHubAPITest {
     void createRepository() {
 
         IGitHubAPI gitHubAPI = new GitHubAPI();
-        gitHubAPI.pushFolder("Jacopopiazza","new_repo_With_puglio", "/Users/japo/Downloads/Puglio", "First commit by CKB");
+        gitHubAPI.pushFolder("Jacopopiazza/new_repo_With_puglio", "/Users/japo/Downloads/Puglio", "First commit by CKB");
 
     }
 }

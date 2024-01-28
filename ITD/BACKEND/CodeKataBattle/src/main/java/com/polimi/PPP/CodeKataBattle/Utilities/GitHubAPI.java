@@ -59,18 +59,18 @@ public class GitHubAPI implements IGitHubAPI {
         return repository.getHtmlUrl().toString();
     }
     @Override
-    public void pushFile(String usernameOwner, String repositoryName, String filePath, String commitMessage) {
-        this.pushFile(usernameOwner, repositoryName, filePath, commitMessage, "main");
+    public void pushFile(String repositoryName, String filePath, String commitMessage) {
+        this.pushFile(repositoryName, filePath, commitMessage, "main");
     }
     @Override
-    public void pushFile(String usernameOwner, String repositoryName, String filePath, String commitMessage, String branchName){
-        this.pushFile(usernameOwner, repositoryName, filePath, "", commitMessage, branchName);
+    public void pushFile(String repositoryName, String filePath, String commitMessage, String branchName){
+        this.pushFile(repositoryName, filePath, "", commitMessage, branchName);
     }
     @Override
-    public void pushFile(String usernameOwner, String repositoryName, String filePath, String baseFolder, String commitMessage, String branchName){
+    public void pushFile(String repositoryName, String filePath, String baseFolder, String commitMessage, String branchName){
         GHRepository repo;
         try{
-            repo = this.gitHub.getRepository(usernameOwner + "/" + repositoryName);
+            repo = this.gitHub.getRepository(repositoryName);
         }catch (Exception e){
             throw new ErrorInConnectingToGitHubException("Error in connecting to the repo to push file");
         }
@@ -90,18 +90,18 @@ public class GitHubAPI implements IGitHubAPI {
         }
     }
     @Override
-    public void pushFolder(String usernameOwner, String repositoryName, String folderPath, String commitMessage){
-        this.pushFolder(usernameOwner, repositoryName, folderPath, commitMessage, "main");
+    public void pushFolder(String repositoryName, String folderPath, String commitMessage){
+        this.pushFolder(repositoryName, folderPath, commitMessage, "main");
     }
     @Override
-    public void pushFolder(String usernameOwner, String repositoryName, String folderPath, String commitMessage, String branchName){
-        this.pushFolder(usernameOwner, repositoryName, folderPath, "", commitMessage, branchName);
+    public void pushFolder(String repositoryName, String folderPath, String commitMessage, String branchName){
+        this.pushFolder(repositoryName, folderPath, "", commitMessage, branchName);
     }
     @Override
-    public void pushFolder(String usernameOwner, String repositoryName, String folderPath, String baseFolder, String commitMessage, String branchName){
+    public void pushFolder(String repositoryName, String folderPath, String baseFolder, String commitMessage, String branchName){
         GHRepository repo;
         try{
-            repo = this.gitHub.getRepository(usernameOwner + "/" + repositoryName);
+            repo = this.gitHub.getRepository(repositoryName);
         }catch (Exception e){
             throw new ErrorInConnectingToGitHubException("Error in connecting to the repo to push file");
         }
@@ -149,10 +149,10 @@ public class GitHubAPI implements IGitHubAPI {
     }
 
     @Override
-    public void changeRepositoryVisibility(String usernameOwner, String repositoryName, boolean isPrivate){
+    public void changeRepositoryVisibility(String repositoryName, boolean isPrivate){
         GHRepository repository;
         try{
-            repository = gitHub.getRepository(usernameOwner + "/" + repositoryName);
+            repository = gitHub.getRepository(repositoryName);
         }catch (Exception e){
             throw new ErrorInConnectingToGitHubException("Error in connecting to repository");
         }
