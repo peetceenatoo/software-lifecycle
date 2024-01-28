@@ -34,6 +34,7 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     @Query(value = "SELECT new com.polimi.PPP.CodeKataBattle.DTOs.TournamentRankingDTO(u.username, SUM(v.bestScore)) " +
             "FROM BestBattleScores v " +
             "JOIN Users u ON v.user_id = u.id " +
+            "JOIN Battles b ON v.battle_id = b.id " +
             "WHERE v.tournament_id = :tournamentId " +
             "GROUP BY u.username " +
             "ORDER BY SUM(v.bestScore) DESC", nativeQuery = true)

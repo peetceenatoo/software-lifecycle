@@ -25,7 +25,6 @@ public class DeadlineScheduler {
     private final BattleService battleService; // Assuming this service handles the logic
     private final BattleInviteService battleInviteService;
     private final TournamentService tournamentService;
-
     private final IGitHubAPI gitHubAPI;
 
     @Autowired
