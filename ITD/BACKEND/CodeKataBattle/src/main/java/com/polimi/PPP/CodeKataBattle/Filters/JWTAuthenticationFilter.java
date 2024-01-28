@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -33,6 +34,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         // Skip filter for public endpoints
         if (request.getMethod().equals("POST") && ("/api/users/signup".equals(requestURI) || "/api/users/login".equals(requestURI))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Allow the user to accept the invite without being authenticated
+        // as all the necessary information are in a signed token as request parameter
+        if (request.getMethod().equals("GET") && requestURI.startsWith("/api/battles/acceptInvite/")) {
             filterChain.doFilter(request, response);
             return;
         }
