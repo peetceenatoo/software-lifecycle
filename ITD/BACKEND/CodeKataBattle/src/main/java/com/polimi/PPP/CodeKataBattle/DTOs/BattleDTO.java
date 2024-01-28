@@ -22,5 +22,6 @@ public class BattleDTO {
     private int minStudentsInGroup;
     private boolean manualScoringRequires;
     private String repositoryLink;
+    private String testRepositoryLink;
     // Getters and setters
 }

@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.TaskScheduling;
 import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.TournamentDTO;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
+import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
 import com.polimi.PPP.CodeKataBattle.service.BattleInviteService;
 import com.polimi.PPP.CodeKataBattle.service.BattleService;
 import com.polimi.PPP.CodeKataBattle.service.TournamentService;
@@ -25,12 +26,15 @@ public class DeadlineScheduler {
     private final BattleInviteService battleInviteService;
     private final TournamentService tournamentService;
 
+    private final IGitHubAPI gitHubAPI;
+
     @Autowired
-    public DeadlineScheduler(TaskScheduler taskScheduler, BattleService battleService, TournamentService tournamentService, BattleInviteService battleInviteService) {
+    public DeadlineScheduler(TaskScheduler taskScheduler, BattleService battleService, TournamentService tournamentService, BattleInviteService battleInviteService, IGitHubAPI gitHubAPI) {
         this.battleService = battleService;
         this.tournamentService = tournamentService;
         this.taskScheduler = taskScheduler;
         this.battleInviteService = battleInviteService;
+        this.gitHubAPI = gitHubAPI;
     }
 
     @PostConstruct
@@ -39,7 +43,7 @@ public class DeadlineScheduler {
         //TODO: we should correctly handle changes of deadlines and reschedule the tasks
         // .
         // Immediate processing of past deadlines after a crash/restart happens automatically thanks to
-        // how Spirng's TaskScheduler works
+        // how Spring's TaskScheduler works
 
         log.info("Scheduling existing battles and tournaments");
         scheduleExistingBattles();
@@ -64,7 +68,7 @@ public class DeadlineScheduler {
     public void scheduleNewBattle(BattleDTO battle) {
         switch (battle.getState()) {
             case BattleStateEnum.SUBSCRIPTION:
-                taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler), battle.getSubscriptionDeadline().toInstant(ZoneOffset.UTC));
+                taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), battle.getSubscriptionDeadline().toInstant(ZoneOffset.UTC));
                 break;
             case ONGOING:
                 taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battle.getId()), battle.getSubmissionDeadline().toInstant(ZoneOffset.UTC));

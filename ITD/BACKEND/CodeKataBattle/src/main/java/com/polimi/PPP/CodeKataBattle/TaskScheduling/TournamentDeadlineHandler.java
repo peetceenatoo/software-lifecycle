@@ -16,7 +16,6 @@ public class TournamentDeadlineHandler implements DeadlineHandler{
 
     @Override
     public void handleDeadline() {
-        // TODO Auto-generated method stub
         this.tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
     }
 
