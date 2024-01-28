@@ -35,6 +35,10 @@ public class DeadlineScheduler {
 
     @PostConstruct
     public void init(){
+
+        //TODO: we should correctly handle changes of deadlines and reschedule the tasks
+        // as well as immediately processing eventual past deadlines after a crash/restart
+
         log.info("Scheduling existing battles and tournaments");
         scheduleExistingBattles();
         scheduleExistingTournaments();
