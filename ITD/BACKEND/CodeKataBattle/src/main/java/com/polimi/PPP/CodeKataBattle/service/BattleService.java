@@ -178,6 +178,7 @@ public class BattleService {
     }
 
     //I can remove some checks to improve it
+    @Transactional
     public void enrollAndInviteBattle(BattleEnrollDTO battleEnrollDTO) {
         if (battleEnrollDTO.getUsernames().isEmpty()) {
             throw new InvalidArgumentException("No users to invite");
