@@ -66,7 +66,7 @@ public class DeadlineScheduler {
 
     public void scheduleNewBattle(BattleDTO battle) {
         switch (battle.getState()) {
-            case BattleStateEnum.SUBSCRIPTION:
+            case SUBSCRIPTION:
                 taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), battle.getSubscriptionDeadline().toInstant(ZoneOffset.UTC));
                 break;
             case ONGOING:

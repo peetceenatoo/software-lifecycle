@@ -35,11 +35,13 @@ public class EvaluatorProcess {
     public void processSubmission(SubmissionDTO submissionDTO){
         //Process submission
 
-        if(submissionDTO.getBattle().getProgrammingLanguage() != ProgrammingLanguageEnum.JAVA)
+        if(submissionDTO.getBattle().getProgrammingLanguage() != ProgrammingLanguageEnum.JAVA) {
             submissionService.createSubmissionScore(submissionDTO.getId(),
                     SubmissionStateEnum.FAILED,
                     0,
                     "Programming language not yet supported");
+            return;
+        }
 
         IEvaluator evaluator = new JavaEvaluator(gitHubAPI, tempFolder);
 
