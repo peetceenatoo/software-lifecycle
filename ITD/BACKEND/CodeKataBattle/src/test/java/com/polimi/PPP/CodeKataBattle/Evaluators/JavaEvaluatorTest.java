@@ -14,7 +14,8 @@ class JavaEvaluatorTest {
     void scoreOfFunctionalTests() {
 
         IGitHubAPI gitHubAPI = new GitHubAPI(true);
-        JavaEvaluator javaEvaluator = new JavaEvaluator(gitHubAPI);
+        String tempFolder = System.getProperty("java.io.tmpdir");
+        JavaEvaluator javaEvaluator = new JavaEvaluator(gitHubAPI, tempFolder);
 
 
         SubmissionDTO submissionDTO = new SubmissionDTO();

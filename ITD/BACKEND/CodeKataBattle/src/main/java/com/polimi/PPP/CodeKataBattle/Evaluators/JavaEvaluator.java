@@ -19,14 +19,14 @@ import java.util.UUID;
 public class JavaEvaluator implements IEvaluator{
 
     private final IGitHubAPI gitHubAPI;
-    private final String workingDirectory = "/Users/japo/Desktop/CodeKataBattle/";
-
+    private String workingDirectory;
     private float functionalScore;
 
     private String tempFolderName;
 
-    public JavaEvaluator(IGitHubAPI gitHubAPI) {
+    public JavaEvaluator(IGitHubAPI gitHubAPI, String workingDirectory) {
         this.gitHubAPI = gitHubAPI;
+        this.workingDirectory = workingDirectory;
     }
 
     private void deleteFolder(Path folderPath) throws IOException {

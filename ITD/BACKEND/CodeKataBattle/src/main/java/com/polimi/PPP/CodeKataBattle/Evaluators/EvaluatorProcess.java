@@ -11,6 +11,7 @@ import com.polimi.PPP.CodeKataBattle.service.SubmissionService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class EvaluatorProcess {
     @Autowired
     private SubmissionService submissionService;
 
+    @Value("${java.io.tmpdir}")
+    private String tempFolder;
 
     @Autowired
     private IGitHubAPI gitHubAPI;
@@ -38,7 +41,7 @@ public class EvaluatorProcess {
                     0,
                     "Programming language not yet supported");
 
-        IEvaluator evaluator = new JavaEvaluator(gitHubAPI);
+        IEvaluator evaluator = new JavaEvaluator(gitHubAPI, tempFolder);
 
         Float functionalScore;
         try{
