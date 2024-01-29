@@ -1,14 +1,12 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
-import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.BattleStudentDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.ScoreCorrectionDTO;
-import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.*;
 import com.polimi.PPP.CodeKataBattle.Model.Battle;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.Role;
 import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
+import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -145,10 +144,67 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollToBattle(@RequestBody Long battleId) {
+    public ResponseEntity<?> enrollToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
         UserDTO user = this.getAuthenticatedUser();
-        battleService.enrollToBattle(battleId, user.getId());
+        battleService.enrollAndInviteBattle(battleEnrollDTO);
         return ResponseEntity.ok("Enrolled successfully");
     }
+
+    @PostMapping("/invite")
+    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
+    public ResponseEntity<?> inviteToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
+        UserDTO user = this.getAuthenticatedUser();
+        battleService.inviteUserToBattle(battleEnrollDTO);
+        return ResponseEntity.ok("Invited successfully");
+    }
+
+    @GetMapping("/getGithubToken/{battleId}")
+    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
+    public ResponseEntity<?> getGithubToken(@PathVariable Long battleId) {
+        UserDTO user = this.getAuthenticatedUser();
+        Optional<BattleStudentDTO> battleStudentDTO = battleService.getBattleByIdStudent(battleId, user.getId());
+
+        if(battleStudentDTO.isEmpty()){
+            throw new InvalidArgumentException("Invalid battle for student");
+        }
+
+        BattleDTO battleDTO = battleStudentDTO.get().getBattle();
+
+        //Check battle is ongoing
+        if(battleDTO.getState() != BattleStateEnum.ONGOING){
+            throw new InvalidBattleStateException("Cannot request token for battles that are not ongoing");
+        }
+
+        String userToken = jwtHelper.generateSubmissionToken(battleId, user.getId(), battleDTO.getSubmissionDeadline());
+
+        return ResponseEntity.ok(new StudentGithubTokenDTO(userToken));
+    }
+
+
+    @GetMapping("/acceptInvitation/{token}")
+    public ResponseEntity<?> acceptInvitation(@PathVariable String token) {
+
+        if(token == null || !jwtHelper.validateToken(token)){
+            throw new InvalidTokenException("Invalid token provided");
+        }
+
+        String useCase = jwtHelper.extractUseCase(token);
+
+        if(!useCase.equals(JWTTokenUseCase.BATTLE_INVITE.name())){
+            throw new InvalidTokenException("Invalid token for the endpoint");
+        }
+
+        Long battleInviteId = jwtHelper.extractBattleInviteId(token);
+
+        if(battleInviteId < 0) throw new InvalidArgumentException("Invalid invite id");
+
+        battleService.acceptBattleInvite(battleInviteId);
+        return ResponseEntity.ok("Accepted successfully");
+    }
+
+
+
+
+
 
 }

@@ -27,4 +27,6 @@ public interface BattleSubscriptionRepository extends JpaRepository<BattleSubscr
 
     @Query("SELECT MAX(bs.groupId) FROM BattleSubscription bs WHERE bs.battle.id = :battleId")
     Long findMaxGroupIdInBattle(Long battleId);
+
+    long findGroupIdByBattleIdAndUserId(Long battleId, Long userId);
 }
