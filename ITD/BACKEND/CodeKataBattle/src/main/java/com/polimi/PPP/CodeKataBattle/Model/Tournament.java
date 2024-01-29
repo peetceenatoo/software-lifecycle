@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -26,7 +28,7 @@ public class Tournament {
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Deadline is mandatory")
-    private Date deadline;
+    private LocalDateTime deadline;
 
     @Column(nullable = false, length = 256)
     @Enumerated(EnumType.STRING)

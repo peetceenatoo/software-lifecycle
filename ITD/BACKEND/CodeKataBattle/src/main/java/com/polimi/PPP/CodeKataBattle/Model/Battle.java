@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -24,20 +25,16 @@ public class Battle {
     private String name;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "codeKataPath is mandatory")
-    private String codeKataPath;
-
-    @Column(nullable = false, length = 256)
     @Enumerated(EnumType.STRING)
     private BattleStateEnum state;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Subsription Deadline is mandatory")
-    private Date subscribtion_deadline;
+    private LocalDateTime subscribtion_deadline;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Submission Deadline is mandatory")
-    private Date submissiondeadline;
+    private LocalDateTime submissiondeadline;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Max Students in Group is mandatory")
@@ -60,5 +57,9 @@ public class Battle {
     @ManyToOne
     @JoinColumn(name="tournament_fk")
     private Tournament tournament;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProgrammingLanguageEnum programmingLanguage = ProgrammingLanguageEnum.JAVA;
 
 }

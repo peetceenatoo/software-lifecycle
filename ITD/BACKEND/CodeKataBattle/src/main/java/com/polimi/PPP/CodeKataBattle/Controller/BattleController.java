@@ -1,5 +1,10 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
+import com.polimi.PPP.CodeKataBattle.DTOs.ScoreCorrectionDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
+import com.polimi.PPP.CodeKataBattle.Evaluators.EvaluatorProcess;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.*;
 import com.polimi.PPP.CodeKataBattle.Model.*;
@@ -7,7 +12,6 @@ import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,20 +34,28 @@ public class BattleController extends AuthenticatedController {
     private BattleService battleService;
 
     @Autowired
+    private EvaluatorProcess evaluatorProcess;
+
+    @Autowired
     JwtHelper jwtHelper;
 
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @PathVariable Long battleId) {
+    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl, @PathVariable Long battleId) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
         Long bId = submissionAuth.getBattleId();
-        String repositoryUrl = submissionAuth.getRepositoryUrl();
         Long userId = submissionAuth.getUserId();
 
         if( !Objects.equals(bId, battleId) )
             throw new InvalidTokenException("Invalid token for the battle.");
 
-        submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
+        if(repositoryUrl.isEmpty() || commitHash.isEmpty())
+            throw new InvalidArgumentException("Invalid arguments for the request.");
+
+        SubmissionDTO submissionDTO = submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
+
+        evaluatorProcess.processSubmission(submissionDTO);
+
         return ResponseEntity.ok("Commit registered successfully.");
     }
 

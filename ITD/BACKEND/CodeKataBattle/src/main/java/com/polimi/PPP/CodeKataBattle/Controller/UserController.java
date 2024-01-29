@@ -7,6 +7,7 @@ import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.Security.UserIdAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.Utilities.EmailProvider;
+import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.UserService;
 import jakarta.validation.Valid;
@@ -44,6 +45,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
         log.warn("User {} logging in with password {}", request.getEmail(), request.getPassword());
+        
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDTO userDTO = userService.findByEmail(request.getEmail());
         String token = this.jwtHelper.generateToken(userDTO.getId());

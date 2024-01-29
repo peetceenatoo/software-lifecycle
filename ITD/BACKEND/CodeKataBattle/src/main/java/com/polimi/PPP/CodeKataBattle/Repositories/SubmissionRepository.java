@@ -2,6 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Repositories;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.GroupSubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.Model.Submission;
+import com.polimi.PPP.CodeKataBattle.Model.SubmissionStateEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,5 +31,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
             "JOIN BattleScore bs ON s.id = bs.submission.id " +
             "WHERE s.battle.id = :battleId")
     List<GroupSubmissionDTO> findAllSubmissionsWithScoresByBattleId(Long battleId);
+    // Repository methods as needed
+
+    List<Submission> findAllByState(SubmissionStateEnum state);
 }
 

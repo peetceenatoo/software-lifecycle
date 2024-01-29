@@ -2,6 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Utilities;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.MessageDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.ErrorInNotificationException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.MissingEnvironmentVariableExcpetion;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
@@ -25,6 +26,11 @@ public class EmailProvider implements NotificationProvider{
 
     @PostConstruct
     public void init() {
+
+        if(password == null || password.isEmpty()){
+            throw new MissingEnvironmentVariableExcpetion("Missing SMTP password");
+        }
+
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.ssl.enable", this.ssl);

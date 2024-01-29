@@ -30,3 +30,4 @@ public class BattleSubscription {
     private Long groupId;
 
 }
+

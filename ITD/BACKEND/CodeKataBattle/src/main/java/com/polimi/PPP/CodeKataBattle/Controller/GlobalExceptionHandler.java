@@ -61,6 +61,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(MissingEnvironmentVariableExcpetion.class)
+    public ResponseEntity<Object> handleMissingEnvironmentVariableExcpetion(MissingEnvironmentVariableExcpetion ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(ErrorInConnectingToGitHubException.class)
+    public ResponseEntity<Object> handleErrorInConnectingToGitHubException(ErrorInConnectingToGitHubException ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex) {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
@@ -84,6 +96,19 @@ public class GlobalExceptionHandler {
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
+
+    @ExceptionHandler(InternalErrorException.class)
+    public ResponseEntity<Object> handleInternalErrorException(InvalidUserIdException ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(InvalidBattleCreationException.class)
+    public ResponseEntity<Object> handleInvalidBattleCreationException(InvalidUserIdException ex) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());

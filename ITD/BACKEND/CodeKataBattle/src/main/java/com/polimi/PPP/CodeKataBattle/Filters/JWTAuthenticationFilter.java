@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -37,6 +38,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Allow the user to accept the invite without being authenticated
+        // as all the necessary information are in a signed token as request parameter
+        if (request.getMethod().equals("GET") && requestURI.startsWith("/api/battles/acceptInvitation/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // Extracting and validating the token from the header
         String token = null;
         try{
@@ -52,7 +60,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Extracting the useCase from the token
-        String useCaseString = jwtHelper.extractUseCase(token);
+        String useCaseString = jwtHelper. extractUseCase(token);
         if (useCaseString == null ){
             throw new InvalidTokenException("Invalid useCase provided in the token");
         }
