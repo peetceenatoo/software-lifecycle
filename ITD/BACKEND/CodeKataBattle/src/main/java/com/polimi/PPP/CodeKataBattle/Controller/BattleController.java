@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.Controller;
 import com.polimi.PPP.CodeKataBattle.DTOs.ScoreCorrectionDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.Evaluators.EvaluatorProcess;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.service.*;
@@ -37,6 +38,9 @@ public class BattleController extends AuthenticatedController {
 
         if( !Objects.equals(bId, battleId) )
             throw new InvalidTokenException("Invalid token for the battle.");
+
+        if(repositoryUrl.isEmpty() || commitHash.isEmpty())
+            throw new InvalidArgumentException("Invalid arguments for the request.");
 
         SubmissionDTO submissionDTO = submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
 
