@@ -101,4 +101,25 @@ public class BattleController extends AuthenticatedController {
         }
     }
 
+    @GetMapping("/{battleId}/ranking")
+    public ResponseEntity<?> getRankingBattle(@PathVariable Long battleId) {
+        UserDTO user = this.getAuthenticatedUser();
+        if (user.getRole().getName() != RoleEnum.ROLE_STUDENT) {
+            Optional<BattleStudentDTO> battle = battleService.getBattleByIdStudent(battleId, user.getId());
+            if (battle.isPresent()) {
+                return ResponseEntity.ok(battleService.getBattleRanking(battleId));
+            } else {
+                throw new InvalidArgumentException("Battle not found");
+            }
+        }else {
+            Optional<BattleDTO> battle = battleService.getBattleByIdEducator(battleId, user.getId());
+            if (battle.isPresent()) {
+                return ResponseEntity.ok(battleService.getBattleRanking(battleId));
+            } else {
+                throw new InvalidArgumentException("Battle not found");
+            }
+        }
+
+    }
+
 }

@@ -11,6 +11,8 @@ import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -91,4 +93,17 @@ public class BattleService {
     }
 
 
+    public List<BattleRankingDTO> getBattleRanking(Long battleId) {
+        List<BattleRankingGroupDTO> group_ranking = battleScoreRepository.calculateStudentRankingForBattle(battleId);
+        List<BattleRankingDTO> ranking = new ArrayList<>();
+        for (BattleRankingGroupDTO x: group_ranking) {
+            List<String> usernames = battleSubscriptionRepository.findUsernamesByBattleId(battleId, x.getGroupId());
+            BattleRankingDTO battleRankingDTO = new BattleRankingDTO();
+            battleRankingDTO.setGroupId(x.getGroupId());
+            battleRankingDTO.setUsernames(usernames);
+            battleRankingDTO.setHighestScore(x.getHighestScore());
+            ranking.add(battleRankingDTO);
+        }
+        return ranking;
+    }
 }
