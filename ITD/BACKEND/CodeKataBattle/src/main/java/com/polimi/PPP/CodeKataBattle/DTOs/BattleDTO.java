@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 public class BattleDTO {
     private Long id;
     private String name;
-    private String codeKataPath;
     private BattleStateEnum state;
     private LocalDateTime subscriptionDeadline;
     private LocalDateTime submissionDeadline;

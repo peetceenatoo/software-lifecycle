@@ -25,10 +25,6 @@ public class Battle {
     private String name;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "codeKataPath is mandatory")
-    private String codeKataPath;
-
-    @Column(nullable = false, length = 256)
     @Enumerated(EnumType.STRING)
     private BattleStateEnum state;
 
