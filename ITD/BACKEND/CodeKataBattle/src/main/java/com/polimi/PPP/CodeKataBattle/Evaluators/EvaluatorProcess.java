@@ -99,6 +99,8 @@ public class EvaluatorProcess {
     public void init(){
         log.info("Evaluator process started");
 
+        this.tempFolder = this.tempFolder.replaceFirst("^~", System.getProperty("user.home"));
+
         //Checking if there are any pending submissions
         List<SubmissionDTO> pendingSubmissions = submissionService.getPendingSubmissions();
 
