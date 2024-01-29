@@ -22,4 +22,9 @@ public interface BattleSubscriptionRepository extends JpaRepository<BattleSubscr
             "WHERE bs.battle.id = :battleId AND bs.groupId = :groupId " +
             "ORDER BY u.username")
     List<String> findUsernamesByBattleId(Long battleId, Long groupId);
+
+    Optional<BattleSubscription> findByUserIdAndBattleId(Long userId, Long battleId);
+
+    @Query("SELECT MAX(bs.groupId) FROM BattleSubscription bs WHERE bs.battle.id = :battleId")
+    Long findMaxGroupIdInBattle(Long battleId);
 }

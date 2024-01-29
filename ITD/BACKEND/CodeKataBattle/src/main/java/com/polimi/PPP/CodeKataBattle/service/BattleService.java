@@ -2,9 +2,7 @@ package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
-import com.polimi.PPP.CodeKataBattle.Model.Battle;
-import com.polimi.PPP.CodeKataBattle.Model.BattleScore;
-import com.polimi.PPP.CodeKataBattle.Model.BattleSubscription;
+import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleScoreRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
+
 @Service
 public class BattleService {
 
@@ -106,4 +104,5 @@ public class BattleService {
         }
         return ranking;
     }
+
 }

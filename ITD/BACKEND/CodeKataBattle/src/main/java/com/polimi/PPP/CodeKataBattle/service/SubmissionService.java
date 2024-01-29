@@ -1,11 +1,9 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
+import com.polimi.PPP.CodeKataBattle.DTOs.GroupSubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.UserNotSubscribedException;
-import com.polimi.PPP.CodeKataBattle.Model.Battle;
-import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
-import com.polimi.PPP.CodeKataBattle.Model.Submission;
-import com.polimi.PPP.CodeKataBattle.Model.User;
+import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.SubmissionRepository;
@@ -15,6 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SubmissionService {
@@ -55,6 +58,21 @@ public class SubmissionService {
         submission.setBattle(battle);
 
         submissionRepository.save(submission);
+    }
+
+
+    public List<GroupSubmissionDTO> getSubmissionsByUserGroupInBattle(Long userId, Long battleId) {
+        return submissionRepository.findSubmissionsByUserGroupInBattle(userId, battleId);
+    }
+    public List<GroupSubmissionDTO> getAllSubmissionsWithScoresByBattle(Long battleId) {
+        return submissionRepository.findAllSubmissionsWithScoresByBattleId(battleId);
+    }
+
+    public Map<Long, List<GroupSubmissionDTO>> getSubmissionsGroupedByGroupInBattle(Long battleId) {
+        List<GroupSubmissionDTO> submissions = submissionRepository.findAllSubmissionsWithScoresByBattleId(battleId);
+
+        // Grouping the submissions by groupId
+        return submissions.stream().collect(Collectors.groupingBy(GroupSubmissionDTO::getGroupId));
     }
 
 

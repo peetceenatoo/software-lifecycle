@@ -122,4 +122,33 @@ public class BattleController extends AuthenticatedController {
 
     }
 
+    @GetMapping("/{battleId}/submissions")
+    public ResponseEntity<?> getSubmissions(@PathVariable Long battleId) {
+        UserDTO user = this.getAuthenticatedUser();
+        if (user.getRole().getName() == RoleEnum.ROLE_STUDENT) {
+            Optional<BattleStudentDTO> battle = battleService.getBattleByIdStudent(battleId, user.getId());
+            if (battle.isPresent()) {
+                return ResponseEntity.ok(submissionService.getSubmissionsByUserGroupInBattle(user.getId(), battleId));
+            } else {
+                throw new InvalidArgumentException("Battle not found");
+            }
+        } else {
+            Optional<BattleDTO> battle = battleService.getBattleByIdEducator(battleId, user.getId());
+            if (battle.isPresent()) {
+                return ResponseEntity.ok(submissionService.getAllSubmissionsWithScoresByBattle(battleId));
+                //return ResponseEntity.ok(submissionService.getSubmissionsGroupedByGroupInBattle(battleId));
+            } else {
+                throw new InvalidArgumentException("Battle not found");
+            }
+        }
+    }
+
+    @PostMapping("/enroll")
+    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
+    public ResponseEntity<?> enrollToBattle(@RequestBody Long battleId) {
+        UserDTO user = this.getAuthenticatedUser();
+        battleService.enrollToBattle(battleId, user.getId());
+        return ResponseEntity.ok("Enrolled successfully");
+    }
+
 }
