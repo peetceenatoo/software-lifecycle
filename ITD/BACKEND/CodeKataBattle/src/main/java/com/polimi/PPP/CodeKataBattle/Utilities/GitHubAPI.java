@@ -55,12 +55,6 @@ public class GitHubAPI implements IGitHubAPI {
         }catch (Exception e){
             throw new ErrorInConnectingToGitHubException("Error in creating repository");
         }
-        try{
-        repository.addCollaborators(gitHub.getUser("GabP404"));
-        }catch (Exception e){
-            throw new ErrorInConnectingToGitHubException("Error in adding collaborator");
-        }
-
 
         return repository.getHtmlUrl().toString();
     }
