@@ -40,7 +40,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         // Allow the user to accept the invite without being authenticated
         // as all the necessary information are in a signed token as request parameter
-        if (request.getMethod().equals("GET") && requestURI.startsWith("/api/battles/acceptInvite/")) {
+        if (request.getMethod().equals("GET") && requestURI.startsWith("/api/battles/acceptInvitation/")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -60,7 +60,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Extracting the useCase from the token
-        String useCaseString = jwtHelper.extractUseCase(token);
+        String useCaseString = jwtHelper. extractUseCase(token);
         if (useCaseString == null ){
             throw new InvalidTokenException("Invalid useCase provided in the token");
         }

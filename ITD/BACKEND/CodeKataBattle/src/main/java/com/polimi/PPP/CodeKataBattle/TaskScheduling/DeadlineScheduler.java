@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class DeadlineScheduler {
     private final TaskScheduler taskScheduler;
-    private final BattleService battleService; // Assuming this service handles the logic
+    private final BattleService battleService;
     private final BattleInviteService battleInviteService;
     private final TournamentService tournamentService;
     private final IGitHubAPI gitHubAPI;
