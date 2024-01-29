@@ -1,5 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
+import com.polimi.PPP.CodeKataBattle.DTOs.BattleScoreDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.BestBattleScoreDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.GroupSubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
@@ -100,6 +102,21 @@ public class SubmissionService {
         submissionRepository.save(submission);
         battleScoreRepository.save(battleScore);
 
+    }
+
+    public BattleScoreDTO correctScore(Long submissionId, int correction) {
+        Optional<BattleScore> battleScoreOpt = battleScoreRepository.findBySubmissionId(submissionId);
+
+        if (battleScoreOpt.isPresent()) {
+            BattleScore battleScore = battleScoreOpt.get();
+            battleScore.setManualCorrection(correction);
+            BattleScore result = battleScoreRepository.save(battleScore);
+            BattleScoreDTO battleScoreDTO = new BattleScoreDTO();
+            modelMapper.map(result, battleScoreDTO);
+            return battleScoreDTO;
+        } else {
+            throw new InvalidArgumentException("Invalid submission id");
+        }
     }
 
     public List<SubmissionDTO> getPendingSubmissions() {

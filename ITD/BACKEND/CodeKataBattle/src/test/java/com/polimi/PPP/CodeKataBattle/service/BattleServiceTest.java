@@ -86,15 +86,12 @@ class BattleServiceTest {
         MockitoAnnotations.openMocks(this);
         this.battleService = new BattleService(battleRepository, battleScoreRepository, tournamentRepository, gitHubAPI, modelMapper, battleSubscriptionRepository
                 ,userRepository, battleInviteRepository);
-
-
-
     }
+
+
 
     @Test
     public void createBattle() throws IOException {
-
-        var now = Instant.now();
 
         Long tournamentId = 10L;
 

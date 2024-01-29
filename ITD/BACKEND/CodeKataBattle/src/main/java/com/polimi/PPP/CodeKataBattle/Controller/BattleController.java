@@ -61,7 +61,7 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/correctScore")
     public ResponseEntity<?> correctScore(@RequestBody ScoreCorrectionDTO correctionDTO) {
-        Optional<String> result = battleService.correctScore(correctionDTO.getSubmissionId(), correctionDTO.getCorrection());
+        BattleScoreDTO result = submissionService.correctScore(correctionDTO.getSubmissionId(), correctionDTO.getCorrection());
         return ResponseEntity.ok(result);
     }
 

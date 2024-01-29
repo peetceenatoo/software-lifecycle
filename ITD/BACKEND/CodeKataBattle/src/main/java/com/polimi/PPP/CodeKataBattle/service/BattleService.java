@@ -82,19 +82,6 @@ public class BattleService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<String> correctScore(Long submissionId, int correction) {
-        Optional<BattleScore> battleScoreOpt = battleScoreRepository.findBySubmissionId(submissionId);
-
-        if (battleScoreOpt.isPresent()) {
-            BattleScore battleScore = battleScoreOpt.get();
-            battleScore.setManualCorrection(correction);
-            battleScoreRepository.save(battleScore);
-            return Optional.of("Success");
-        } else {
-            throw new InvalidArgumentException("Invalid submission id");
-        }
-    }
-
     public Optional<BattleDTO> getBattleByIdEducator(Long battleId, Long userId) {
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
         if (battleOpt.isPresent()) {
