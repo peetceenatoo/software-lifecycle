@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -15,6 +16,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
@@ -78,14 +80,13 @@ public class JwtHelper {
 
     }
 
-    public String generateSubmissionToken(Long battleId, Long userId, String repositoryUrl, LocalDateTime submissionDeadline) {
+    public String generateSubmissionToken(Long battleId, Long userId, LocalDateTime submissionDeadline) {
         var now = Instant.now();
 
         try{
             return Jwts.builder()
                     .claim("battleId", battleId)
                     .subject(String.valueOf(userId))
-                    .claim("repositoryUrl", repositoryUrl)
                     .claim("useCase", JWTTokenUseCase.SUBMISSION.name())
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(submissionDeadline.atZone(java.time.ZoneId.systemDefault()).toInstant()))
@@ -97,15 +98,17 @@ public class JwtHelper {
 
     }
 
-    public String generateInviteToken(Long battleInviteId){
+    public String generateInviteToken(Long battleInviteId, LocalDateTime battleDeadline){
         var now = Instant.now();
+
+        var timestampDeadline = battleDeadline.toInstant(ZoneOffset.UTC);
 
         try{
             return Jwts.builder()
                     .subject(String.valueOf(battleInviteId))
                     .claim("useCase", JWTTokenUseCase.BATTLE_INVITE.name())
                     .issuedAt(Date.from(now))
-                    .expiration(Date.from(now.plus(1, DAYS))) // 1 Day
+                    .expiration(Date.from(timestampDeadline)) // Till the start of the battle
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)
                     .compact();
         }catch (Exception e){
@@ -125,14 +128,6 @@ public class JwtHelper {
 
     public String extractUseCase(String token) {
         return getTokenBody(token).get("useCase", String.class);
-    }
-    public String extractRepositoryUrl(String token) {
-        Claims tokenBody = getTokenBody(token);
-
-        if(tokenBody.get("useCase", String.class).equals(JWTTokenUseCase.SUBMISSION.name()))
-            return tokenBody.get("repositoryUrl", String.class);
-        else
-            throw new AccessDeniedException("Access denied: Invalid token use case");
     }
 
     public Long extractBattleId(String token) {
@@ -170,6 +165,7 @@ public class JwtHelper {
 
     private boolean isTokenExpired(String token) {
         Claims claims = getTokenBody(token);
+        //check expiration of jwt using UTC timestamps
         return claims.getExpiration().before(new Date());
     }
 }

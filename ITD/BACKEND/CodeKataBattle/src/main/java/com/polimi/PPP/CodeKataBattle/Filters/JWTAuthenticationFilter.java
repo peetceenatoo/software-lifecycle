@@ -121,13 +121,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         return new UserIdAuthenticationToken(userId);
     }
 
+
     private Authentication getSubmissionAuthentication(String token) {
         // Extract information from token (e.g., username, roles)
         Long userId = jwtHelper.extractUserId(token);
         Long battleId = jwtHelper.extractBattleId(token);
-        String repositoryUrl = jwtHelper.extractRepositoryUrl(token);
-        return new SubmissionAuthenticationToken(userId, battleId, repositoryUrl);
+        return new SubmissionAuthenticationToken(userId, battleId, "TEST");
     }
+
+
 
 
 }

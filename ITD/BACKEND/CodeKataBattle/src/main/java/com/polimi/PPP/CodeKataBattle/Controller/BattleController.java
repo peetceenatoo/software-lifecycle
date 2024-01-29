@@ -2,10 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.*;
-import com.polimi.PPP.CodeKataBattle.Model.Battle;
-import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
-import com.polimi.PPP.CodeKataBattle.Model.Role;
-import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
+import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.service.*;
@@ -31,6 +28,9 @@ public class BattleController extends AuthenticatedController {
 
     @Autowired
     private BattleService battleService;
+
+    @Autowired
+    JwtHelper jwtHelper;
 
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")

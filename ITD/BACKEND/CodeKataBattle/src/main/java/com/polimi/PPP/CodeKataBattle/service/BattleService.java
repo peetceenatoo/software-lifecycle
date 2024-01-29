@@ -96,7 +96,7 @@ public class BattleService {
         }
     }
 
-
+    @Transactional
     public List<BattleRankingDTO> getBattleRanking(Long battleId) {
         List<BattleRankingGroupDTO> group_ranking = battleScoreRepository.calculateStudentRankingForBattle(battleId);
         List<BattleRankingDTO> ranking = new ArrayList<>();
