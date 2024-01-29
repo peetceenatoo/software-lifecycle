@@ -25,10 +25,9 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @PathVariable Long battleId) {
+    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl, @PathVariable Long battleId) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
         Long bId = submissionAuth.getBattleId();
-        String repositoryUrl = submissionAuth.getRepositoryUrl();
         Long userId = submissionAuth.getUserId();
 
         if( !Objects.equals(bId, battleId) )

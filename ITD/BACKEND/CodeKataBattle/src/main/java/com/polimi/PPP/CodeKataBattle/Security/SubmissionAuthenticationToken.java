@@ -8,13 +8,11 @@ public class SubmissionAuthenticationToken extends UsernamePasswordAuthenticatio
 {
     private final Long userId;
     private final Long battleId;
-    private String repositoryUrl;
 
     public SubmissionAuthenticationToken(Long userId, Long battleId, String repositoryUrl) {
         super(null, Collections.emptyList());
         this.userId = userId;
         this.battleId = battleId;
-        this.repositoryUrl = repositoryUrl;
     }
 
     public Long getUserId() {
@@ -23,10 +21,6 @@ public class SubmissionAuthenticationToken extends UsernamePasswordAuthenticatio
 
     public Long getBattleId() {
         return battleId;
-    }
-
-    public String getRepositoryUrl() {
-        return repositoryUrl;
     }
 
 }
