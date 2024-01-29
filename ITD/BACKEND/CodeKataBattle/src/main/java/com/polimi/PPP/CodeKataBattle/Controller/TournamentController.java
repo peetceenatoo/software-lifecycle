@@ -8,7 +8,7 @@ import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +52,6 @@ public class TournamentController extends AuthenticatedController{
         List<TournamentDTO> createdTournaments = tournamentService.getManagedTournaments(user.getId());
         return ResponseEntity.ok(createdTournaments);
     }
-
 
     @GetMapping("/enrolled")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
@@ -123,5 +122,13 @@ public class TournamentController extends AuthenticatedController{
         return ResponseEntity.ok("Enrollment successful.");
 
     }
+
+    @PostMapping("/{tournamentId}/createBattle")
+    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
+    public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
+        battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
+        return ResponseEntity.ok("Enrollment successful.");
+    }
+
 
 }

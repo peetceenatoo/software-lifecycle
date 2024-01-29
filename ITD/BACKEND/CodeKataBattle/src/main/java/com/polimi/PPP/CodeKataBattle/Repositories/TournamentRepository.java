@@ -18,8 +18,6 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     List<Tournament> findByNameContainingIgnoreCaseOrIdIs(String name, Long id);
     List<Tournament> findByUsers_Id(Long userId); // For enrolled tournaments
 
-    //Tournament findById(Long tournamentId);
-
     @Query("UPDATE Tournament t SET t.state = :newState WHERE t.id = :tournamentId")
     @Modifying
     @Transactional
