@@ -4,6 +4,8 @@ import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import com.polimi.PPP.CodeKataBattle.Model.ProgrammingLanguageEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -23,5 +25,6 @@ public class BattleDTO {
     private boolean manualScoringRequires;
     private String repositoryLink;
     private String testRepositoryLink;
+    private ProgrammingLanguageEnum programmingLanguage;
     // Getters and setters
 }

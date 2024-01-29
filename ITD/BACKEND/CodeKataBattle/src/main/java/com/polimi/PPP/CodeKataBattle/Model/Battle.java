@@ -62,4 +62,8 @@ public class Battle {
     @JoinColumn(name="tournament_fk")
     private Tournament tournament;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProgrammingLanguageEnum programmingLanguage = ProgrammingLanguageEnum.JAVA;
+
 }
