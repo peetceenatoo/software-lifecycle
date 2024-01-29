@@ -21,9 +21,12 @@ public class JavaEvaluator implements IEvaluator{
     private final IGitHubAPI gitHubAPI;
     private final String workingDirectory = "/Users/japo/Desktop/CodeKataBattle/";
 
+    private float functionalScore;
+
+    private String tempFolderName;
+
     public JavaEvaluator(IGitHubAPI gitHubAPI) {
         this.gitHubAPI = gitHubAPI;
-
     }
 
     private void deleteFolder(Path folderPath) throws IOException {
@@ -117,6 +120,7 @@ public class JavaEvaluator implements IEvaluator{
 
 
         String tempFolder = downloadCodeForEvaluation(submission);
+        this.tempFolderName = tempFolder;
         Path tempFolderPath = Paths.get(tempFolder);
         String testPath = tempFolder + "/testCode";
         String testPomPath = testPath + "/pom.xml";
@@ -169,16 +173,25 @@ public class JavaEvaluator implements IEvaluator{
             throw new ErrorDuringEvaluationException("Build failed.");
         }
 
-        try {
-            deleteFolder(tempFolderPath);
-        } catch (IOException e) {
-            //DO nothing
-        }
+        this.functionalScore = score;
 
         return score;
     }
 
+    @Override
+    public void cleanUp() {
+
+        Path tempFolderPath = Paths.get(this.tempFolderName);
+
+        if(Files.exists(tempFolderPath))
+            try {
+                deleteFolder(tempFolderPath);
+            } catch (IOException e) {
+                // Do nothing
+            }
+    }
+
     public Float scoreOfStaticAnalysis(SubmissionDTO submission) throws ErrorDuringEvaluationException {
-        return new Random().nextFloat(0, 100);
+        return this.functionalScore;
     }
 }

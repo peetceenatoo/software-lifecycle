@@ -1,6 +1,8 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.ScoreCorrectionDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
+import com.polimi.PPP.CodeKataBattle.Evaluators.EvaluatorProcess;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.service.*;
@@ -23,6 +25,9 @@ public class BattleController extends AuthenticatedController {
     @Autowired
     private BattleService battleService;
 
+    @Autowired
+    private EvaluatorProcess evaluatorProcess;
+
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
     public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl, @PathVariable Long battleId) {
@@ -33,7 +38,10 @@ public class BattleController extends AuthenticatedController {
         if( !Objects.equals(bId, battleId) )
             throw new InvalidTokenException("Invalid token for the battle.");
 
-        submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
+        SubmissionDTO submissionDTO = submissionService.createSubmission(bId, userId, repositoryUrl, commitHash);
+
+        evaluatorProcess.processSubmission(submissionDTO);
+
         return ResponseEntity.ok("Commit registered successfully.");
     }
 

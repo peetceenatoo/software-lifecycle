@@ -1,0 +1,111 @@
+package com.polimi.PPP.CodeKataBattle.Evaluators;
+
+import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
+import com.polimi.PPP.CodeKataBattle.Exceptions.ErrorDuringEvaluationException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidSubmissionStateException;
+import com.polimi.PPP.CodeKataBattle.Model.ProgrammingLanguageEnum;
+import com.polimi.PPP.CodeKataBattle.Model.SubmissionStateEnum;
+import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
+import com.polimi.PPP.CodeKataBattle.service.BattleService;
+import com.polimi.PPP.CodeKataBattle.service.SubmissionService;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@Slf4j
+public class EvaluatorProcess {
+
+    @Autowired
+    private SubmissionService submissionService;
+
+
+    @Autowired
+    private IGitHubAPI gitHubAPI;
+
+    @Async("taskExecutor")
+    public void processSubmission(SubmissionDTO submissionDTO){
+        //Process submission
+
+        if(submissionDTO.getBattle().getProgrammingLanguage() != ProgrammingLanguageEnum.JAVA)
+            submissionService.createSubmissionScore(submissionDTO.getId(),
+                    SubmissionStateEnum.FAILED,
+                    0,
+                    "Programming language not yet supported");
+
+        IEvaluator evaluator = new JavaEvaluator(gitHubAPI);
+
+        Float functionalScore;
+        try{
+            functionalScore = evaluator.scoreOfFunctionalTests(submissionDTO);
+        }catch (ErrorDuringEvaluationException ex){
+            //TODO: Handle error, set submission status to error and post log
+
+            try{
+                submissionService.createSubmissionScore(submissionDTO.getId(),
+                        SubmissionStateEnum.FAILED,
+                        0,
+                        "Log publishing yet to be implemented");
+            }catch (InvalidSubmissionStateException e){
+                // Do nothing
+            }
+
+            evaluator.cleanUp();
+            return;
+        }
+
+        Float staticAnalysisScore;
+        try{
+            staticAnalysisScore = evaluator.scoreOfStaticAnalysis(submissionDTO);
+        }catch (ErrorDuringEvaluationException ex){
+            //TODO: Handle error, set submission status to error and post log
+            try{
+                submissionService.createSubmissionScore(submissionDTO.getId(),
+                        SubmissionStateEnum.FAILED,
+                        0,
+                        "Log publishing yet to be implemented");
+            }catch (InvalidSubmissionStateException e){
+                // Do nothing
+            }
+            evaluator.cleanUp();
+            return;
+        }
+
+        Float automaticScore = (functionalScore + staticAnalysisScore) / 2;
+
+        try{
+            submissionService.createSubmissionScore(submissionDTO.getId(),
+                    SubmissionStateEnum.COMPLETED,
+                    automaticScore.intValue(),
+                    "Log publishing yet to be implemented");
+        }catch (InvalidSubmissionStateException e){
+            // Do nothing
+        }
+
+        evaluator.cleanUp();
+
+    }
+
+
+    @PostConstruct
+    public void init(){
+        log.info("Evaluator process started");
+
+        //Checking if there are any pending submissions
+        List<SubmissionDTO> pendingSubmissions = submissionService.getPendingSubmissions();
+
+        log.info("Found " + pendingSubmissions.size() + " pending submissions");
+
+        for(SubmissionDTO submissionDTO : pendingSubmissions){
+            processSubmission(submissionDTO);
+        }
+
+
+    }
+
+}

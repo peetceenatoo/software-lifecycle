@@ -9,4 +9,5 @@ public interface IEvaluator {
     Float scoreOfFunctionalTests(SubmissionDTO submission) throws ErrorDuringEvaluationException;
 
     Float scoreOfStaticAnalysis(SubmissionDTO submission) throws ErrorDuringEvaluationException ;
+    void cleanUp();
 }

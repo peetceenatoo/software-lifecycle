@@ -16,6 +16,6 @@ public class BattleInviteService {
 
 
     public void changeBattleInvitesState(Long battleInviteId, BattleInviteStateEnum oldState, BattleInviteStateEnum newState){
-        battleInviteRepository.updateStateForBattle(battleInviteId, oldState, newState);
+        this.battleInviteRepository.updateStateForBattle(battleInviteId, oldState, newState);
     }
 }
