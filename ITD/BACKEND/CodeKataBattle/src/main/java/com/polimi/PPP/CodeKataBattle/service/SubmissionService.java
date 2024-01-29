@@ -2,15 +2,13 @@ package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.UserNotSubscribedException;
-import com.polimi.PPP.CodeKataBattle.Model.Battle;
-import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
-import com.polimi.PPP.CodeKataBattle.Model.Submission;
-import com.polimi.PPP.CodeKataBattle.Model.User;
+import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.SubmissionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +29,7 @@ public class SubmissionService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public void createSubmission(Long battleId, Long userId, String repositoryUrl, String commitHash) throws InvalidBattleStateException, UserNotSubscribedException {
         Battle battle = battleRepository.findById(battleId)
                 .orElseThrow(() -> new EntityNotFoundException("Battle not found"));
@@ -46,7 +45,7 @@ public class SubmissionService {
 
         Submission submission = new Submission();
         submission.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        submission.setProcessed(false);
+        submission.setState(SubmissionStateEnum.PENDING);
         submission.setRepositoryUrl(repositoryUrl);
         submission.setCommitHash(commitHash);
 
@@ -56,6 +55,8 @@ public class SubmissionService {
 
         submissionRepository.save(submission);
     }
+
+
 
 
 }

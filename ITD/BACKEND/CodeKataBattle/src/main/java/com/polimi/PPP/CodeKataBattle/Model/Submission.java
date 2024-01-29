@@ -24,7 +24,8 @@ public class Submission {
     private Timestamp timestamp;
 
     @Column(nullable = false)
-    private Boolean processed;
+    @Enumerated(EnumType.STRING)
+    private SubmissionStateEnum state;
 
     @Column(nullable = false)
     @NotBlank(message = "RepositoryUrl is mandatory")

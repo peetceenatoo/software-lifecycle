@@ -1,6 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.DTOs;
 
 import com.polimi.PPP.CodeKataBattle.Model.Battle;
+import com.polimi.PPP.CodeKataBattle.Model.SubmissionStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ public class SubmissionDTO {
 
     private Timestamp timestamp;
 
-    private Boolean processed;
+    private SubmissionStateEnum state;
 
     private String repositoryUrl;
 
