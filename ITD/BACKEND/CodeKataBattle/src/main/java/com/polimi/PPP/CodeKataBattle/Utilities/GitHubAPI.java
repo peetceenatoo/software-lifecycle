@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.Utilities;
 import com.polimi.PPP.CodeKataBattle.Exceptions.ErrorInConnectingToGitHubException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.MissingEnvironmentVariableExcpetion;
 import jakarta.annotation.PostConstruct;
+import lombok.NoArgsConstructor;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,19 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
+@NoArgsConstructor
 public class GitHubAPI implements IGitHubAPI {
 
     private GitHub gitHub;
 
     @Value("${CKB_GITHUB_TOKEN}")
     private String oAuthToken;
+
+    public GitHubAPI(Boolean useForTesting){
+        String variableValue = System.getenv("CKB_GITHUB_TOKEN");
+        this.oAuthToken = variableValue;
+        this.init();
+    }
 
     @PostConstruct
     public void init() {
