@@ -17,6 +17,7 @@ import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Utilities.URLTrimmer;
 import jakarta.transaction.Transactional;
 import org.apache.commons.io.FileUtils;
+import org.hibernate.loader.ast.spi.BatchLoader;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,29 +37,38 @@ import java.util.zip.ZipInputStream;
 @Service
 public class BattleService {
 
-    @Autowired
-    private BattleRepository battleRepository;
+    private final BattleRepository battleRepository;
+
+    private final BattleScoreRepository battleScoreRepository;
+
+    private final TournamentRepository tournamentRepository;
+
+    private final GitHubAPI gitHubAPI;
+
+    private final ModelMapper modelMapper;
+
+    private final BattleSubscriptionRepository battleSubscriptionRepository;
+
+    private final UserRepository userRepository;
+
+    private final BattleInviteRepository battleInviteRepository;
+
 
     @Autowired
-    private BattleScoreRepository battleScoreRepository;
+    public BattleService(BattleRepository battleRepository, BattleScoreRepository battleScoreRepository, TournamentRepository tournamentRepository,
+                            GitHubAPI gitHubAPI, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository, UserRepository userRepository,
+                                BattleInviteRepository battleInviteRepository){
+        this.modelMapper = modelMapper;
+        this.battleRepository = battleRepository;
+        this.userRepository = userRepository;
+        this.battleScoreRepository = battleScoreRepository;
+        this.tournamentRepository = tournamentRepository;
+        this.gitHubAPI = gitHubAPI;
+        this.battleSubscriptionRepository = battleSubscriptionRepository;
+        this.battleInviteRepository = battleInviteRepository;
 
-    @Autowired
-    private TournamentRepository tournamentRepository;
 
-    @Autowired
-    private GitHubAPI gitHubAPI;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private BattleSubscriptionRepository battleSubscriptionRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BattleInviteRepository battleInviteRepository;
+    }
 
     public List<BattleDTO> getBattlesByTournamentId(Long tournamentId) {
         return battleRepository.findByTournamentId(tournamentId).stream()
@@ -276,7 +286,7 @@ public class BattleService {
     }
 
     @Transactional
-    public void createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
+    public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
         // Validate battleDTO
         validateBattleCreation(battleDTO, tournamentId);
 
@@ -301,22 +311,17 @@ public class BattleService {
         gitHubAPI.pushFolder(testRepoUrl, testDir.getAbsolutePath(), "Initial commit");
 
         // Create and save Battle entity (sorry this code is not much softwareengineered)
-        // I will surely fix it later on
         Battle battle = new Battle();
-        battle.setName(battleDTO.getName());
-        battle.setState(BattleStateEnum.SUBSCRIPTION);
-        battle.setManualScoringRequires(battleDTO.isManualScoringRequires());
-        battle.setProgrammingLanguage(battleDTO.getProgrammingLanguage());
+        modelMapper.map(battleDTO, battle);
         battle.setRepositoryLink(URLTrimmer.trimUrl(codeRepoUrl));
         battle.setTestRepositoryLink(URLTrimmer.trimUrl(testRepoUrl));
-        battle.setMaxStudentsInGroup(battleDTO.getMaxStudentsInGroup());
-        battle.setMinStudentsInGroup(battleDTO.getMinStudentsInGroup());
-        battle.setSubscribtion_deadline(battleDTO.getSubscriptionDeadline());
-        battle.setSubmissiondeadline(battleDTO.getSubmissionDeadline());
+        battle.setState(BattleStateEnum.SUBSCRIPTION);
         battle.setTournament(tournament);
 
         // Map battleDTO to Battle and set other fields
-        battleRepository.save(battle);
+        Battle result = battleRepository.save(battle);
+        BattleDTO toBeReturned = new BattleDTO();
+        modelMapper.map(result, toBeReturned);
 
         // Clean up temporary directories
         try {
@@ -326,6 +331,8 @@ public class BattleService {
         catch(IOException e){
             throw new InternalErrorException("File system error while extracting the zip files.");
         }
+
+        return toBeReturned;
     }
 
     private void validateBattleCreation(BattleCreationDTO battleDTO, Long tournamentId) throws InvalidBattleCreationException {
@@ -355,7 +362,7 @@ public class BattleService {
 
                 if ( entry.isDirectory() ) {
                     // Check if the directory is named "src"
-                    if (entryName.equals("src"))
+                    if (entryName.equals("src/"))
                         hasSrcDirectory = true;
                 } else {
                     // Check if the file is named "pom.xml"

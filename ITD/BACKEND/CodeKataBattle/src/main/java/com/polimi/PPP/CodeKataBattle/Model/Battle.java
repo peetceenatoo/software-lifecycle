@@ -30,11 +30,11 @@ public class Battle {
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Subsription Deadline is mandatory")
-    private LocalDateTime subscribtion_deadline;
+    private LocalDateTime subscriptionDeadline;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Submission Deadline is mandatory")
-    private LocalDateTime submissiondeadline;
+    private LocalDateTime submissionDeadline;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Max Students in Group is mandatory")
@@ -46,7 +46,7 @@ public class Battle {
 
     @Column(nullable = false)
     @NotBlank(message = "Manual Scoring option is mandatory")
-    private boolean manualScoringRequires;
+    private boolean manualScoringRequired;
 
     @Column(length = 256)
     private String repositoryLink;

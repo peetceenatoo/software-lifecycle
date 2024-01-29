@@ -21,7 +21,7 @@ public class BattleDTO {
     private LocalDateTime submissionDeadline;
     private int maxStudentsInGroup;
     private int minStudentsInGroup;
-    private boolean manualScoringRequires;
+    private boolean manualScoringRequired;
     private String repositoryLink;
     private String testRepositoryLink;
     private ProgrammingLanguageEnum programmingLanguage;
