@@ -18,11 +18,6 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     List<Tournament> findByNameContainingIgnoreCaseOrIdIs(String name, Long id);
     List<Tournament> findByUsers_Id(Long userId); // For enrolled tournaments
 
-    @Query("UPDATE Tournament t SET t.state = :newState WHERE t.id = :tournamentId")
-    @Modifying
-    @Transactional
-    void updateStateForTournament(@Param("tournamentId") Long tournamentId, @Param("newState") TournamentStateEnum newState);
-
     @Query(value = "SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END " +
             "FROM Tournament t " +
             "JOIN t.users u " +

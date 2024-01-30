@@ -14,17 +14,25 @@ import java.util.stream.Collectors;
 @Service
 public class TournamentService {
 
-    @Autowired
-    private TournamentRepository tournamentRepository;
+
+    private final TournamentRepository tournamentRepository;
+
+
+    private final BattleRepository battleRepository;
+
+
+    private final UserRepository userRepository;
+
+
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private BattleRepository battleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public TournamentService(TournamentRepository tournamentRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+        this.tournamentRepository = tournamentRepository;
+        this.battleRepository = battleRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public Boolean hasUserRightsOnTournament(Long userId, Long tournamentId){
         return tournamentRepository.hasUserRightsOnTournament(userId, tournamentId);
@@ -66,8 +74,18 @@ public class TournamentService {
                                    .collect(Collectors.toList());
     }
 
-    public void updateStateForTournament(Long tournamentId, TournamentStateEnum newState) {
-        tournamentRepository.updateStateForTournament(tournamentId, newState);
+    public TournamentDTO updateStateForTournament(Long tournamentId, TournamentStateEnum newState) {
+        // No check on educator role as it is done by the scheduler
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                                                    .orElseThrow(() -> new IllegalArgumentException("Tournament ID is wrong"));
+
+        if(tournament.getState().ordinal() >= newState.ordinal()){
+            throw new IllegalStateException("Cannot put tournament in a previous state.");
+        }
+
+        tournament.setState(newState);
+        Tournament updated = tournamentRepository.save(tournament);
+        return modelMapper.map(updated, TournamentDTO.class);
     }
 
     @Transactional
@@ -93,10 +111,14 @@ public class TournamentService {
         return modelMapper.map(savedTournament, TournamentDTO.class);
     }
 
-    public void closeTournament(Long tournamentId) {
+    public TournamentDTO closeTournament(Long tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                                                     .orElseThrow(() -> new IllegalArgumentException("Tournament ID is wrong"));
-    
+
+        if (tournament.getState() != TournamentStateEnum.ONGOING) {
+            throw new IllegalStateException("Tournament is not in ongoing phase");
+        }
+
         List<Battle> battles = battleRepository.findByTournamentId(tournamentId);
         boolean allBattlesEnded = battles.stream().allMatch(battle -> battle.getState() == BattleStateEnum.ENDED);
     
@@ -105,7 +127,8 @@ public class TournamentService {
         }
     
         tournament.setState(TournamentStateEnum.ENDED);
-        tournamentRepository.save(tournament);
+        Tournament result = tournamentRepository.save(tournament);
+        return modelMapper.map(result, TournamentDTO.class);
     }
 
     @Transactional
@@ -134,7 +157,7 @@ public class TournamentService {
 
     public List<TournamentDTO> searchTournamentsByKeyword(String keyword) {
 
-        Long id = -1L;
+        long id = -1L;
         try {
             id = Long.parseLong(keyword);
         } catch (NumberFormatException e) {
