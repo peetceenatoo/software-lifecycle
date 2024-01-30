@@ -107,13 +107,13 @@ public class DeadlineScheduler {
         switch (battle.getState()) {
             case SUBSCRIPTION:
                 deadlineZoned = TimezoneUtil.convertUtcToLocalTime(battle.getSubscriptionDeadline());
-                log.info("Scheduling Tournament closing at : " + deadlineZoned);
+                log.info("Scheduling Battle subscription closing at : " + deadlineZoned);
                 taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), deadlineZoned.toInstant());
 
                 break;
             case ONGOING:
                 deadlineZoned = TimezoneUtil.convertUtcToLocalTime(battle.getSubmissionDeadline());
-                log.info("Scheduling Tournament closing at : " + deadlineZoned);
+                log.info("Scheduling Battle submission closing at : " + deadlineZoned);
                 taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battle.getId()), deadlineZoned.toInstant());
                 break;
             default:
