@@ -79,12 +79,22 @@ public class BattleService {
     }
 
     public List<BattleDTO> getBattlesByTournamentId(Long tournamentId) {
+
+        if (tournamentRepository.findById(tournamentId).isEmpty()) {
+            throw new InvalidArgumentException("Invalid tournament id");
+        }
+
         return battleRepository.findByTournamentId(tournamentId).stream()
                                .map(battle -> modelMapper.map(battle, BattleDTO.class))
                                .collect(Collectors.toList());
     }
 
     public List<BattleDTO> getEnrolledBattlesByTournamentId(Long tournamentId, Long userId) {
+
+        if (tournamentRepository.findById(tournamentId).isEmpty()) {
+            throw new InvalidArgumentException("Invalid tournament id");
+        }
+
         return battleRepository.findBattlesByTournamentIdAndUserId(tournamentId, userId).stream()
                 .map(battle -> modelMapper.map(battle, BattleDTO.class))
                 .collect(Collectors.toList());
@@ -279,6 +289,14 @@ public class BattleService {
     @Transactional
     public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
 
+        // Check tournamentId is valid and tournament is ongoing
+        Optional<Tournament> tournamentOpt = tournamentRepository.findById(tournamentId);
+        if ( tournamentOpt.isEmpty() )
+            throw new InvalidArgumentException("Invalid tournament ID.");
+        Tournament tournament = tournamentOpt.get();
+        if ( tournament.getState() != TournamentStateEnum.ONGOING )
+            throw new InvalidBattleCreationException("Tournament is not ongoing.");
+
         ZonedDateTime utcSubscriptionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubscriptionDeadline());
         battleDTO.setSubscriptionDeadline(utcSubscriptionDeadline);
 
@@ -293,12 +311,6 @@ public class BattleService {
         File testDir = unzipAndValidate(testZip);
         if( codeDir == null || testDir == null )
             throw new InvalidBattleCreationException("Invalid zip folders.");
-
-        // Get tournament by ID
-        Optional<Tournament> tournamentOptional = tournamentRepository.findById(tournamentId);
-        if( tournamentOptional.isEmpty() )
-            throw new InvalidArgumentException("Invalid tournament ID.");
-        Tournament tournament = tournamentOptional.get();
 
         // Create GitHub repositories and push contents
         String codeRepoUrl = gitHubAPI.createRepository(tournament.getName() + "-" + battleDTO.getName(), "", true);

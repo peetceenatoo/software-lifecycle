@@ -115,10 +115,7 @@ public class TournamentController extends AuthenticatedController{
         //Preauthorize already checking if the user is an educator
         //Checking if he manages the tournament is enough
         UserDTO authenticatedUser = this.getAuthenticatedUser();
-        if (!tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
-            throw new InvalidRightsForActionException("Not authorized to close this tournament.");
-
-        tournamentService.closeTournament(tournamentId);
+        tournamentService.closeTournament(tournamentId, authenticatedUser.getId());
         return ResponseEntity.ok("Tournament closed successfully.");
 
     }

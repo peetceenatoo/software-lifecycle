@@ -122,9 +122,13 @@ public class TournamentService {
         return toBeReturned;
     }
 
-    public TournamentDTO closeTournament(Long tournamentId) {
+    public TournamentDTO closeTournament(Long tournamentId, Long userId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                                                     .orElseThrow(() -> new IllegalArgumentException("Tournament ID is wrong"));
+
+        if(!tournamentRepository.hasUserRightsOnTournament(userId, tournamentId)){
+            throw new IllegalArgumentException("User does not have rights on this tournament");
+        }
 
         if (tournament.getState() != TournamentStateEnum.ONGOING) {
             throw new IllegalStateException("Tournament is not in ongoing phase");

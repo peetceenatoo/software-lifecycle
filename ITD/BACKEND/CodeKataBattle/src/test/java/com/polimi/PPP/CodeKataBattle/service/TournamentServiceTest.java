@@ -421,6 +421,13 @@ class TournamentServiceTest {
         when(tournamentRepository.findById(3L)).thenReturn(Optional.of(ongoingBattlesTournament));
         when(tournamentRepository.findById(4L)).thenReturn(Optional.of(tournament));
 
+        when(tournamentRepository.hasUserRightsOnTournament(1L, 1L)).thenReturn(true);
+        when(tournamentRepository.hasUserRightsOnTournament(1L, 2L)).thenReturn(true);
+        when(tournamentRepository.hasUserRightsOnTournament(1L, 3L)).thenReturn(true);
+        when(tournamentRepository.hasUserRightsOnTournament(1L, 4L)).thenReturn(true);
+
+        when(tournamentRepository.hasUserRightsOnTournament(2L, 4L)).thenReturn(false);
+
         when(battleRepository.findByTournamentId(1L)).thenReturn(new ArrayList<>());
         when(battleRepository.findByTournamentId(2L)).thenReturn(new ArrayList<>());
         when(battleRepository.findByTournamentId(3L)).thenReturn(new ArrayList<>(Arrays.asList(ongoingBattle)));
@@ -437,15 +444,15 @@ class TournamentServiceTest {
         noBattlesEndedTournament.setState(TournamentStateEnum.ENDED);
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(noBattlesEndedTournament);
 
-        TournamentDTO returned = tournamentService.closeTournament(1L);
+        TournamentDTO returned = tournamentService.closeTournament(1L, 1L);
 
         assertEquals(firstEnded, returned);
 
         // Already ended
-        assertThrows(IllegalStateException.class, () -> tournamentService.closeTournament(2L));
+        assertThrows(IllegalStateException.class, () -> tournamentService.closeTournament(2L, 1L));
 
         // Ongoing battles
-        assertThrows(IllegalStateException.class, () -> tournamentService.closeTournament(3L));
+        assertThrows(IllegalStateException.class, () -> tournamentService.closeTournament(3L,  1L));
 
         // Can be closed
         TournamentDTO secondEnded = new TournamentDTO();
@@ -458,7 +465,9 @@ class TournamentServiceTest {
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournamentEnded);
 
 
-        assertEquals(secondEnded, tournamentService.closeTournament(4L));
+        assertEquals(secondEnded, tournamentService.closeTournament(4L, 1L));
+
+        assertThrows(IllegalArgumentException.class, () -> tournamentService.closeTournament(4L, 2L));
     }
     @Test
     public void testEnrollInTournament(){
