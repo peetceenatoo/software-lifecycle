@@ -6,14 +6,22 @@ import java.time.format.DateTimeFormatter;
 
 public class TimezoneUtil {
 
-    public static ZonedDateTime convertToUtc(String localDateTimeString, String timeZoneId) {
-        ZonedDateTime localDateTime = ZonedDateTime.parse(
-                localDateTimeString,
-                DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of(timeZoneId))
-        );
+    /**
+     * Converts the given ZonedDateTime to UTC.
+     *
+     * @param localDateTime ZonedDateTime in any timezone
+     * @return ZonedDateTime in UTC
+     */
+    public static ZonedDateTime convertToUtc(ZonedDateTime localDateTime) {
         return localDateTime.withZoneSameInstant(ZoneId.of("UTC"));
     }
 
+    /**
+     * Converts a UTC ZonedDateTime to a specified timezone.
+     *
+     * @param utcDateTime ZonedDateTime in UTC
+     * @return ZonedDateTime in the target timezone
+     */
     public static ZonedDateTime convertUtcToLocalTime(ZonedDateTime utcDateTime) {
         return utcDateTime.withZoneSameInstant(ZoneId.systemDefault());
     }

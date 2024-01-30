@@ -279,10 +279,10 @@ public class BattleService {
     @Transactional
     public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
 
-        ZonedDateTime utcSubscriptionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubscriptionDeadline().toString(), battleDTO.getTimeZone());
+        ZonedDateTime utcSubscriptionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubscriptionDeadline());
         battleDTO.setSubscriptionDeadline(utcSubscriptionDeadline);
 
-        ZonedDateTime utcSubmissionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubmissionDeadline().toString(), battleDTO.getTimeZone());
+        ZonedDateTime utcSubmissionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubmissionDeadline());
         battleDTO.setSubmissionDeadline(utcSubmissionDeadline);
 
         // Validate battleDTO

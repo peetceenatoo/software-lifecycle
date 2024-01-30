@@ -346,7 +346,6 @@ class TournamentServiceTest {
         tournamentCreationDTO.getEducatorsInvited().add(1L);
         tournamentCreationDTO.getEducatorsInvited().add(2L);
         tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now());
-        tournamentCreationDTO.setTimeZone("Europe/Rome");
 
         Tournament created = new Tournament();
         created.setId(1L);

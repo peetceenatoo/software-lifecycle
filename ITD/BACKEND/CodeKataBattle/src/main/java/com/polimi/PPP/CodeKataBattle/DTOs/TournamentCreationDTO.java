@@ -1,7 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.polimi.PPP.CodeKataBattle.Annotations.ValidTimezone;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -24,12 +24,8 @@ public class TournamentCreationDTO {
     private String tournamentName;
 
     @NotNull(message = "Registration deadline is mandatory")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private ZonedDateTime registrationDeadline;
-
-    @NotNull
-    @ValidTimezone
-    private String timeZone;
 
     @NotNull(message = "Tournament invitations is mandatory")
     private List<Long> educatorsInvited;

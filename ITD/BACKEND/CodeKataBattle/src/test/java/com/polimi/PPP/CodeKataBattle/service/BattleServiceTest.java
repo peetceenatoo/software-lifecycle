@@ -222,7 +222,6 @@ class BattleServiceTest {
         battleCreationDTO.setSubscriptionDeadline(deadlines);
         battleCreationDTO.setMinStudentsInGroup(1);
         battleCreationDTO.setMaxStudentsInGroup(3);
-        battleCreationDTO.setTimeZone("Europe/Rome");
 
         when(tournamentRepository.findById(tournamentId)).thenReturn(java.util.Optional.of(tournament));
         when(battleRepository.save(any(Battle.class))).thenReturn(mockBattleEntity);

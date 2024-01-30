@@ -95,7 +95,7 @@ public class TournamentService {
         Tournament tournament = new Tournament();
         modelMapper.map(tournamentDTO, tournament);
 
-        ZonedDateTime utcDeadline = TimezoneUtil.convertToUtc(tournamentDTO.getRegistrationDeadline().toString(), tournamentDTO.getTimeZone());
+        ZonedDateTime utcDeadline = TimezoneUtil.convertToUtc(tournamentDTO.getRegistrationDeadline());
         tournament.setDeadline(utcDeadline);
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
         tournament.setBattles(new java.util.HashSet<>());
