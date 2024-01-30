@@ -14,16 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class TournamentService {
 
-
     private final TournamentRepository tournamentRepository;
-
-
     private final BattleRepository battleRepository;
-
-
     private final UserRepository userRepository;
-
-
     private final ModelMapper modelMapper;
 
     @Autowired
