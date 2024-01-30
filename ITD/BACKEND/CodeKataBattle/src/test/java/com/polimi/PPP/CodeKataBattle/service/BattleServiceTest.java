@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -80,6 +81,9 @@ class BattleServiceTest {
     @Mock
     private GitHubAPI gitHubAPI;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
 
 
 
@@ -87,7 +91,7 @@ class BattleServiceTest {
     void setUp(){
         MockitoAnnotations.openMocks(this);
         this.battleService = new BattleService(battleRepository, battleScoreRepository, tournamentRepository, gitHubAPI, modelMapper, battleSubscriptionRepository
-                ,userRepository, battleInviteRepository);
+                ,userRepository, battleInviteRepository, eventPublisher);
     }
     
     @Test

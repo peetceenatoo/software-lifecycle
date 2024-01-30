@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -41,10 +42,13 @@ class TournamentServiceTest {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.tournamentService  = new TournamentService(tournamentRepository, battleRepository, userRepository, modelMapper);
+        this.tournamentService  = new TournamentService(tournamentRepository, battleRepository, userRepository, modelMapper, eventPublisher);
     }
 
     @Test

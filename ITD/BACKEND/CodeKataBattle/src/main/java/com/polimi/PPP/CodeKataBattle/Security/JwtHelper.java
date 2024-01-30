@@ -62,7 +62,7 @@ public class JwtHelper {
         return kf.generatePublic(spec);
     }
 
-    private final int MINUTES = 60;
+    private final int MINUTES = 3600;
 
     public String generateToken(Long userId, RoleEnum role) {
         var now = Instant.now();

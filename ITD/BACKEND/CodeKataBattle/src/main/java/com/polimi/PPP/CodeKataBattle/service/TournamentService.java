@@ -3,11 +3,15 @@ package com.polimi.PPP.CodeKataBattle.service;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
+import com.polimi.PPP.CodeKataBattle.TaskScheduling.DeadlineScheduler;
+import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +22,11 @@ public class TournamentService {
     private final BattleRepository battleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public TournamentService(TournamentRepository tournamentRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public TournamentService(TournamentRepository tournamentRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper, ApplicationEventPublisher eventPublisher){
+        this.eventPublisher = eventPublisher;
         this.tournamentRepository = tournamentRepository;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
@@ -86,6 +92,7 @@ public class TournamentService {
         // Input validation done in the controller
         Tournament tournament = new Tournament();
         modelMapper.map(tournamentDTO, tournament);
+        tournament.setDeadline(LocalDateTime.from(tournamentDTO.getRegistrationDeadline()));
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
         tournament.setBattles(new java.util.HashSet<>());
         tournament.setUsers(new java.util.HashSet<>());
@@ -104,7 +111,11 @@ public class TournamentService {
         // Save tournament
         savedTournament = tournamentRepository.save(savedTournament);
 
-        return modelMapper.map(savedTournament, TournamentDTO.class);
+        TournamentDTO toBeReturned = modelMapper.map(savedTournament, TournamentDTO.class);
+
+        eventPublisher.publishEvent(new TournamentCreatedEvent(this,toBeReturned));
+
+        return toBeReturned;
     }
 
     public TournamentDTO closeTournament(Long tournamentId) {

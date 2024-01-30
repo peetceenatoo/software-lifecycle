@@ -25,6 +25,7 @@ public class TournamentController extends AuthenticatedController{
     @Autowired
     private TournamentService tournamentService;
 
+
     @Autowired
     @Qualifier("emailProvider")
     private NotificationProvider notificationProvider;
@@ -80,6 +81,7 @@ public class TournamentController extends AuthenticatedController{
 
         tournamentCreationDTO.getEducatorsInvited().add(authenticatedUser.getId());
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+
 
         return ResponseEntity.ok(tournament);
     }

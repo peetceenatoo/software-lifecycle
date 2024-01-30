@@ -6,6 +6,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InternalErrorException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
+import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleCreationException;
@@ -20,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.hibernate.loader.ast.spi.BatchLoader;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,11 +55,14 @@ public class BattleService {
 
     private final BattleInviteRepository battleInviteRepository;
 
+    private final ApplicationEventPublisher eventPublisher;
+
 
     @Autowired
     public BattleService(BattleRepository battleRepository, BattleScoreRepository battleScoreRepository, TournamentRepository tournamentRepository,
                             GitHubAPI gitHubAPI, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository, UserRepository userRepository,
-                                BattleInviteRepository battleInviteRepository){
+                                BattleInviteRepository battleInviteRepository,
+                                ApplicationEventPublisher eventPublisher){
         this.modelMapper = modelMapper;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
@@ -66,6 +71,7 @@ public class BattleService {
         this.gitHubAPI = gitHubAPI;
         this.battleSubscriptionRepository = battleSubscriptionRepository;
         this.battleInviteRepository = battleInviteRepository;
+        this.eventPublisher = eventPublisher;
 
 
     }
@@ -305,6 +311,8 @@ public class BattleService {
         Battle result = battleRepository.save(battle);
         BattleDTO toBeReturned = new BattleDTO();
         modelMapper.map(result, toBeReturned);
+
+        eventPublisher.publishEvent(new BattleCreatedEvent(this,toBeReturned));
 
         // Clean up temporary directories
         try {

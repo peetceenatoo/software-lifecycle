@@ -5,7 +5,6 @@ import com.polimi.PPP.CodeKataBattle.service.TournamentService;
 
 public class TournamentDeadlineHandler implements DeadlineHandler{
 
-
     private final TournamentService tournamentService;
     private final Long tournamentId;
 

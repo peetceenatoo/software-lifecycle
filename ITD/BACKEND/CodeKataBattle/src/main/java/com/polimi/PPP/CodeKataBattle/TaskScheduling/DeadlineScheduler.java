@@ -11,6 +11,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.util.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
@@ -60,11 +61,32 @@ public class DeadlineScheduler {
 
     }
 
-    public void scheduleNewTournament(TournamentDTO tournament) {
+    @EventListener
+    public void handleTournamentCreated(TournamentCreatedEvent event) {
+        TournamentDTO tournament = event.getTournament();
+        // Logic to schedule tasks for the created tournament
+        // You might retrieve additional details using the tournamentId
+        // and then schedule the task
+        scheduleNewTournament(tournament);
+    }
+
+    @EventListener
+    public void handleBattleCreated(BattleCreatedEvent event) {
+        BattleDTO battle = event.getBattle();
+        // Logic to schedule tasks for the created battle
+        // You might retrieve additional details using the battleId
+        // and then schedule the task
+        scheduleNewBattle(battle);
+    }
+
+    private void scheduleNewTournament(TournamentDTO tournament) {
+        log.info("Current LocalDateTime: " + java.time.LocalDateTime.now().atOffset(ZoneOffset.UTC));
+        log.info("Scheduling Tournament closing at : " + tournament.getDeadline().atOffset(ZoneOffset.UTC));
         taskScheduler.schedule(new TournamentDeadlineHandler(tournamentService, tournament.getId()), tournament.getDeadline().toInstant(ZoneOffset.UTC));
     }
 
-    public void scheduleNewBattle(BattleDTO battle) {
+    private void scheduleNewBattle(BattleDTO battle) {
+        log.info("Current LocalDateTime: " + java.time.LocalDateTime.now());
         switch (battle.getState()) {
             case SUBSCRIPTION:
                 taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), battle.getSubscriptionDeadline().toInstant(ZoneOffset.UTC));
