@@ -108,21 +108,21 @@ public class TournamentController extends AuthenticatedController{
         return ResponseEntity.ok(battleService.getEnrolledBattlesByTournamentId(tournamentId, authenticatedUser.getId()));
     }
 
-    @PostMapping("/close")
+    @PostMapping("/{tournamentId}/close")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
-    public ResponseEntity<?> closeTournament(@RequestBody Long tournamentId) {
+    public ResponseEntity<?> closeTournament(@PathVariable Long tournamentId) {
 
         //Preauthorize already checking if the user is an educator
         //Checking if he manages the tournament is enough
         UserDTO authenticatedUser = this.getAuthenticatedUser();
-        tournamentService.closeTournament(tournamentId, authenticatedUser.getId());
-        return ResponseEntity.ok("Tournament closed successfully.");
+        TournamentDTO tournamentDTO = tournamentService.closeTournament(tournamentId, authenticatedUser.getId());
+        return ResponseEntity.ok(tournamentDTO);
 
     }
 
-    @PostMapping("/enroll")
+    @PostMapping("/{tournamentId}/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollInTournament(@RequestBody Long tournamentId) {
+    public ResponseEntity<?> enrollInTournament(@PathVariable Long tournamentId) {
 
         UserDTO authenticatedUser = this.getAuthenticatedUser();
         if (tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
