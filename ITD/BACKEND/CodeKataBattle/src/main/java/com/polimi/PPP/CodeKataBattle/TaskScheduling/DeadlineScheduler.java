@@ -4,6 +4,7 @@ import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.TournamentDTO;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import com.polimi.PPP.CodeKataBattle.service.BattleInviteService;
 import com.polimi.PPP.CodeKataBattle.service.BattleService;
 import com.polimi.PPP.CodeKataBattle.service.TournamentService;
@@ -13,10 +14,14 @@ import org.h2.util.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -79,20 +84,37 @@ public class DeadlineScheduler {
         scheduleNewBattle(battle);
     }
 
+
+
     private void scheduleNewTournament(TournamentDTO tournament) {
-        log.info("Current LocalDateTime: " + java.time.LocalDateTime.now().atOffset(ZoneOffset.UTC));
-        log.info("Scheduling Tournament closing at : " + tournament.getDeadline().atOffset(ZoneOffset.UTC));
-        taskScheduler.schedule(new TournamentDeadlineHandler(tournamentService, tournament.getId()), tournament.getDeadline().toInstant(ZoneOffset.UTC));
+
+        ZonedDateTime deadlineZoned = TimezoneUtil.convertUtcToLocalTime(tournament.getDeadline());
+        ZonedDateTime currentDateTime = TimezoneUtil.convertUtcToLocalTime(ZonedDateTime.now(ZoneOffset.UTC));
+
+        log.info("Current LocalDateTime: " + currentDateTime);
+        log.info("Scheduling Tournament closing at : " + deadlineZoned);
+
+        taskScheduler.schedule(new TournamentDeadlineHandler(tournamentService, tournament.getId()), deadlineZoned.toInstant());
     }
 
     private void scheduleNewBattle(BattleDTO battle) {
-        log.info("Current LocalDateTime: " + java.time.LocalDateTime.now());
+        ZonedDateTime currentDateTime = TimezoneUtil.convertUtcToLocalTime(ZonedDateTime.now(ZoneOffset.UTC));
+
+        log.info("Current LocalDateTime: " + currentDateTime);
+
+        ZonedDateTime deadlineZoned;
+
         switch (battle.getState()) {
             case SUBSCRIPTION:
-                taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), battle.getSubscriptionDeadline().toInstant(ZoneOffset.UTC));
+                deadlineZoned = TimezoneUtil.convertUtcToLocalTime(battle.getSubscriptionDeadline());
+                log.info("Scheduling Tournament closing at : " + deadlineZoned);
+                taskScheduler.schedule(new BattleSubscriptionDeadlineHandler(battleService, battleInviteService, battle.getId(), taskScheduler, gitHubAPI), deadlineZoned.toInstant());
+
                 break;
             case ONGOING:
-                taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battle.getId()), battle.getSubmissionDeadline().toInstant(ZoneOffset.UTC));
+                deadlineZoned = TimezoneUtil.convertUtcToLocalTime(battle.getSubmissionDeadline());
+                log.info("Scheduling Tournament closing at : " + deadlineZoned);
+                taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battle.getId()), deadlineZoned.toInstant());
                 break;
             default:
                 break;

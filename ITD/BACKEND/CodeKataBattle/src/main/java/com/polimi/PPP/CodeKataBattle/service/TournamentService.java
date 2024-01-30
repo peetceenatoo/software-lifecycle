@@ -5,6 +5,7 @@ import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.DeadlineScheduler;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,7 +94,9 @@ public class TournamentService {
         // Input validation done in the controller
         Tournament tournament = new Tournament();
         modelMapper.map(tournamentDTO, tournament);
-        tournament.setDeadline(LocalDateTime.from(tournamentDTO.getRegistrationDeadline()));
+
+        ZonedDateTime utcDeadline = TimezoneUtil.convertToUtc(tournamentDTO.getRegistrationDeadline().toString(), tournamentDTO.getTimeZone());
+        tournament.setDeadline(utcDeadline);
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
         tournament.setBattles(new java.util.HashSet<>());
         tournament.setUsers(new java.util.HashSet<>());

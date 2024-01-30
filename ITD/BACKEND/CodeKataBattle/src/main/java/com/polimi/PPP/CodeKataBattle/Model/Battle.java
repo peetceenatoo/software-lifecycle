@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Getter
@@ -31,11 +32,11 @@ public class Battle {
 
     @Column(nullable = false, length = 256)
     @NotNull(message = "Subsription Deadline is mandatory")
-    private LocalDateTime subscriptionDeadline;
+    private ZonedDateTime subscriptionDeadline;
 
     @Column(nullable = false, length = 256)
     @NotNull(message = "Submission Deadline is mandatory")
-    private LocalDateTime submissionDeadline;
+    private ZonedDateTime submissionDeadline;
 
     @Column(nullable = false, length = 256)
     @NotBlank(message = "Max Students in Group is mandatory")

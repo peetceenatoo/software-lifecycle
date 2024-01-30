@@ -16,8 +16,8 @@ import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
@@ -82,7 +82,7 @@ public class JwtHelper {
 
     }
 
-    public String generateSubmissionToken(Long battleId, Long userId, LocalDateTime submissionDeadline) {
+    public String generateSubmissionToken(Long battleId, Long userId, ZonedDateTime submissionDeadline) {
         var now = Instant.now();
 
         try{
@@ -91,7 +91,7 @@ public class JwtHelper {
                     .subject(String.valueOf(userId))
                     .claim("useCase", JWTTokenUseCase.SUBMISSION.name())
                     .issuedAt(Date.from(now))
-                    .expiration(Date.from(submissionDeadline.atZone(java.time.ZoneId.systemDefault()).toInstant()))
+                    .expiration(Date.from(submissionDeadline.toInstant()))
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)
                     .compact();
         }catch (Exception e){
@@ -100,10 +100,10 @@ public class JwtHelper {
 
     }
 
-    public String generateInviteToken(Long battleInviteId, LocalDateTime battleDeadline){
+    public String generateInviteToken(Long battleInviteId, ZonedDateTime battleDeadline){
         var now = Instant.now();
 
-        var timestampDeadline = battleDeadline.toInstant(ZoneOffset.UTC);
+        var timestampDeadline = battleDeadline.toInstant();
 
         try{
             return Jwts.builder()

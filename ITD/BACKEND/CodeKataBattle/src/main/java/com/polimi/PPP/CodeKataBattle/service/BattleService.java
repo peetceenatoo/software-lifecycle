@@ -7,6 +7,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleCreationException;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import org.springframework.web.multipart.MultipartFile;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
@@ -276,6 +278,13 @@ public class BattleService {
 
     @Transactional
     public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
+
+        ZonedDateTime utcSubscriptionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubscriptionDeadline().toString(), battleDTO.getTimeZone());
+        battleDTO.setSubscriptionDeadline(utcSubscriptionDeadline);
+
+        ZonedDateTime utcSubmissionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubmissionDeadline().toString(), battleDTO.getTimeZone());
+        battleDTO.setSubmissionDeadline(utcSubmissionDeadline);
+
         // Validate battleDTO
         validateBattleCreation(battleDTO, tournamentId);
 

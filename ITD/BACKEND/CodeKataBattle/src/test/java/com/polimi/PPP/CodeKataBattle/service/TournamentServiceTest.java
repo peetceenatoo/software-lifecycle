@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static com.polimi.PPP.CodeKataBattle.Model.RoleEnum.ROLE_STUDENT;
@@ -84,7 +84,7 @@ class TournamentServiceTest {
         tournament.setId(1L);
         tournament.setName("tournament1");
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setUsers(new HashSet<>());
         tournament.getUsers().add(user1);
 
@@ -121,7 +121,7 @@ class TournamentServiceTest {
         tournament.setId(1L);
         tournament.setName("tournament1");
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setUsers(new HashSet<>());
         tournament.getUsers().add(user1);
 
@@ -138,7 +138,7 @@ class TournamentServiceTest {
         tournament2.setId(2L);
         tournament2.setName("tournament1");
         tournament2.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament2.setDeadline(LocalDateTime.now());
+        tournament2.setDeadline(ZonedDateTime.now());
         tournament2.setUsers(new HashSet<>());
         tournament2.getUsers().add(user1);
         when(tournamentRepository.findById(2L)).thenReturn(java.util.Optional.of(tournament2));
@@ -156,7 +156,7 @@ class TournamentServiceTest {
         tournamentSub.setId(1L);
         tournamentSub.setName("tournament1");
         tournamentSub.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournamentSub.setDeadline(LocalDateTime.now());
+        tournamentSub.setDeadline(ZonedDateTime.now());
         tournamentSub.setUsers(new HashSet<>());
         tournaments.add(tournamentSub);
 
@@ -164,7 +164,7 @@ class TournamentServiceTest {
         tournamentOngoing.setId(2L);
         tournamentOngoing.setName("tournament2");
         tournamentOngoing.setState(TournamentStateEnum.ONGOING);
-        tournamentOngoing.setDeadline(LocalDateTime.now());
+        tournamentOngoing.setDeadline(ZonedDateTime.now());
         tournamentOngoing.setUsers(new HashSet<>());
         tournaments.add(tournamentOngoing);
 
@@ -172,7 +172,7 @@ class TournamentServiceTest {
         tournamentEnded.setId(3L);
         tournamentEnded.setName("tournament3");
         tournamentEnded.setState(TournamentStateEnum.ENDED);
-        tournamentEnded.setDeadline(LocalDateTime.now());
+        tournamentEnded.setDeadline(ZonedDateTime.now());
         tournamentEnded.setUsers(new HashSet<>());
         tournaments.add(tournamentEnded);
 
@@ -257,7 +257,7 @@ class TournamentServiceTest {
         tournament1.setId(1L);
         tournament1.setName("tournament1");
         tournament1.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament1.setDeadline(LocalDateTime.now());
+        tournament1.setDeadline(ZonedDateTime.now());
         tournament1.setUsers(new HashSet<>());
         tournament1.getUsers().add(user2);
 
@@ -290,14 +290,14 @@ class TournamentServiceTest {
         tournament.setId(1L);
         tournament.setName("tournament1");
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setUsers(new HashSet<>());
 
         Tournament tournamentUpdated = new Tournament();
         tournamentUpdated.setId(1L);
         tournamentUpdated.setName("tournament1");
         tournamentUpdated.setState(TournamentStateEnum.ONGOING);
-        tournamentUpdated.setDeadline(LocalDateTime.now());
+        tournamentUpdated.setDeadline(ZonedDateTime.now());
         tournamentUpdated.setUsers(new HashSet<>());
 
 
@@ -345,7 +345,8 @@ class TournamentServiceTest {
         tournamentCreationDTO.setEducatorsInvited(new ArrayList<Long>());
         tournamentCreationDTO.getEducatorsInvited().add(1L);
         tournamentCreationDTO.getEducatorsInvited().add(2L);
-        tournamentCreationDTO.setRegistrationDeadline(LocalDateTime.now());
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now());
+        tournamentCreationDTO.setTimeZone("Europe/Rome");
 
         Tournament created = new Tournament();
         created.setId(1L);
@@ -376,7 +377,7 @@ class TournamentServiceTest {
         noBattlesTournament.setId(1L);
         noBattlesTournament.setName("tournament1");
         noBattlesTournament.setState(TournamentStateEnum.ONGOING);
-        noBattlesTournament.setDeadline(LocalDateTime.now());
+        noBattlesTournament.setDeadline(ZonedDateTime.now());
         noBattlesTournament.setBattles(new HashSet<>());
 
         // Ended tournament
@@ -384,7 +385,7 @@ class TournamentServiceTest {
         endedTournament.setId(2L);
         endedTournament.setName("tournament2");
         endedTournament.setState(TournamentStateEnum.ENDED);
-        endedTournament.setDeadline(LocalDateTime.now());
+        endedTournament.setDeadline(ZonedDateTime.now());
         endedTournament.setBattles(new HashSet<>());
 
         // Tournament with ongoing battles
@@ -392,7 +393,7 @@ class TournamentServiceTest {
         ongoingBattlesTournament.setId(3L);
         ongoingBattlesTournament.setName("tournament3");
         ongoingBattlesTournament.setState(TournamentStateEnum.ONGOING);
-        ongoingBattlesTournament.setDeadline(LocalDateTime.now());
+        ongoingBattlesTournament.setDeadline(ZonedDateTime.now());
         ongoingBattlesTournament.setBattles(new HashSet<>());
 
         Battle ongoingBattle = new Battle();
@@ -407,7 +408,7 @@ class TournamentServiceTest {
         tournament.setId(4L);
         tournament.setName("tournament4");
         tournament.setState(TournamentStateEnum.ONGOING);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setBattles(new HashSet<>());
 
         Battle endedBattle = new Battle();
@@ -478,7 +479,7 @@ class TournamentServiceTest {
         tournament.setId(1L);
         tournament.setName("tournament1");
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setUsers(new HashSet<>());
 
         // An Ended Tournament
@@ -486,7 +487,7 @@ class TournamentServiceTest {
         endedTournament.setId(2L);
         endedTournament.setName("tournament2");
         endedTournament.setState(TournamentStateEnum.ENDED);
-        endedTournament.setDeadline(LocalDateTime.now());
+        endedTournament.setDeadline(ZonedDateTime.now());
         endedTournament.setUsers(new HashSet<>());
 
 
@@ -509,14 +510,14 @@ class TournamentServiceTest {
         tournament1.setId(1L);
         tournament1.setName("tournament1");
         tournament1.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament1.setDeadline(LocalDateTime.now());
+        tournament1.setDeadline(ZonedDateTime.now());
         tournament1.setUsers(new HashSet<>());
 
         Tournament tournament2 = new Tournament();
         tournament2.setId(20L);
         tournament2.setName("tournament2");
         tournament2.setState(TournamentStateEnum.SUBSCRIPTION);
-        tournament2.setDeadline(LocalDateTime.now());
+        tournament2.setDeadline(ZonedDateTime.now());
         tournament2.setUsers(new HashSet<>());
 
 

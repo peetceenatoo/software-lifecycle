@@ -5,13 +5,14 @@ import com.polimi.PPP.CodeKataBattle.Model.BattleInviteStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import com.polimi.PPP.CodeKataBattle.service.BattleInviteService;
 import com.polimi.PPP.CodeKataBattle.service.BattleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+
+import java.time.ZonedDateTime;
 
 public class BattleSubscriptionDeadlineHandler implements DeadlineHandler {
     private final BattleService battleService;
@@ -41,7 +42,8 @@ public class BattleSubscriptionDeadlineHandler implements DeadlineHandler {
         gitHubAPI.changeRepositoryVisibility(battle.getRepositoryLink(), false);
 
         // Schedule a task to run at the submission deadline
-        taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battleId), battle.getSubmissionDeadline().toInstant(ZoneOffset.UTC));
+        ZonedDateTime submissionDeadline = TimezoneUtil.convertUtcToLocalTime(battle.getSubmissionDeadline());
+        taskScheduler.schedule(new BattleSubmissionDeadlineHandler(battleService, battleId), submissionDeadline.toInstant());
     }
 
     @Override
