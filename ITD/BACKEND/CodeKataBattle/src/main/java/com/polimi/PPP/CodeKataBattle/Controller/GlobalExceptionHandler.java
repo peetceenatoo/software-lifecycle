@@ -111,8 +111,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidBattleCreationException.class)
-    public ResponseEntity<Object> handleInvalidBattleCreationException(InvalidUserIdException ex) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ResponseEntity<Object> handleInvalidBattleCreationException(InvalidBattleCreationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 

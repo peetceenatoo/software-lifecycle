@@ -16,7 +16,6 @@ public class BattleScore {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "Automatic score is mandatory")
     private int automaticScore;
 
     @Column(nullable = true)

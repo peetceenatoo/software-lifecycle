@@ -4,6 +4,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.ErrorInConnectingToGitHubExcepti
 import com.polimi.PPP.CodeKataBattle.Exceptions.MissingEnvironmentVariableExcpetion;
 import jakarta.annotation.PostConstruct;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 @Component
 @NoArgsConstructor
+@Slf4j
 public class GitHubAPI implements IGitHubAPI {
 
     private GitHub gitHub;
@@ -43,9 +45,40 @@ public class GitHubAPI implements IGitHubAPI {
             throw new ErrorInConnectingToGitHubException("Error in connecting to GitHub, check token");
         }
 
+        // Check limit
+        GHRateLimit rateLimit;
+        try{
+            rateLimit = gitHub.getRateLimit();
+        }catch (Exception e){
+            throw new ErrorInConnectingToGitHubException("Error in connecting to GitHub, check token");
+        }
+
+        log.info("GitHub API initialized");
+        log.info("GitHub API rate limit: " + rateLimit.getRemaining() + "/" + rateLimit.getLimit() + ", resets at: " + rateLimit.getResetDate());
+
+
+    }
+
+    @Override
+    public void deleteRepository(String repositoryName){
+        GHRepository repository;
+        try{
+            repository = gitHub.getRepository(repositoryName);
+        }catch (Exception e){
+            throw new ErrorInConnectingToGitHubException("Error in connecting to repository");
+        }
+
+        try{
+            repository.delete();
+        }catch (IOException e){
+            throw new ErrorInConnectingToGitHubException("Error in deleting repository");
+        }
     }
     @Override
     public String createRepository(String name, String description, boolean isPrivate){
+
+        name = name.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9-_]", "-");
+
         GHRepository repository;
         try{
             repository = gitHub.createRepository(name)
@@ -55,12 +88,6 @@ public class GitHubAPI implements IGitHubAPI {
         }catch (Exception e){
             throw new ErrorInConnectingToGitHubException("Error in creating repository");
         }
-        try{
-        repository.addCollaborators(gitHub.getUser("GabP404"));
-        }catch (Exception e){
-            throw new ErrorInConnectingToGitHubException("Error in adding collaborator");
-        }
-
 
         return repository.getHtmlUrl().toString();
     }

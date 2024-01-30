@@ -21,10 +21,8 @@ import java.util.List;
 public class TournamentController extends AuthenticatedController{
 
     // to get the request's UserDTO object, call this.getAuthenticatedUser();
-
     @Autowired
     private TournamentService tournamentService;
-
 
     @Autowired
     @Qualifier("emailProvider")
@@ -136,8 +134,8 @@ public class TournamentController extends AuthenticatedController{
     @PostMapping("/{tournamentId}/createBattle")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
     public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
-        battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
-        return ResponseEntity.ok("Enrollment successful.");
+        BattleDTO battle =battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
+        return ResponseEntity.ok(battle);
     }
 
 

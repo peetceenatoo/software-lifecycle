@@ -28,11 +28,9 @@ public class Submission {
     private SubmissionStateEnum state;
 
     @Column(nullable = false)
-    @NotBlank(message = "RepositoryUrl is mandatory")
     private String repositoryUrl;
 
     @Column(nullable = false)
-    @NotBlank(message = "CommitHash is mandatory")
     private String commitHash;
 
     @ManyToOne

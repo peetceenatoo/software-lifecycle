@@ -21,15 +21,12 @@ public class User {
     private Long id;
 
     @Column(nullable = false, length = 50)
-    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Surname is mandatory")
     private String surname;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Password is mandatory")
     private String password;
 
     @Column(nullable = false,unique = true, length = 256)
@@ -37,7 +34,6 @@ public class User {
     private String email;
 
     @Column(nullable = false,unique = true, length = 50)
-    @NotBlank(message = "Username is mandatory")
     private String username;
 
     @Column(name = "link_bio")

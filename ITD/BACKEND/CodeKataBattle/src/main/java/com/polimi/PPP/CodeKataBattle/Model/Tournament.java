@@ -22,11 +22,9 @@ public class Tournament {
     private Long id;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(nullable = false, length = 256)
-    @NotNull(message = "Deadline is mandatory")
     private ZonedDateTime deadline;
 
     @Column(nullable = false, length = 256)
