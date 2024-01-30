@@ -35,19 +35,18 @@ public class TournamentController extends AuthenticatedController{
 
     @GetMapping("/{tournamentId}")
     public ResponseEntity<?> getTournament(@PathVariable Long tournamentId) {
+
         TournamentDTO tournament = tournamentService.getTournamentById(tournamentId);
         return ResponseEntity.ok(tournament);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getTournaments() {
-        UserDTO user = this.getAuthenticatedUser();
-        List<TournamentDTO> tournaments = tournamentService.getTournaments(null);
-        return ResponseEntity.ok(tournaments);
+    @GetMapping()
+    public ResponseEntity<?> getTournament() {
+        return ResponseEntity.ok(tournamentService.getTournaments(null));
     }
 
-    @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentDTO>> getTournaments(@PathVariable(required = false) TournamentStateEnum state) {
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<TournamentDTO>> getTournaments(@PathVariable TournamentStateEnum state) {
         UserDTO user = this.getAuthenticatedUser();
         List<TournamentDTO> tournaments = tournamentService.getTournaments(state);
         return ResponseEntity.ok(tournaments);
