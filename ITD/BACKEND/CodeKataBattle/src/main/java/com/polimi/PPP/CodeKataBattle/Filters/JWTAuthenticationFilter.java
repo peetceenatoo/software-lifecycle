@@ -3,20 +3,24 @@ package com.polimi.PPP.CodeKataBattle.Filters;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserIdException;
 import com.polimi.PPP.CodeKataBattle.Model.JWTTokenUseCase;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
-import com.polimi.PPP.CodeKataBattle.Security.UserIdAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -126,7 +130,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getAuthentication(String token) {
         // Extract information from token (e.g., username, roles)
         Long userId = jwtHelper.extractUserId(token);
-        return new UserIdAuthenticationToken(userId);
+        RoleEnum role;
+        try{
+            role = jwtHelper.extractRole(token);
+        } catch(Exception e) {
+            throw new InvalidTokenException("Invalid role provided in the token");
+        }
+        Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role.name()));
+        return new UsernamePasswordAuthenticationToken(userId, null ,authorities);
     }
 
 

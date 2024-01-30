@@ -32,7 +32,7 @@ public class TournamentService {
     }
 
     public TournamentDTO getTournamentById(Long tournamentId) {
-        return modelMapper.map(tournamentRepository.findById(tournamentId).orElse(null), TournamentDTO.class);
+        return modelMapper.map(tournamentRepository.findById(tournamentId).orElseThrow(() -> new IllegalArgumentException("Invalid Tournament ID")), TournamentDTO.class);
     }
 
     public List<TournamentDTO> getTournaments(TournamentStateEnum state) {

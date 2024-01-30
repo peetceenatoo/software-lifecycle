@@ -2,6 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Security;
 
 
 import com.polimi.PPP.CodeKataBattle.Model.JWTTokenUseCase;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.NoArgsConstructor;
@@ -63,13 +64,14 @@ public class JwtHelper {
 
     private final int MINUTES = 60;
 
-    public String generateToken(Long userId) {
+    public String generateToken(Long userId, RoleEnum role) {
         var now = Instant.now();
 
         try{
             return Jwts.builder()
                     .subject(String.valueOf(userId))
                     .claim("useCase", JWTTokenUseCase.USER.name())
+                    .claim("role", role.name())
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                     .signWith(getPrivateKey(), Jwts.SIG.RS256)
@@ -142,6 +144,10 @@ public class JwtHelper {
 
     public Long extractUserId(String token) {
         return Long.parseLong(getTokenBody(token).getSubject());
+    }
+
+    public RoleEnum extractRole(String token) {
+        return RoleEnum.valueOf(getTokenBody(token).get("role", String.class));
     }
 
     public Boolean validateToken(String token) {

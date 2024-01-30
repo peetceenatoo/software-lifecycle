@@ -43,13 +43,6 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//        Set permissions on endpoints
-                .authorizeHttpRequests(auth -> auth
-//            our public endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/users/signup").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
-//            our private endpoints
-                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

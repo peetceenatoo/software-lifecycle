@@ -1,20 +1,12 @@
 package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
-import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidUserIdException;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
-import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
-import com.polimi.PPP.CodeKataBattle.Security.UserIdAuthenticationToken;
-import com.polimi.PPP.CodeKataBattle.Utilities.EmailProvider;
-import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +40,7 @@ public class UserController {
         
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDTO userDTO = userService.findByEmail(request.getEmail());
-        String token = this.jwtHelper.generateToken(userDTO.getId());
+        String token = this.jwtHelper.generateToken(userDTO.getId(), userDTO.getRole().getName());
         return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token));
     }
 

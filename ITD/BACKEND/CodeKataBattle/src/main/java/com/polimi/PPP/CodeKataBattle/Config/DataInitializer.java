@@ -29,25 +29,6 @@ public class DataInitializer {
                 }
             }
 
-            // Check if the user already exists to avoid duplicates
-            if (userRepository.findByUsername("testuser").isEmpty()) {
-
-                // Get the user role
-                Role userRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT).get();
-
-                // Create a new user
-                User fakeUser = new User();
-                fakeUser.setName("John");
-                fakeUser.setSurname("Doe");
-                // fakeUser.setPassword("password"); // Ideally, you should encrypt the password
-                fakeUser.setPassword(passwordEncoder.encode("password"));
-                fakeUser.setEmail("john.doe@example.com");
-                fakeUser.setUsername("testuser");
-                fakeUser.setLinkBio("http://example.com/bio");
-                fakeUser.setRole(userRole);
-
-                userRepository.save(fakeUser);
-            }
         };
     }
 }

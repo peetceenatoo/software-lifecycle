@@ -229,6 +229,8 @@ class TournamentServiceTest {
         assertEquals(tournamentService.getTournaments(TournamentStateEnum.ENDED).size(), endedDTO.size());
 
 
+        when(tournamentRepository.findById(46464L)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> tournamentService.getTournamentById(46464L));
 
     }
     @Test
