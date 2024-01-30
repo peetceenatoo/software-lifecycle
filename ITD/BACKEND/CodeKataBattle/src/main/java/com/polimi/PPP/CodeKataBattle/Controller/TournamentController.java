@@ -6,6 +6,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRightsForActionException;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,14 @@ public class TournamentController extends AuthenticatedController{
     }
 
     @GetMapping
-    public ResponseEntity<List<TournamentDTO>> getTournaments(@RequestParam(required = false) TournamentStateEnum state) {
+    public ResponseEntity<?> getTournaments() {
+        UserDTO user = this.getAuthenticatedUser();
+        List<TournamentDTO> tournaments = tournamentService.getTournaments(null);
+        return ResponseEntity.ok(tournaments);
+    }
+
+    @GetMapping("/{state}")
+    public ResponseEntity<List<TournamentDTO>> getTournaments(@PathVariable(required = false) TournamentStateEnum state) {
         UserDTO user = this.getAuthenticatedUser();
         List<TournamentDTO> tournaments = tournamentService.getTournaments(state);
         return ResponseEntity.ok(tournaments);
@@ -63,9 +71,13 @@ public class TournamentController extends AuthenticatedController{
 
     @PostMapping("/create")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
-    public ResponseEntity<?> createTournament(@RequestBody TournamentCreationDTO tournamentCreationDTO) {
+    public ResponseEntity<?> createTournament(@Valid @RequestBody TournamentCreationDTO tournamentCreationDTO) {
 
         UserDTO authenticatedUser = this.getAuthenticatedUser();
+
+        if (tournamentCreationDTO.getEducatorsInvited() == null)
+            tournamentCreationDTO.setEducatorsInvited(new java.util.ArrayList<>());
+
         tournamentCreationDTO.getEducatorsInvited().add(authenticatedUser.getId());
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
 

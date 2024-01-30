@@ -2,6 +2,7 @@ package com.polimi.PPP.CodeKataBattle.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class Tournament {
     private String name;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Deadline is mandatory")
+    @NotNull(message = "Deadline is mandatory")
     private LocalDateTime deadline;
 
     @Column(nullable = false, length = 256)

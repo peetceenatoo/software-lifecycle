@@ -87,6 +87,9 @@ public class TournamentService {
         Tournament tournament = new Tournament();
         modelMapper.map(tournamentDTO, tournament);
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
+        tournament.setBattles(new java.util.HashSet<>());
+        tournament.setUsers(new java.util.HashSet<>());
+
         Tournament savedTournament = tournamentRepository.save(tournament);
 
         // Handle association with educators
