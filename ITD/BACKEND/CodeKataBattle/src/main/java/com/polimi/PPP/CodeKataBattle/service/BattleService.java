@@ -249,7 +249,7 @@ public class BattleService {
                                .collect(Collectors.toList());
     }
 
-    public void changeBattleState(Long battleId, BattleStateEnum state) {
+    public BattleDTO changeBattleState(Long battleId, BattleStateEnum state) {
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
         if (battleOpt.isPresent()) {
             Battle battle = battleOpt.get();
@@ -259,18 +259,13 @@ public class BattleService {
             }
 
             battle.setState(state);
-            battleRepository.save(battle);
+
+            BattleDTO toBeReturned = new BattleDTO();
+            modelMapper.map(battleRepository.save(battle), toBeReturned);
+            return toBeReturned;
         } else {
             throw new InvalidArgumentException("Invalid battle id");
         }
-    }
-
-    @Transactional
-    public void startBattle(Long battleId) {
-
-        // set all pending invites for this battle to rejected
-
-        changeBattleState(battleId, BattleStateEnum.ONGOING);
     }
 
     @Transactional

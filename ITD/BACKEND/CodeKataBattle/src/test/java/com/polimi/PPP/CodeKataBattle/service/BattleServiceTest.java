@@ -1,7 +1,9 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleCreationException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
@@ -86,6 +88,87 @@ class BattleServiceTest {
         MockitoAnnotations.openMocks(this);
         this.battleService = new BattleService(battleRepository, battleScoreRepository, tournamentRepository, gitHubAPI, modelMapper, battleSubscriptionRepository
                 ,userRepository, battleInviteRepository);
+    }
+    
+    @Test
+    public void testChangeBattleState() {
+
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("NOME");
+        tournament.setState(TournamentStateEnum.ONGOING);
+        tournament.setDeadline(LocalDateTime.now());
+        tournament.setBattles(new HashSet<>());
+        tournament.setUsers(new HashSet<>());
+
+
+        Battle battle = new Battle();
+        battle.setState(BattleStateEnum.SUBSCRIPTION);
+        battle.setTournament(tournament);
+        battle.setId(1L);
+        battle.setManualScoringRequired(true);
+        battle.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+        battle.setRepositoryLink("repoLink");
+        battle.setTestRepositoryLink("testLink");
+        battle.setMinStudentsInGroup(1);
+        battle.setMaxStudentsInGroup(3);
+        battle.setSubmissionDeadline(LocalDateTime.now());
+        battle.setSubscriptionDeadline(LocalDateTime.now());
+        battle.setName("Battle");
+
+        BattleDTO battleDTO = new BattleDTO();
+        modelMapper.map(battle, battleDTO);
+
+        BattleDTO battleUpdated = new BattleDTO();
+        Battle battleUpdatedEntity = new Battle();
+        modelMapper.map(battle, battleUpdatedEntity);
+        modelMapper.map(battle, battleUpdated);
+        battleUpdatedEntity.setState(BattleStateEnum.ONGOING);
+        battleUpdated.setState(BattleStateEnum.ONGOING);
+
+        when(battleRepository.findById(1L)).thenReturn(java.util.Optional.of(battle));
+        when(battleRepository.save(any(Battle.class))).thenReturn(battleUpdatedEntity);
+
+        Battle found = battleRepository.findById(1L).get();
+        checkBattlesAreEquals(battle, found);
+
+        BattleDTO updated = battleService.changeBattleState(1L, BattleStateEnum.ONGOING);
+        checkBattlesAreEquals(battleUpdated, updated);
+
+        when(battleRepository.findById(1L)).thenReturn(java.util.Optional.of(battleUpdatedEntity));
+
+        assertThrows(InvalidArgumentException.class,() -> {
+            battleService.changeBattleState(1L, BattleStateEnum.ONGOING);
+        });
+
+    }
+
+    private void checkBattlesAreEquals(Battle battle1, Battle battle2){
+        assertEquals(battle1.getId(), battle2.getId());
+        assertEquals(battle1.getName(), battle2.getName());
+        assertEquals(battle1.getState(), battle2.getState());
+        assertEquals(battle1.getRepositoryLink(), battle2.getRepositoryLink());
+        assertEquals(battle1.getTestRepositoryLink(), battle2.getTestRepositoryLink());
+        assertEquals(battle1.isManualScoringRequired(), battle2.isManualScoringRequired());
+        assertEquals(battle1.getProgrammingLanguage(), battle2.getProgrammingLanguage());
+        assertEquals(battle1.getSubmissionDeadline(), battle2.getSubmissionDeadline());
+        assertEquals(battle1.getSubscriptionDeadline(), battle2.getSubscriptionDeadline());
+        assertEquals(battle1.getMinStudentsInGroup(), battle2.getMinStudentsInGroup());
+        assertEquals(battle1.getMaxStudentsInGroup(), battle2.getMaxStudentsInGroup());
+    }
+
+    private void checkBattlesAreEquals(BattleDTO battle1, BattleDTO battle2){
+        assertEquals(battle1.getId(), battle2.getId());
+        assertEquals(battle1.getName(), battle2.getName());
+        assertEquals(battle1.getState(), battle2.getState());
+        assertEquals(battle1.getRepositoryLink(), battle2.getRepositoryLink());
+        assertEquals(battle1.getTestRepositoryLink(), battle2.getTestRepositoryLink());
+        assertEquals(battle1.isManualScoringRequired(), battle2.isManualScoringRequired());
+        assertEquals(battle1.getProgrammingLanguage(), battle2.getProgrammingLanguage());
+        assertEquals(battle1.getSubmissionDeadline(), battle2.getSubmissionDeadline());
+        assertEquals(battle1.getSubscriptionDeadline(), battle2.getSubscriptionDeadline());
+        assertEquals(battle1.getMinStudentsInGroup(), battle2.getMinStudentsInGroup());
+        assertEquals(battle1.getMaxStudentsInGroup(), battle2.getMaxStudentsInGroup());
     }
 
 
