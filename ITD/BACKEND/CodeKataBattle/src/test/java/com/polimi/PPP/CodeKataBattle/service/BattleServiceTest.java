@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -445,7 +446,7 @@ class BattleServiceTest {
         tournament.setId(1L);
         tournament.setName("NOME");
         tournament.setState(TournamentStateEnum.ONGOING);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setBattles(new HashSet<>());
         tournament.setUsers(new HashSet<>());
 
@@ -459,8 +460,8 @@ class BattleServiceTest {
         battle.setTestRepositoryLink("testLink");
         battle.setMinStudentsInGroup(1);
         battle.setMaxStudentsInGroup(3);
-        battle.setSubmissionDeadline(LocalDateTime.now());
-        battle.setSubscriptionDeadline(LocalDateTime.now());
+        battle.setSubmissionDeadline(ZonedDateTime.now());
+        battle.setSubscriptionDeadline(ZonedDateTime.now());
         battle.setName("Battle");
 
         BattleDTO battleDTO = new BattleDTO();
