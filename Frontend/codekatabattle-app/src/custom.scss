@@ -1,0 +1,19 @@
+// custom.scss
+
+// Import Bootstrap functions (if necessary)
+@import "bootstrap/functions";
+
+// Your custom purple color
+$primary: #6f42c1;
+
+// Import Bootstrap variables
+@import "bootstrap/variables";
+
+// Override the primary color
+$theme-colors: (
+  "primary": $primary,
+  // You can continue to set other colors if needed
+);
+
+// Finally, import Bootstrap to compile it with your overrides
+@import "bootstrap";

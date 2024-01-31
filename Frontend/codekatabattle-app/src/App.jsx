@@ -1,16 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './components/Header.jsx';
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import LoginPage from './LoginPage';
+import HomePage from './HomePage';
+import SignupPage from './routes/SignupPage';
+import './custom.scss';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <Header/>
-  )
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <LoginPage />
+        </Route>
+        <Route path="/">
+          <HomePage />
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
 
-export default App
+export default App;
