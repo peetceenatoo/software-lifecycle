@@ -11,7 +11,7 @@ class GitHubAPITest {
     void createRepository() {
 
         IGitHubAPI gitHubAPI = new GitHubAPI();
-        gitHubAPI.cloneRepository("Jacopopiazza/new_repo_With_puglio","/Users/japo/Desktop/CodeKataBattle", "758daf2");
+        //gitHubAPI.cloneRepository("Jacopopiazza/new_repo_With_puglio","/Users/japo/Desktop/CodeKataBattle", "758daf2");
 
     }
 }

@@ -216,7 +216,7 @@ class BattleServiceTest {
 
         BattleCreationDTO battleCreationDTO = new BattleCreationDTO();
         battleCreationDTO.setName("Battle");
-        battleCreationDTO.setManualScoringRequires(true);
+        battleCreationDTO.setManualScoringRequired(true);
         battleCreationDTO.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
         battleCreationDTO.setSubmissionDeadline(deadlines);
         battleCreationDTO.setSubscriptionDeadline(deadlines);
@@ -225,7 +225,7 @@ class BattleServiceTest {
 
         when(tournamentRepository.findById(tournamentId)).thenReturn(java.util.Optional.of(tournament));
         when(battleRepository.save(any(Battle.class))).thenReturn(mockBattleEntity);
-        when(gitHubAPI.createRepository(any(String.class), any(String.class), any(boolean.class))).thenReturn(tournament.getName() + "-" + mockBattle.getName());
+        when(gitHubAPI.createRepository(any(String.class), any(String.class), any(boolean.class))).thenReturn("https://github.com/user/" + tournament.getName() + "-" + mockBattle.getName());
 
 
         BattleDTO created = this.battleService.createBattle(tournamentId, battleCreationDTO, mockZip, mockZip);
