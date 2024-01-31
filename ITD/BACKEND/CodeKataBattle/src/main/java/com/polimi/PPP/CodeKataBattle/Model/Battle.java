@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Getter
@@ -22,7 +23,6 @@ public class Battle {
     private Long id;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(nullable = false, length = 256)
@@ -30,23 +30,18 @@ public class Battle {
     private BattleStateEnum state;
 
     @Column(nullable = false, length = 256)
-    @NotNull(message = "Subsription Deadline is mandatory")
-    private LocalDateTime subscriptionDeadline;
+    private ZonedDateTime subscriptionDeadline;
 
     @Column(nullable = false, length = 256)
-    @NotNull(message = "Submission Deadline is mandatory")
-    private LocalDateTime submissionDeadline;
+    private ZonedDateTime submissionDeadline;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Max Students in Group is mandatory")
     private int maxStudentsInGroup;
 
     @Column(nullable = false, length = 256)
-    @NotBlank(message = "Min Students in Group is mandatory")
     private int minStudentsInGroup;
 
     @Column(nullable = false)
-    @NotBlank(message = "Manual Scoring option is mandatory")
     private boolean manualScoringRequired;
 
     @Column(length = 256)

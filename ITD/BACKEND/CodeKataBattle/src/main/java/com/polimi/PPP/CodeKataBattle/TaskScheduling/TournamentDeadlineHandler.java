@@ -3,6 +3,8 @@ package com.polimi.PPP.CodeKataBattle.TaskScheduling;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 import com.polimi.PPP.CodeKataBattle.service.TournamentService;
 
+import java.util.Optional;
+
 public class TournamentDeadlineHandler implements DeadlineHandler{
 
     private final TournamentService tournamentService;
@@ -15,6 +17,7 @@ public class TournamentDeadlineHandler implements DeadlineHandler{
 
     @Override
     public void handleDeadline() {
+        System.out.println("Tournament deadline reached");
         this.tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
     }
 

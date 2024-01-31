@@ -1,8 +1,7 @@
 package com.polimi.PPP.CodeKataBattle.DTOs;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class TournamentDTO {
     private Long id;
     private String name;
-    private LocalDateTime deadline;
+    private ZonedDateTime deadline;
     private TournamentStateEnum state;
 }

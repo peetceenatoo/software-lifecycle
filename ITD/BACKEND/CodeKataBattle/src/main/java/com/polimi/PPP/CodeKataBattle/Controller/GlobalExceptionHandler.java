@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -109,8 +111,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidBattleCreationException.class)
-    public ResponseEntity<Object> handleInvalidBattleCreationException(InvalidUserIdException ex) {
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ResponseEntity<Object> handleInvalidBattleCreationException(InvalidBattleCreationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
@@ -153,6 +155,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
         ApiError apiError = new ApiError(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 

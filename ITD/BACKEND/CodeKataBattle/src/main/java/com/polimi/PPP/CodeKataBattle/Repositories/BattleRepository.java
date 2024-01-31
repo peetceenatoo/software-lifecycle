@@ -19,4 +19,5 @@ public interface BattleRepository extends JpaRepository<Battle, Long> {
     List<Battle> findBattlesByTournamentIdAndUserId(@Param("tournamentId") Long tournamentId, @Param("userId") Long userId);
 
     List<Battle> findByStateNotAndStateNot(BattleStateEnum state, BattleStateEnum state2);
+    Boolean existsByTournamentIdAndName(Long tournamentId, String name);
 }

@@ -30,7 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -99,7 +99,7 @@ class BattleServiceTest {
         tournament.setId(1L);
         tournament.setName("NOME");
         tournament.setState(TournamentStateEnum.ONGOING);
-        tournament.setDeadline(LocalDateTime.now());
+        tournament.setDeadline(ZonedDateTime.now());
         tournament.setBattles(new HashSet<>());
         tournament.setUsers(new HashSet<>());
 
@@ -114,8 +114,8 @@ class BattleServiceTest {
         battle.setTestRepositoryLink("testLink");
         battle.setMinStudentsInGroup(1);
         battle.setMaxStudentsInGroup(3);
-        battle.setSubmissionDeadline(LocalDateTime.now());
-        battle.setSubscriptionDeadline(LocalDateTime.now());
+        battle.setSubmissionDeadline(ZonedDateTime.now());
+        battle.setSubscriptionDeadline(ZonedDateTime.now());
         battle.setName("Battle");
 
         BattleDTO battleDTO = new BattleDTO();
@@ -180,7 +180,7 @@ class BattleServiceTest {
 
         Long tournamentId = 10L;
 
-        LocalDateTime deadlines = LocalDateTime.now();
+        ZonedDateTime deadlines = ZonedDateTime.now();
 
         Tournament tournament = new Tournament();
         tournament.setId(tournamentId);
@@ -214,7 +214,7 @@ class BattleServiceTest {
 
         BattleCreationDTO battleCreationDTO = new BattleCreationDTO();
         battleCreationDTO.setName("Battle");
-        battleCreationDTO.setManualScoringRequires(true);
+        battleCreationDTO.setManualScoringRequired(true);
         battleCreationDTO.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
         battleCreationDTO.setSubmissionDeadline(deadlines);
         battleCreationDTO.setSubscriptionDeadline(deadlines);
@@ -223,7 +223,7 @@ class BattleServiceTest {
 
         when(tournamentRepository.findById(tournamentId)).thenReturn(java.util.Optional.of(tournament));
         when(battleRepository.save(any(Battle.class))).thenReturn(mockBattleEntity);
-        when(gitHubAPI.createRepository(any(String.class), any(String.class), any(boolean.class))).thenReturn(tournament.getName() + "-" + mockBattle.getName());
+        when(gitHubAPI.createRepository(any(String.class), any(String.class), any(boolean.class))).thenReturn("https://github.com/user/" + tournament.getName() + "-" + mockBattle.getName());
 
 
         BattleDTO created = this.battleService.createBattle(tournamentId, battleCreationDTO, mockZip, mockZip);

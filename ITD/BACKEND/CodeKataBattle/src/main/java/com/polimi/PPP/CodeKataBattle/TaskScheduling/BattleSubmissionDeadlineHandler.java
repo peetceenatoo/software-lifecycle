@@ -4,8 +4,6 @@ import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.service.BattleService;
 
-import java.time.LocalDateTime;
-
 public class BattleSubmissionDeadlineHandler implements DeadlineHandler{
     private final BattleService battleService;
     private final Long battleId;

@@ -6,6 +6,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleCreationException;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import org.springframework.web.multipart.MultipartFile;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
@@ -72,12 +74,22 @@ public class BattleService {
     }
 
     public List<BattleDTO> getBattlesByTournamentId(Long tournamentId) {
+
+        if (tournamentRepository.findById(tournamentId).isEmpty()) {
+            throw new InvalidArgumentException("Invalid tournament id");
+        }
+
         return battleRepository.findByTournamentId(tournamentId).stream()
                                .map(battle -> modelMapper.map(battle, BattleDTO.class))
                                .collect(Collectors.toList());
     }
 
     public List<BattleDTO> getEnrolledBattlesByTournamentId(Long tournamentId, Long userId) {
+
+        if (tournamentRepository.findById(tournamentId).isEmpty()) {
+            throw new InvalidArgumentException("Invalid tournament id");
+        }
+
         return battleRepository.findBattlesByTournamentIdAndUserId(tournamentId, userId).stream()
                 .map(battle -> modelMapper.map(battle, BattleDTO.class))
                 .collect(Collectors.toList());
@@ -199,6 +211,26 @@ public class BattleService {
 
     @Transactional
     public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
+
+        // Check tournamentId is valid and tournament is ongoing
+        Optional<Tournament> tournamentOpt = tournamentRepository.findById(tournamentId);
+        if ( tournamentOpt.isEmpty() )
+            throw new InvalidArgumentException("Invalid tournament ID.");
+        Tournament tournament = tournamentOpt.get();
+        if ( tournament.getState() != TournamentStateEnum.ONGOING )
+            throw new InvalidBattleCreationException("Tournament is not ongoing.");
+
+        // Check if a battle with the same name in this tournament already exists
+        if ( battleRepository.existsByTournamentIdAndName(tournamentId, battleDTO.getName()) )
+            throw new InvalidBattleCreationException("A battle with the same name already exists in this tournament.");
+
+        // Convert deadlines to UTC
+        ZonedDateTime utcSubscriptionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubscriptionDeadline());
+        battleDTO.setSubscriptionDeadline(utcSubscriptionDeadline);
+
+        ZonedDateTime utcSubmissionDeadline = TimezoneUtil.convertToUtc(battleDTO.getSubmissionDeadline());
+        battleDTO.setSubmissionDeadline(utcSubmissionDeadline);
+
         // Validate battleDTO
         validateBattleCreation(battleDTO, tournamentId);
 
@@ -208,30 +240,55 @@ public class BattleService {
         if( codeDir == null || testDir == null )
             throw new InvalidBattleCreationException("Invalid zip folders.");
 
-        // Get tournament by ID
-        Optional<Tournament> tournamentOptional = tournamentRepository.findById(tournamentId);
-        if( tournamentOptional.isEmpty() )
-            throw new InvalidArgumentException("Invalid tournament ID.");
-        Tournament tournament = tournamentOptional.get();
 
         // Create GitHub repositories and push contents
         String codeRepoUrl = gitHubAPI.createRepository(tournament.getName() + "-" + battleDTO.getName(), "", true);
-        String testRepoUrl = gitHubAPI.createRepository(tournament.getName() + "-" + battleDTO.getName() + "-test", "", true);
+        codeRepoUrl = URLTrimmer.extractRepoPath(codeRepoUrl);
 
-        // Push the folder through the GitHubAPIs
-        gitHubAPI.pushFolder(codeRepoUrl, codeDir.getAbsolutePath(), "Initial commit");
-        gitHubAPI.pushFolder(testRepoUrl, testDir.getAbsolutePath(), "Initial commit");
 
-        // Create and save Battle entity (sorry this code is not much softwareengineered)
-        Battle battle = new Battle();
-        modelMapper.map(battleDTO, battle);
-        battle.setRepositoryLink(URLTrimmer.trimUrl(codeRepoUrl));
-        battle.setTestRepositoryLink(URLTrimmer.trimUrl(testRepoUrl));
-        battle.setState(BattleStateEnum.SUBSCRIPTION);
-        battle.setTournament(tournament);
+        String testRepoUrl;
+        try{
+            testRepoUrl = gitHubAPI.createRepository(tournament.getName() + "-" + battleDTO.getName() + "-test", "", true);
+        }catch (Exception e) {
+            try {
+                gitHubAPI.deleteRepository(codeRepoUrl);
+            } catch (Exception e2) {
+                //do nothing
+            }
+            throw e;
+        }
 
-        // Map battleDTO to Battle and set other fields
-        Battle result = battleRepository.save(battle);
+
+        testRepoUrl = URLTrimmer.extractRepoPath(testRepoUrl);
+
+        Battle result;
+
+        try{
+            // Push the folder through the GitHubAPIs
+            gitHubAPI.pushFolder(codeRepoUrl, codeDir.getAbsolutePath(), "Initial commit");
+            gitHubAPI.pushFolder(testRepoUrl, testDir.getAbsolutePath(), "Initial commit");
+
+            // Create and save Battle entity
+            Battle battle = new Battle();
+            modelMapper.map(battleDTO, battle);
+            battle.setRepositoryLink(codeRepoUrl);
+            battle.setTestRepositoryLink(testRepoUrl);
+            battle.setState(BattleStateEnum.SUBSCRIPTION);
+            battle.setTournament(tournament);
+
+
+            // Map battleDTO to Battle and set other fields
+            result = battleRepository.save(battle);
+        }catch (Exception e){
+            try{
+                gitHubAPI.deleteRepository(codeRepoUrl);
+                gitHubAPI.deleteRepository(testRepoUrl);
+            }catch (Exception e2){
+                //do nothing
+            }
+            throw e;
+        }
+
         BattleDTO toBeReturned = new BattleDTO();
         modelMapper.map(result, toBeReturned);
 
@@ -259,49 +316,64 @@ public class BattleService {
     }
 
     private File unzipAndValidate(MultipartFile zipFile) throws InvalidBattleCreationException {
+        File tempZipFile = null;
+        try {
+            // Store the multipart file in a temporary file
+            tempZipFile = Files.createTempFile("uploadedZip", ".zip").toFile();
+            zipFile.transferTo(tempZipFile);
 
-        try ( InputStream inputStream = zipFile.getInputStream();
-        ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+            try (InputStream inputStream = new FileInputStream(tempZipFile);
+                 ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
 
-            // Create a temporary directory to extract the contents
-            File tempDirectory = Files.createTempDirectory("tempDir").toFile();
+                File tempDirectory = Files.createTempDirectory("tempDir").toFile();
 
-            ZipEntry entry;
-            boolean hasSrcDirectory = false;
-            boolean hasPomFile = false;
+                ZipEntry entry;
+                boolean hasSrcDirectory = false;
+                boolean hasPomFile = false;
 
-            while ( ( entry = zipInputStream.getNextEntry() ) != null ) {
-                String entryName = entry.getName();
-                File entryFile = new File(tempDirectory, entryName);
+                while ((entry = zipInputStream.getNextEntry()) != null) {
+                    String entryName = entry.getName();
+                    File entryFile = new File(tempDirectory, entryName);
 
-                if ( entry.isDirectory() ) {
-                    // Check if the directory is named "src"
-                    if (entryName.equals("src/"))
-                        hasSrcDirectory = true;
-                } else {
-                    // Check if the file is named "pom.xml"
-                    if (entryName.equals("pom.xml"))
-                        hasPomFile = true;
+                    // Create parent directories for the entry file if they don't exist
+                    if (entry.isDirectory()) {
+                        entryFile.mkdirs();
+                        if (entryName.equals("src/"))
+                            hasSrcDirectory = true;
+                    } else {
+                        File parentDir = entryFile.getParentFile();
+                        if (parentDir != null && !parentDir.exists()) {
+                            parentDir.mkdirs();
+                        }
 
-                    try ( OutputStream outputStream = new FileOutputStream(entryFile) ) {
-                        byte[] buffer = new byte[1024];
-                        int bytesRead;
-                        while ( (bytesRead = zipInputStream.read(buffer)) != -1 )
-                            outputStream.write(buffer, 0, bytesRead);
+                        if(entryName.contains(".DS_Store")) continue;
+                        if (entryName.equals("pom.xml"))
+                            hasPomFile = true;
+
+                        try (OutputStream outputStream = new FileOutputStream(entryFile)) {
+                            byte[] buffer = new byte[1024];
+                            int bytesRead;
+                            while ((bytesRead = zipInputStream.read(buffer)) != -1) {
+                                outputStream.write(buffer, 0, bytesRead);
+                            }
+                        }
                     }
                 }
-            }
 
-            // Check if both conditions are met: "src" directory and "pom.xml" file exist
-            if ( hasSrcDirectory && hasPomFile )
-                return tempDirectory;
-            else {
-                // Cleanup and delete the temporary directory if validation fails
-                deleteDirectory(tempDirectory);
-                return null;
+                if (hasSrcDirectory && hasPomFile)
+                    return tempDirectory;
+                else {
+                    deleteDirectory(tempDirectory);
+                    return null;
+                }
             }
-        } catch ( Exception e ){
+        } catch (Exception e) {
             throw new InternalErrorException("File system error while extracting the zip files.");
+        } finally {
+            // Delete the temporary zip file
+            if (tempZipFile != null && tempZipFile.exists()) {
+                tempZipFile.delete();
+            }
         }
     }
 

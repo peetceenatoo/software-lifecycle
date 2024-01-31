@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.DTOs;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import com.polimi.PPP.CodeKataBattle.Model.ProgrammingLanguageEnum;
@@ -17,8 +18,8 @@ public class BattleDTO {
     private Long id;
     private String name;
     private BattleStateEnum state;
-    private LocalDateTime subscriptionDeadline;
-    private LocalDateTime submissionDeadline;
+    private ZonedDateTime subscriptionDeadline;
+    private ZonedDateTime submissionDeadline;
     private int maxStudentsInGroup;
     private int minStudentsInGroup;
     private boolean manualScoringRequired;

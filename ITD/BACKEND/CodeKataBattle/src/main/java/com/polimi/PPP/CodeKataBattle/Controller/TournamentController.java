@@ -21,10 +21,8 @@ import java.util.List;
 public class TournamentController extends AuthenticatedController{
 
     // to get the request's UserDTO object, call this.getAuthenticatedUser();
-
     @Autowired
     private TournamentService tournamentService;
-
 
     @Autowired
     @Qualifier("emailProvider")
@@ -35,19 +33,18 @@ public class TournamentController extends AuthenticatedController{
 
     @GetMapping("/{tournamentId}")
     public ResponseEntity<?> getTournament(@PathVariable Long tournamentId) {
+
         TournamentDTO tournament = tournamentService.getTournamentById(tournamentId);
         return ResponseEntity.ok(tournament);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getTournaments() {
-        UserDTO user = this.getAuthenticatedUser();
-        List<TournamentDTO> tournaments = tournamentService.getTournaments(null);
-        return ResponseEntity.ok(tournaments);
+    @GetMapping()
+    public ResponseEntity<?> getTournament() {
+        return ResponseEntity.ok(tournamentService.getTournaments(null));
     }
 
-    @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentDTO>> getTournaments(@PathVariable(required = false) TournamentStateEnum state) {
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<TournamentDTO>> getTournaments(@PathVariable TournamentStateEnum state) {
         UserDTO user = this.getAuthenticatedUser();
         List<TournamentDTO> tournaments = tournamentService.getTournaments(state);
         return ResponseEntity.ok(tournaments);
@@ -109,24 +106,21 @@ public class TournamentController extends AuthenticatedController{
         return ResponseEntity.ok(battleService.getEnrolledBattlesByTournamentId(tournamentId, authenticatedUser.getId()));
     }
 
-    @PostMapping("/close")
+    @PostMapping("/{tournamentId}/close")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
-    public ResponseEntity<?> closeTournament(@RequestBody Long tournamentId) {
+    public ResponseEntity<?> closeTournament(@PathVariable Long tournamentId) {
 
         //Preauthorize already checking if the user is an educator
         //Checking if he manages the tournament is enough
         UserDTO authenticatedUser = this.getAuthenticatedUser();
-        if (!tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
-            throw new InvalidRightsForActionException("Not authorized to close this tournament.");
-
-        tournamentService.closeTournament(tournamentId);
-        return ResponseEntity.ok("Tournament closed successfully.");
+        TournamentDTO tournamentDTO = tournamentService.closeTournament(tournamentId, authenticatedUser.getId());
+        return ResponseEntity.ok(tournamentDTO);
 
     }
 
-    @PostMapping("/enroll")
+    @PostMapping("/{tournamentId}/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollInTournament(@RequestBody Long tournamentId) {
+    public ResponseEntity<?> enrollInTournament(@PathVariable Long tournamentId) {
 
         UserDTO authenticatedUser = this.getAuthenticatedUser();
         if (tournamentService.hasUserRightsOnTournament(authenticatedUser.getId(), tournamentId))
@@ -140,8 +134,8 @@ public class TournamentController extends AuthenticatedController{
     @PostMapping("/{tournamentId}/createBattle")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
     public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
-        battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
-        return ResponseEntity.ok("Enrollment successful.");
+        BattleDTO battle =battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
+        return ResponseEntity.ok(battle);
     }
 
 
