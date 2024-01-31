@@ -34,6 +34,9 @@ public class BattleController extends AuthenticatedController {
     private BattleService battleService;
 
     @Autowired
+    private BattleInviteService battleinvite;
+
+    @Autowired
     private EvaluatorProcess evaluatorProcess;
 
     @Autowired
@@ -96,41 +99,19 @@ public class BattleController extends AuthenticatedController {
     @PostMapping("/{battleId}/closeBattle")
     public ResponseEntity<?> closeBattle(@PathVariable Long battleId) {
         UserDTO user = this.getAuthenticatedUser();
-        if (user.getRole().getName() == RoleEnum.ROLE_EDUCATOR) {
-            Optional<BattleDTO> battle = battleService.getBattleByIdEducator(battleId, user.getId());
-            if (battle.isPresent()) {
-                if(battle.get().getState() != BattleStateEnum.CONSOLIDATION) {
-                    throw new InvalidBattleStateException("Battle is not in consolidation state");
-                }
-                battleService.closeBattle(battleId);
-                return ResponseEntity.ok("Battle closed");
-            } else {
-                throw new InvalidArgumentException("Battle not found");
-            }
-        } else {
-            throw new InvalidRightsForActionException("You are not authorized to close this battle");
+        if (battleId == null) {
+            throw new InvalidArgumentException("Battle id cannot be null");
         }
+        return ResponseEntity.ok(battleService.closeBattle(battleId, user));
     }
 
     @GetMapping("/{battleId}/ranking")
     public ResponseEntity<?> getRankingBattle(@PathVariable Long battleId) {
         UserDTO user = this.getAuthenticatedUser();
-        if (user.getRole().getName() != RoleEnum.ROLE_STUDENT) {
-            Optional<BattleStudentDTO> battle = battleService.getBattleByIdStudent(battleId, user.getId());
-            if (battle.isPresent()) {
-                return ResponseEntity.ok(battleService.getBattleRanking(battleId));
-            } else {
-                throw new InvalidArgumentException("Battle not found");
-            }
-        }else {
-            Optional<BattleDTO> battle = battleService.getBattleByIdEducator(battleId, user.getId());
-            if (battle.isPresent()) {
-                return ResponseEntity.ok(battleService.getBattleRanking(battleId));
-            } else {
-                throw new InvalidArgumentException("Battle not found");
-            }
+        if (battleId == null) {
+            throw new InvalidArgumentException("Battle id cannot be null");
         }
-
+        return ResponseEntity.ok(battleService.getBattleRanking(battleId, user));
     }
 
     @GetMapping("/{battleId}/submissions")
@@ -158,7 +139,7 @@ public class BattleController extends AuthenticatedController {
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
     public ResponseEntity<?> enrollToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
         UserDTO user = this.getAuthenticatedUser();
-        battleService.enrollAndInviteBattle(battleEnrollDTO);
+        battleinvite.enrollAndInviteBattle(battleEnrollDTO);
         return ResponseEntity.ok("Enrolled successfully");
     }
 
@@ -166,7 +147,7 @@ public class BattleController extends AuthenticatedController {
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
     public ResponseEntity<?> inviteToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
         UserDTO user = this.getAuthenticatedUser();
-        battleService.inviteUserToBattle(battleEnrollDTO);
+        battleinvite.inviteUserToBattle(battleEnrollDTO);
         return ResponseEntity.ok("Invited successfully");
     }
 
@@ -210,7 +191,7 @@ public class BattleController extends AuthenticatedController {
 
         if(battleInviteId < 0) throw new InvalidArgumentException("Invalid invite id");
 
-        battleService.acceptBattleInvite(battleInviteId);
+        battleinvite.acceptBattleInvite(battleInviteId);
         return ResponseEntity.ok("Accepted successfully");
     }
 

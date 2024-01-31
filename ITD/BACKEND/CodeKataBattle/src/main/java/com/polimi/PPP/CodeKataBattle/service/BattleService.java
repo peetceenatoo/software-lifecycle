@@ -1,6 +1,5 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InternalErrorException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
@@ -11,14 +10,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleCreationException;
 import com.polimi.PPP.CodeKataBattle.Model.Battle;
-import com.polimi.PPP.CodeKataBattle.Model.BattleScore;
 import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.Tournament;
-import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Utilities.URLTrimmer;
-import jakarta.transaction.Transactional;
 import org.apache.commons.io.FileUtils;
-import org.hibernate.loader.ast.spi.BatchLoader;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -113,18 +108,40 @@ public class BattleService {
         return Optional.empty();
     }
 
+    private boolean userHasPermissionToBattle(UserDTO user, Long battleId) {
+        if (user.getRole().getName() == RoleEnum.ROLE_EDUCATOR) {
+            Optional<Battle> battle = battleRepository.findById(battleId);
+            if (battle.isEmpty()) {
+                if (battle.get().getTournament().getUsers().stream().anyMatch(user1 -> user1.getId().equals(user.getId())))
+                    return false;
+            }
+        } else {
+            Optional<BattleSubscription> battleSubscriptionOpt = battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, user.getId());
+            if (battleSubscriptionOpt.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    public void closeBattle(Long battleId) {
+    public BattleDTO closeBattle(Long battleId, UserDTO user) {
+        if (!userHasPermissionToBattle(user, battleId)) {
+            throw new InvalidArgumentException("User not enrolled in the battle");
+        }
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
         if (battleOpt.isPresent()) {
             Battle battle = battleOpt.get();
             battle.setState(BattleStateEnum.ENDED);
             battleRepository.save(battle);
         }
+        return modelMapper.map(battleOpt.get(), BattleDTO.class);
     }
 
     @Transactional
-    public List<BattleRankingDTO> getBattleRanking(Long battleId) {
+    public List<BattleRankingDTO> getBattleRanking(Long battleId, UserDTO user) {
+        if (!userHasPermissionToBattle(user, battleId)) {
+            throw new InvalidArgumentException("User not enrolled in the battle");
+        }
         List<BattleRankingGroupDTO> group_ranking = battleScoreRepository.calculateStudentRankingForBattle(battleId);
         List<BattleRankingDTO> ranking = new ArrayList<>();
         for (BattleRankingGroupDTO x: group_ranking) {
@@ -139,105 +156,11 @@ public class BattleService {
     }
 
 
-    @Transactional
-    public void inviteUserToBattle(BattleEnrollDTO battleEnrollDTO) {
-        Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
-        User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
-        if (battleEnrollDTO.getUsernames().isEmpty() ) {
-            throw new InvalidArgumentException("No users to invite");
-        }
-        for (String username : battleEnrollDTO.getUsernames()) {
-            User invitedUser = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new EntityNotFoundException("Invited user not found"));
-            BattleInvite invite = new BattleInvite();
-            invite.setBattle(battle);
-            invite.setUser(user);
-            invite.setInvitedUser(invitedUser);
-            invite.setState(BattleInviteStateEnum.PENDING); // Assuming an enum for the invite state
-            battleInviteRepository.save(invite);
-        }
-    }
-
-    @Transactional
-    public void enrollBattle(BattleEnrollDTO battleEnrollDTO) {
-        Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
-        User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
-        BattleInvite invite = new BattleInvite();
-        invite.setBattle(battle);
-        invite.setUser(user);
-        invite.setInvitedUser(null);
-        invite.setState(BattleInviteStateEnum.ACCEPTED); // Assuming an enum for the invite state
-        battleInviteRepository.save(invite);
-    }
-
-    //I can remove some checks to improve it
-    @Transactional
-    public void enrollAndInviteBattle(BattleEnrollDTO battleEnrollDTO) {
-        if (battleEnrollDTO.getUsernames().isEmpty()) {
-            throw new InvalidArgumentException("No users to invite");
-        }
-        Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
-        User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
-        if(battleEnrollDTO.getUsernames().size() > battle.getMaxStudentsInGroup()) {
-            throw new InvalidArgumentException("Too many users to invite");
-        }
-        if(battleEnrollDTO.getUsernames().size() > battle.getMinStudentsInGroup()) {
-            throw new InvalidArgumentException("Too few users to invite");
-        }
-        enrollBattle(battleEnrollDTO);
-        inviteUserToBattle(battleEnrollDTO);
-    }
-
-    @Transactional
-    public void acceptBattleInvite(Long inviteId) {
-
-        BattleInvite invite = battleInviteRepository.findById(inviteId)
-                .orElseThrow(() -> new InvalidArgumentException("Invite not found"));
-        Battle battle = invite.getBattle();
-        Long battleId = battle.getId();
-        User user = invite.getUser();
-        Long userId = user.getId();
-
-        if(battle.getState() != BattleStateEnum.SUBSCRIPTION){
-            throw new InvalidArgumentException("Subscription deadline expired");
-        }
 
 
-        invite.setState(BattleInviteStateEnum.ACCEPTED);
-        battleInviteRepository.save(invite);
 
-        // Count the accepted invites
-        //Long acceptedInvitesCount = battleInviteRepository.countByBattleIdAndState(battleId, BattleInviteStateEnum.ACCEPTED, userId);
 
-        List<BattleInvite> invites = battleInviteRepository.getAcceptedInvite(battleId, BattleInviteStateEnum.ACCEPTED, userId);
 
-        // Check if the count meets the minimum group size constraint
-        if (invites.size() == battle.getMinStudentsInGroup()) {
-            // Create a new BattleSubscription
-            long groupId = battleSubscriptionRepository.findMaxGroupIdInBattle(battleId) + 1;
-            for (BattleInvite x: invites) {
-                BattleSubscription subscription = new BattleSubscription();
-                subscription.setBattle(battle);
-                subscription.setUser(x.getUser());
-                //generate a group id getting the max group id and adding 1
-                subscription.setGroupId(groupId);
-                battleSubscriptionRepository.save(subscription);
-            }
-        }else{
-            if (invites.size() > battle.getMinStudentsInGroup() && invites.size() <= battle.getMaxStudentsInGroup()) {
-                BattleSubscription subscription = new BattleSubscription();
-                subscription.setBattle(battle);
-                subscription.setUser(user);
-                //find the group id of the other users that accepted that battle
-                long groupId = battleSubscriptionRepository.findGroupIdByBattleIdAndUserId(battleId, userId);
-                subscription.setGroupId(groupId);
-            }
-            else if (invites.size() < battle.getMinStudentsInGroup()) return;
-
-            throw new InvalidArgumentException("Too many users in the group");
-        }
-
-    }
 
 
     public BattleDTO getBattleById(Long battleId) {

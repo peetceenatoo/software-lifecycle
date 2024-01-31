@@ -29,9 +29,13 @@ public interface BattleInviteRepository extends JpaRepository<BattleInvite, Long
 
 
     @Query("SELECT COUNT(bi) FROM BattleInvite bi WHERE bi.battle.id = :battleId AND bi.state = :state AND bi.InvitedUser.id = :userId")
-    Long countByBattleIdAndState(@Param("battleId") Long battleId, @Param("state") BattleInviteStateEnum state, @Param("userId") Long userId);
+    int countByBattleIdAndState(@Param("battleId") Long battleId, @Param("state") BattleInviteStateEnum state, @Param("userId") Long userId);
 
     @Query("SELECT bi FROM BattleInvite bi WHERE bi.battle.id = :battleId AND bi.state = :battleInviteStateEnum AND bi.InvitedUser.id = :userId")
     List<BattleInvite> getAcceptedInvite(Long battleId, BattleInviteStateEnum battleInviteStateEnum, Long userId);
+
+    Optional<BattleInvite> findByBattleIdAndUserId(Long battleId, Long userId);
+
+    Optional<BattleInvite> findByBattleIdAndUserIdAndState(Long battleId, Long userId, BattleInviteStateEnum state);
 
 }

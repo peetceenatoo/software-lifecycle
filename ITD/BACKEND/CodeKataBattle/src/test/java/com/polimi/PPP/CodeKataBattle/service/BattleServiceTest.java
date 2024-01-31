@@ -10,6 +10,7 @@ import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
@@ -31,16 +32,13 @@ import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -438,4 +436,234 @@ class BattleServiceTest {
 
         return mockMultipartFile;
     }
+
+    @Test
+    void testGetBattleById() {
+        Long battleId = 1L;
+
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("NOME");
+        tournament.setState(TournamentStateEnum.ONGOING);
+        tournament.setDeadline(LocalDateTime.now());
+        tournament.setBattles(new HashSet<>());
+        tournament.setUsers(new HashSet<>());
+
+        Battle battle = new Battle();
+        battle.setState(BattleStateEnum.SUBSCRIPTION);
+        battle.setTournament(tournament);
+        battle.setId(1L);
+        battle.setManualScoringRequired(true);
+        battle.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+        battle.setRepositoryLink("repoLink");
+        battle.setTestRepositoryLink("testLink");
+        battle.setMinStudentsInGroup(1);
+        battle.setMaxStudentsInGroup(3);
+        battle.setSubmissionDeadline(LocalDateTime.now());
+        battle.setSubscriptionDeadline(LocalDateTime.now());
+        battle.setName("Battle");
+
+        BattleDTO battleDTO = new BattleDTO();
+        modelMapper.map(battle, battleDTO);
+
+        when(battleRepository.findById(battleId)).thenReturn(java.util.Optional.of(battle));
+
+        BattleDTO found = battleService.getBattleById(battleId);
+
+
+        checkBattlesAreEquals(battleDTO, found);
+
+        when(battleRepository.findById(battleId)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(InvalidArgumentException.class, () -> {
+            battleService.getBattleById(battleId);
+        });
+
+    }
+
+    @Test
+    void testGetBattleRanking() {
+        Long battleId = 1L;
+        Long userId = 1L;
+        Long groupId = 1L;
+
+        // Set up mock data
+        User educator = new User();
+        educator.setId(userId + 1);
+
+        User student = new User();
+        student.setId(userId);
+
+        UserDTO educatorDTO = new UserDTO();
+        educator.setId(userId + 1);
+        Role newoleEnum = new Role();
+        newoleEnum.setName(RoleEnum.ROLE_EDUCATOR);
+
+        UserDTO studentDTO = new UserDTO();
+        studentDTO.setId(userId);
+        newoleEnum.setName(RoleEnum.ROLE_STUDENT);
+        studentDTO.setRole(newoleEnum);
+
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("NOME");
+        tournament.setState(TournamentStateEnum.ONGOING);
+        HashSet<User> educators = new HashSet<>();
+        educators.add(educator);
+        tournament.setUsers(educators);
+
+        Battle battle = new Battle();
+        battle.setId(battleId);
+        battle.setState(BattleStateEnum.ONGOING);
+        battle.setTournament(tournament);
+
+        battle.setMinStudentsInGroup(1);
+        battle.setMaxStudentsInGroup(3);
+
+        BattleSubscription battleSubscription = new BattleSubscription();
+        battleSubscription.setBattle(battle);
+        battleSubscription.setGroupId(groupId);
+        battleSubscription.setUser(student);
+
+
+        BattleRankingGroupDTO battleRankingGroupDTO = new BattleRankingGroupDTO();
+        battleRankingGroupDTO.setGroupId(groupId);
+        battleRankingGroupDTO.setHighestScore(100);
+
+        List<BattleRankingGroupDTO> battleRankingGroupDTOList = new ArrayList<>();
+
+        for(int i = 0; i < 3; i ++) {
+            BattleRankingGroupDTO battleRankingGroupDTO1 = new BattleRankingGroupDTO();
+            battleRankingGroupDTO1.setGroupId(groupId + i);
+            battleRankingGroupDTO1.setHighestScore(100 - 10 * i);
+        }
+
+        List<String> usernames = new ArrayList<>();
+
+
+        List<List<String>> usernamesList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                usernames.add("user" + i + "_" + j);
+            }
+            usernamesList.add(usernames);
+        }
+
+
+        when(battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, userId)).thenReturn(Optional.of(battleSubscription));
+        when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
+        when(battleScoreRepository.calculateStudentRankingForBattle(battleId)).thenReturn(battleRankingGroupDTOList);
+        when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId)).thenReturn(usernamesList.get(0));
+        when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 1)).thenReturn(usernamesList.get(1));
+        when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 2)).thenReturn(usernamesList.get(2));
+
+
+        List<BattleRankingDTO> battleRankingDTOList = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            BattleRankingDTO battleRankingDTO = new BattleRankingDTO();
+            battleRankingDTO.setGroupId(groupId);
+            battleRankingDTO.setHighestScore(100 - 10 * i);
+            battleRankingDTO.setUsernames(usernames);
+            battleRankingDTOList.add(battleRankingDTO);
+        }
+
+        List<BattleRankingDTO> result = battleService.getBattleRanking(battleId, studentDTO);
+
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(battleRankingDTOList.get(i).getGroupId(), result.get(i).getGroupId());
+            assertEquals(battleRankingDTOList.get(i).getHighestScore(), result.get(i).getHighestScore());
+            assertEquals(battleRankingDTOList.get(i).getUsernames(), result.get(i).getUsernames());
+        }
+
+        newoleEnum.setName(RoleEnum.ROLE_EDUCATOR);
+        studentDTO.setRole(newoleEnum);
+
+        when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
+        result = battleService.getBattleRanking(battleId, studentDTO);
+
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(battleRankingDTOList.get(i).getGroupId(), result.get(i).getGroupId());
+            assertEquals(battleRankingDTOList.get(i).getHighestScore(), result.get(i).getHighestScore());
+            assertEquals(battleRankingDTOList.get(i).getUsernames(), result.get(i).getUsernames());
+        }
+
+    }
+
+    @Test
+    void testGetBattleByIdEducator() {
+        Long battleId = 1L;
+        Long userId = 1L;
+        Long groupId = 1L;
+        Long tournamentId = 1L;
+
+        User educator = new User();
+        educator.setId(userId);
+
+        UserDTO educatorDTO = new UserDTO();
+        educator.setId(userId);
+        Role newoleEnum = new Role();
+        newoleEnum.setName(RoleEnum.ROLE_EDUCATOR);
+        educatorDTO.setRole(newoleEnum);
+
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("NOME");
+        tournament.setState(TournamentStateEnum.ONGOING);
+        HashSet<User> educators = new HashSet<>();
+        educators.add(educator);
+        tournament.setUsers(educators);
+
+        Battle battle = new Battle();
+        battle.setId(battleId);
+        battle.setState(BattleStateEnum.ONGOING);
+        battle.setTournament(tournament);
+
+        when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
+
+        Optional<BattleDTO> result = battleService.getBattleByIdEducator(battleId, userId);
+
+        assertEquals(battleId, result.get().getId());
+        assertEquals(BattleStateEnum.ONGOING, result.get().getState());
+    }
+
+    @Test
+    void testCloseBattle() {
+        Long battleId = 1L;
+        Long userId = 1L;
+        Long groupId = 1L;
+        Long tournamentId = 1L;
+
+        User educator = new User();
+        educator.setId(userId);
+
+        UserDTO educatorDTO = new UserDTO();
+        educator.setId(userId);
+        Role newoleEnum = new Role();
+        newoleEnum.setName(RoleEnum.ROLE_EDUCATOR);
+        educatorDTO.setRole(newoleEnum);
+
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("NOME");
+        tournament.setState(TournamentStateEnum.ONGOING);
+        HashSet<User> educators = new HashSet<>();
+        educators.add(educator);
+        tournament.setUsers(educators);
+
+        Battle battle = new Battle();
+        battle.setId(battleId);
+        battle.setState(BattleStateEnum.ONGOING);
+        battle.setTournament(tournament);
+
+        when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
+        when(battleRepository.save(any(Battle.class))).thenReturn(battle);
+
+        BattleDTO result = battleService.closeBattle(battleId, educatorDTO);
+        assertEquals(BattleStateEnum.ENDED, result.getState());
+        assertEquals(battleId, result.getId());
+    }
+
+
+
 }
