@@ -91,6 +91,11 @@ public class TournamentService {
 
     @Transactional
     public TournamentDTO createTournament(TournamentCreationDTO tournamentDTO) {
+
+        if (tournamentDTO.getEducatorsInvited().isEmpty()){
+            throw new IllegalArgumentException("At least one educator must be invited (the creator)");
+        }
+
         // Input validation done in the controller
         Tournament tournament = new Tournament();
         modelMapper.map(tournamentDTO, tournament);

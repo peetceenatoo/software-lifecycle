@@ -212,6 +212,17 @@ public class BattleService {
     @Transactional
     public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
 
+
+        if (battleDTO.getMinStudentsInGroup() < 1 || battleDTO.getMaxStudentsInGroup() < 1)
+            throw new InvalidBattleCreationException("Invalid Min and Max number for students groups.");
+
+        if(battleDTO.getMinStudentsInGroup() > battleDTO.getMaxStudentsInGroup())
+            throw new InvalidBattleCreationException("Invalid Min and Max number for students groups.");
+
+        if(battleDTO.getSubscriptionDeadline().isAfter(battleDTO.getSubmissionDeadline()))
+            throw new InvalidBattleCreationException("Invalid deadlines.");
+
+
         // Check tournamentId is valid and tournament is ongoing
         Optional<Tournament> tournamentOpt = tournamentRepository.findById(tournamentId);
         if ( tournamentOpt.isEmpty() )
