@@ -16,6 +16,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -34,8 +37,6 @@ public class EvaluatorProcess {
     @Async("taskExecutor")
     public void processSubmission(SubmissionDTO submissionDTO){
         //Process submission
-
-
 
         if(submissionDTO.getBattle().getProgrammingLanguage() != ProgrammingLanguageEnum.JAVA) {
             submissionService.createSubmissionScore(submissionDTO.getId(),
@@ -83,7 +84,14 @@ public class EvaluatorProcess {
             return;
         }
 
-        Float automaticScore = (functionalScore + staticAnalysisScore) / 2;
+        Timestamp submissionDeadlineTimestamp = Timestamp.valueOf(submissionDTO.getBattle().getSubmissionDeadline().toLocalDateTime());
+        Timestamp subscriptionDeadlineTimestamp = Timestamp.valueOf(submissionDTO.getBattle().getSubscriptionDeadline().toLocalDateTime());
+        Timestamp submissionTimestamp =submissionDTO.getTimestamp();
+
+        // 100 if submitted at subscriptionDeadline, 0 if submitted at submissionDeadline
+        Float timelinessScore = 100 - (float) (submissionTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) / (float) (submissionDeadlineTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) * 100;
+
+        Float automaticScore = (functionalScore + timelinessScore + staticAnalysisScore) / 3;
 
         try{
             submissionService.createSubmissionScore(submissionDTO.getId(),
