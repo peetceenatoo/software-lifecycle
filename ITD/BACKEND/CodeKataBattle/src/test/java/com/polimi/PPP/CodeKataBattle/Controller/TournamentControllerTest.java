@@ -2,20 +2,40 @@ package com.polimi.PPP.CodeKataBattle.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
+import com.polimi.PPP.CodeKataBattle.Model.ProgrammingLanguageEnum;
+import com.polimi.PPP.CodeKataBattle.Model.Tournament;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
+import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.TournamentService;
 import com.polimi.PPP.CodeKataBattle.service.UserService;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -36,6 +56,12 @@ class TournamentControllerTest {
     private String studentToken;
 
     private String educatorToken;
+
+    @MockBean
+    private GitHubAPI gitHubAPI;
+    @MockBean
+    @Qualifier("emailProvider")
+    private NotificationProvider notificationProvider;
 
     private Integer createdTournaments = 0;
 
@@ -167,7 +193,7 @@ class TournamentControllerTest {
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("Tournament2");
-        tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+        tournamentCreationDTO.setEducatorsInvited(new ArrayList<>());
         tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
 
         final MockHttpServletResponse response3 = mockMvc.perform(
@@ -519,6 +545,241 @@ class TournamentControllerTest {
 
         assertEquals(1, tournaments4.size());
 
+    }
+
+    @Test
+    @Order(9)
+    void testCreateBattle() throws Exception{
+        when(gitHubAPI.createRepository(anyString(), anyString(),anyBoolean())).thenReturn("name/repo");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        BattleCreationDTO battleCreationDTO = new BattleCreationDTO();
+        battleCreationDTO.setName("Battle1");
+        battleCreationDTO.setManualScoringRequired(false);
+        battleCreationDTO.setSubmissionDeadline(ZonedDateTime.now().plusDays(4));
+        battleCreationDTO.setSubscriptionDeadline(ZonedDateTime.now().plusDays(3));
+        battleCreationDTO.setMinStudentsInGroup(1);
+        battleCreationDTO.setMaxStudentsInGroup(2);
+        battleCreationDTO.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+
+        MockMultipartFile jsonFile = new MockMultipartFile("battle", "", "application/json", objectMapper.writeValueAsBytes(battleCreationDTO));
+
+
+        TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
+        tournamentCreationDTO.setTournamentName("TournamentSub");
+        tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+
+        TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+
+
+        final MockHttpServletResponse response = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
+                                .file(jsonFile)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+
+        final MockHttpServletResponse response2 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
+                                .file(jsonFile)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.studentToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(401, response2.getStatus());
+
+        final MockHttpServletResponse response3 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
+                                .file(jsonFile)
+                                .file(getGoodZip("codeZippp"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response3.getStatus());
+
+        final MockHttpServletResponse response4 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
+                                .file(jsonFile)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZippppppp"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response4.getStatus());
+
+        final MockHttpServletResponse response5 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/7757577575/createBattle")
+                                .file(jsonFile)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response5.getStatus());
+
+        final MockHttpServletResponse response6 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+tournament.getId()+"/createBattle")
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response6.getStatus());
+
+    }
+
+    private MockMultipartFile getGoodZip(String name) throws IOException {
+
+        MockMultipartFile mockMultipartFile;
+
+        try {
+            File zipFile = createGoodTempZipFile();
+            byte[] zipContent = readFileToByteArray(zipFile);
+
+            mockMultipartFile = new MockMultipartFile(
+                    name, // Parameter name for the multipart file
+                    zipFile.getName(), // Filename
+                    "application/zip", // Content type
+                    zipContent // File content
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return mockMultipartFile;
+    }
+
+    private MockMultipartFile getBadZip1() throws IOException{
+        //Mock zip files
+        MockMultipartFile mockMultipartFile;
+
+        try {
+            File zipFile = createBadTempZipFile1();
+            byte[] zipContent = readFileToByteArray(zipFile);
+
+            mockMultipartFile = new MockMultipartFile(
+                    "file", // Parameter name for the multipart file
+                    zipFile.getName(), // Filename
+                    "application/zip", // Content type
+                    zipContent // File content
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return mockMultipartFile;
+    }
+
+    private File createGoodTempZipFile() throws IOException {
+
+        // Temp dir
+        Path tempDir = Files.createTempDirectory("myTempDir");
+
+
+        // Temporary file
+        File tempZipFile = new File(tempDir.toFile(), "temp.zip");
+
+        try (FileOutputStream fos = new FileOutputStream(tempZipFile);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            // Adding pom.xml file
+            ZipEntry pomEntry = new ZipEntry("pom.xml");
+            zos.putNextEntry(pomEntry);
+            String pomContent = "<project>...</project>"; // Replace with actual pom.xml content
+            zos.write(pomContent.getBytes());
+            zos.closeEntry();
+
+            // Adding src directory
+            ZipEntry srcDirEntry = new ZipEntry("src/");
+            zos.putNextEntry(srcDirEntry);
+            zos.closeEntry();
+
+            // You can add more files or subdirectories inside 'src' if needed
+            // Example: Adding a file inside src directory
+            // ZipEntry srcFileEntry = new ZipEntry("src/MyClass.java");
+            // zos.putNextEntry(srcFileEntry);
+            // String srcFileContent = "public class MyClass {}";
+            // zos.write(srcFileContent.getBytes());
+            // zos.closeEntry();
+        }
+
+        return tempZipFile;
+    }
+
+    private File createBadTempZipFile1() throws IOException {
+
+        // Temp dir
+        Path tempDir = Files.createTempDirectory("myTempDir");
+
+
+        // Temporary file
+        File tempZipFile = new File(tempDir.toFile(), "temp.zip");
+
+        try (FileOutputStream fos = new FileOutputStream(tempZipFile);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            // Adding pom.xml file
+            ZipEntry pomEntry = new ZipEntry("poma.xml");
+            zos.putNextEntry(pomEntry);
+            String pomContent = "<project>...</project>"; // Replace with actual pom.xml content
+            zos.write(pomContent.getBytes());
+            zos.closeEntry();
+
+            // Adding src directory
+            ZipEntry srcDirEntry = new ZipEntry("src/");
+            zos.putNextEntry(srcDirEntry);
+            zos.closeEntry();
+
+            // You can add more files or subdirectories inside 'src' if needed
+            // Example: Adding a file inside src directory
+            // ZipEntry srcFileEntry = new ZipEntry("src/MyClass.java");
+            // zos.putNextEntry(srcFileEntry);
+            // String srcFileContent = "public class MyClass {}";
+            // zos.write(srcFileContent.getBytes());
+            // zos.closeEntry();
+        }
+
+        return tempZipFile;
+    }
+
+    private static  byte[] readFileToByteArray(File file) throws IOException{
+        return Files.readAllBytes(file.toPath());
     }
 
 
