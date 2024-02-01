@@ -68,10 +68,10 @@ public class BattleInviteService {
         }
         Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
         User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
-        if(battleEnrollDTO.getUsernames().size() > battle.getMaxStudentsInGroup()) {
+        if(battleEnrollDTO.getUsernames().size() + 1 > battle.getMaxStudentsInGroup()) {
             throw new InvalidArgumentException("Too many users to invite");
         }
-        if(battleEnrollDTO.getUsernames().size() > battle.getMinStudentsInGroup()) {
+        if(battleEnrollDTO.getUsernames().size() + 1  < battle.getMinStudentsInGroup()) {
             throw new InvalidArgumentException("Too few users to invite");
         }
         enrollBattle(battleEnrollDTO);
@@ -94,7 +94,8 @@ public class BattleInviteService {
 
         for (String username : battleEnrollDTO.getUsernames()) {
             User invitedUser = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new EntityNotFoundException("Invited user not found"));
+                    .orElseThrow(() -> new InvalidArgumentException("Invited user not found"));
+
             BattleInvite invite = new BattleInvite();
             invite.setBattle(battle.get());
             invite.setUser(user);
@@ -148,6 +149,7 @@ public class BattleInviteService {
                 BattleSubscriptionDTO subscriptionDTO = new BattleSubscriptionDTO();
                 modelMapper.map(subscription, subscriptionDTO);
                 subscriptions.add(subscriptionDTO);
+
             }
         }else{
             if (invites.size() > battle.getMinStudentsInGroup() && invites.size() <= battle.getMaxStudentsInGroup()) {
@@ -162,9 +164,8 @@ public class BattleInviteService {
                 modelMapper.map(subscription, subscriptionDTO);
                 subscriptions.add(subscriptionDTO);
             }
-            else if (invites.size() < battle.getMinStudentsInGroup()) return null;
-
-            throw new InvalidArgumentException("Too many users in the group");
+            else if (invites.size() < battle.getMinStudentsInGroup()) return new ArrayList<>();
+            else  throw new InvalidArgumentException("Too many users in the group");
         }
         return subscriptions;
     }

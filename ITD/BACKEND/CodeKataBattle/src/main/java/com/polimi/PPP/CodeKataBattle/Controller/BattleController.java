@@ -140,20 +140,24 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollToBattle(@RequestBody Long battleId, @RequestBody List<String> usernames) {
+    public ResponseEntity<?> enrollToBattle(@RequestBody EnrollmentBattleDTO enrollmentBattleDTO) {
         UserDTO user = this.getAuthenticatedUser();
         BattleEnrollDTO battleEnrollDTO = new BattleEnrollDTO();
-        battleEnrollDTO.setBattleId(battleId);
+        battleEnrollDTO.setBattleId(enrollmentBattleDTO.getBattleId());
         battleEnrollDTO.setUserId(user.getId());
-        battleEnrollDTO.setUsernames(usernames);
+        battleEnrollDTO.setUsernames(enrollmentBattleDTO.getUsernames());
         battleinvite.enrollAndInviteBattle(battleEnrollDTO);
         return ResponseEntity.ok("Enrolled successfully");
     }
 
     @PostMapping("/invite")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> inviteToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
+    public ResponseEntity<?> inviteToBattle(@RequestBody EnrollmentBattleDTO enrollmentBattleDTO) {
         UserDTO user = this.getAuthenticatedUser();
+        BattleEnrollDTO battleEnrollDTO = new BattleEnrollDTO();
+        battleEnrollDTO.setBattleId(enrollmentBattleDTO.getBattleId());
+        battleEnrollDTO.setUserId(user.getId());
+        battleEnrollDTO.setUsernames(enrollmentBattleDTO.getUsernames());
         battleinvite.inviteUserToBattle(battleEnrollDTO);
         return ResponseEntity.ok("Invited successfully");
     }
