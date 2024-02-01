@@ -8,6 +8,7 @@ import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -183,6 +184,7 @@ class BattleServiceTest {
 
 
     @Test
+    @Transactional
     public void createBattle() throws IOException {
 
         Long tournamentId = 10L;

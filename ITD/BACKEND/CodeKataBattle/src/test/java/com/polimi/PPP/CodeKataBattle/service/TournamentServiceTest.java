@@ -9,6 +9,7 @@ import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.TournamentRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -25,6 +27,7 @@ import java.util.*;
 import static com.polimi.PPP.CodeKataBattle.Model.RoleEnum.ROLE_STUDENT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -324,6 +327,7 @@ class TournamentServiceTest {
         assertEquals(tournamentDTO, tournamentService.updateStateForTournament(1L, TournamentStateEnum.ENDED));
     }
     @Test
+    @Transactional
     public void testCreateTournament(){
 
         User edu1 = new User();
@@ -380,6 +384,7 @@ class TournamentServiceTest {
         studentRole.setName(RoleEnum.ROLE_STUDENT);
 
         when(roleRepository.findByName(RoleEnum.ROLE_STUDENT)).thenReturn(Optional.of(studentRole));
+
 
         assertEquals(resultDTO, tournamentService.createTournament(tournamentCreationDTO));
     }
