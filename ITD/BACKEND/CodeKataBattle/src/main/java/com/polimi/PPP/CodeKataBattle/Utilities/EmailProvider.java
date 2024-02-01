@@ -16,13 +16,20 @@ import java.util.Properties;
 @Component("emailProvider")
 public class EmailProvider implements NotificationProvider{
 
-    private final String host = "authsmtp.securemail.pro";
-    private final Integer port = 465;
-    private final String username = "noreply@codekatabattle.it";
+    @Value("${emailprovider.host}")
+    private String host;
+
+    @Value("${emailprovider.port}")
+    private Integer port;
+
+    @Value("${emailprovider.username}")
+    private  String username;
 
     @Value("${CKB_SMTP_PASSWORD}")
     private String password;
-    private final Boolean ssl = true;
+
+    @Value("${emailprovider.ssl}")
+    private Boolean ssl;
     private Session session;
 
     @PostConstruct
