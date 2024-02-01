@@ -101,6 +101,11 @@ public class BattleInviteService {
         if (battleInvite.isEmpty()) {
             throw new InvalidArgumentException("User not enrolled in the battle");
         }
+
+        if(battle.get().getState() != BattleStateEnum.SUBSCRIPTION){
+            throw new InvalidArgumentException("Subscription deadline expired");
+        }
+
         User user = battleInvite.get().getUser();
 
         for (String username : battleEnrollDTO.getUsernames()) {
