@@ -13,6 +13,7 @@ import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +46,14 @@ public class BattleController extends AuthenticatedController {
     @Autowired
     JwtHelper jwtHelper;
 
-    @PostMapping("/{battleId}/commit")
+    @PostMapping("/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl) {
+    public ResponseEntity<?> registerCommit(@RequestBody @Valid CommitDTO commitDTO) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
         Long bId = submissionAuth.getBattleId();
         Long userId = submissionAuth.getUserId();
+        String repositoryUrl = commitDTO.getRepositoryUrl();
+        String commitHash = commitDTO.getCommitHash();
 
         if(repositoryUrl.isEmpty() || commitHash.isEmpty())
             throw new InvalidArgumentException("Invalid arguments for the request.");
@@ -137,7 +140,7 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollToBattle(@RequestBody long battleId, @RequestBody List<String> usernames) {
+    public ResponseEntity<?> enrollToBattle(@RequestBody Long battleId, @RequestBody List<String> usernames) {
         UserDTO user = this.getAuthenticatedUser();
         BattleEnrollDTO battleEnrollDTO = new BattleEnrollDTO();
         battleEnrollDTO.setBattleId(battleId);
