@@ -7,6 +7,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.PendingSubmissionsException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 
@@ -330,7 +334,7 @@ public class BattleService {
         BattleDTO toBeReturned = new BattleDTO();
         modelMapper.map(result, toBeReturned);
 
-        eventPublisher.publishEvent(new BattleCreatedEvent(this,toBeReturned));
+
 
         // Clean up temporary directories
         try {
@@ -341,10 +345,22 @@ public class BattleService {
             throw new InternalErrorException("File system error while extracting the zip files.");
         }
 
-        // Send notification to all enrolled students
-        List<String> studentsEmail = tournament.getUsers().stream().filter(s -> s.getRole().getName() == RoleEnum.ROLE_STUDENT).map(User::getEmail).toList();
-        MessageDTO messageDTO = new MessageDTO("The new battle '" + result.getName() + "' of the tournament '" + tournament.getName() + "' has been created, check it out.", "New battle created");
-        notificationProvider.sendNotification(messageDTO, studentsEmail);
+        // Register an after-commit lambda
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+
+            @Override
+            public void afterCommit() {
+
+                eventPublisher.publishEvent(new BattleCreatedEvent(this,toBeReturned));
+
+                // Send notification to all enrolled students
+                List<String> studentsEmail = tournament.getUsers().stream().filter(s -> s.getRole().getName() == RoleEnum.ROLE_STUDENT).map(User::getEmail).toList();
+                MessageDTO messageDTO = new MessageDTO("The new battle '" + result.getName() + "' of the tournament '" + tournament.getName() + "' has been created, check it out.", "New battle created");
+                notificationProvider.sendNotification(messageDTO, studentsEmail);
+            }
+
+            // Implement other methods as needed or leave them as default
+        });
 
         return toBeReturned;
     }

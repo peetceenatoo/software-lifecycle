@@ -18,12 +18,6 @@ public class TournamentDeadlineHandler implements DeadlineHandler{
     @Override
     public void handleDeadline() {
         System.out.println("Tournament deadline reached");
-        // Safety sleep
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // do nothing
-        }
         this.tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
     }
 

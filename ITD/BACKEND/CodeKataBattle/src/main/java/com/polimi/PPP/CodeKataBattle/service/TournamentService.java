@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -116,31 +119,42 @@ public class TournamentService {
         tournament.setBattles(new java.util.HashSet<>());
         tournament.setUsers(new java.util.HashSet<>());
 
-        Tournament savedTournament = tournamentRepository.save(tournament);
+        tournament = tournamentRepository.save(tournament);
 
         // Handle association with educators
         for (Long id : tournamentDTO.getEducatorsInvited()) {
             User educator = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("EducatorId not valid"));
-            educator.getTournaments().add(savedTournament);
+            educator.getTournaments().add(tournament);
             userRepository.save(educator);
 
-            savedTournament.getUsers().add(educator);
+            tournament.getUsers().add(educator);
         }
 
         // Save tournament
-        savedTournament = tournamentRepository.save(savedTournament);
+        Tournament savedTournament = tournamentRepository.save(tournament);
 
         TournamentDTO toBeReturned = modelMapper.map(savedTournament, TournamentDTO.class);
 
-        eventPublisher.publishEvent(new TournamentCreatedEvent(this,toBeReturned));
+        // Register an after-commit lambda
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
 
-        // Send email to students
-        Role studentRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT).get();
-        List<User> students = userRepository.findByRole(studentRole);
-        List<String> studentsEmail = students.stream().map(User::getEmail).toList();
+            @Override
+            public void afterCommit() {
 
-        MessageDTO messageDTO = new MessageDTO("The new tournament '" + savedTournament.getName() + "' has been created, check it out.", "New tournament created");
-        notificationProvider.sendNotification(messageDTO, studentsEmail);
+
+                eventPublisher.publishEvent(new TournamentCreatedEvent(this,toBeReturned));
+
+                // Send email to students
+                Role studentRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT).get();
+                List<User> students = userRepository.findByRole(studentRole);
+                List<String> studentsEmail = students.stream().map(User::getEmail).toList();
+
+                MessageDTO messageDTO = new MessageDTO("The new tournament '" + savedTournament.getName() + "' has been created, check it out.", "New tournament created");
+                notificationProvider.sendNotification(messageDTO, studentsEmail);
+            }
+
+            // Implement other methods as needed or leave them as default
+        });
 
         return toBeReturned;
     }

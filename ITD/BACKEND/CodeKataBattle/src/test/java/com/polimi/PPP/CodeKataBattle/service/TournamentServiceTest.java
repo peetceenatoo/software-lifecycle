@@ -53,6 +53,7 @@ class TournamentServiceTest {
     @Mock
     private NotificationProvider notificationProvider;
 
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
