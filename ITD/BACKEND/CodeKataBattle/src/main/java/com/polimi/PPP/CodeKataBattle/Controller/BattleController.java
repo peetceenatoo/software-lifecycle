@@ -47,13 +47,10 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/{battleId}/commit")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl, @PathVariable Long battleId) {
+    public ResponseEntity<?> registerCommit(@RequestBody String commitHash, @RequestBody String repositoryUrl) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
         Long bId = submissionAuth.getBattleId();
         Long userId = submissionAuth.getUserId();
-
-        if( !Objects.equals(bId, battleId) )
-            throw new InvalidTokenException("Invalid token for the battle.");
 
         if(repositoryUrl.isEmpty() || commitHash.isEmpty())
             throw new InvalidArgumentException("Invalid arguments for the request.");
@@ -140,8 +137,12 @@ public class BattleController extends AuthenticatedController {
 
     @PostMapping("/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollToBattle(@RequestBody BattleEnrollDTO battleEnrollDTO) {
+    public ResponseEntity<?> enrollToBattle(@RequestBody long battleId, @RequestBody List<String> usernames) {
         UserDTO user = this.getAuthenticatedUser();
+        BattleEnrollDTO battleEnrollDTO = new BattleEnrollDTO();
+        battleEnrollDTO.setBattleId(battleId);
+        battleEnrollDTO.setUserId(user.getId());
+        battleEnrollDTO.setUsernames(usernames);
         battleinvite.enrollAndInviteBattle(battleEnrollDTO);
         return ResponseEntity.ok("Enrolled successfully");
     }
