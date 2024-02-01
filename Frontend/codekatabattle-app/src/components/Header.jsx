@@ -1,54 +1,41 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Navbar, Nav, Form, FormControl, Button, Container, Row, Col } from 'react-bootstrap';
 
-function Header() {
+const Header = () => {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container fluid>
-        <Navbar.Brand href="#">Navbar scroll</Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-
-            
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: '100px' }}
-            navbarScroll
-          >
-            <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Link</Nav.Link>
-            <NavDropdown title="Link" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
-              </NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link href="#" disabled>
-              Link
-            </Nav.Link>
-          </Nav>
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
-        </Navbar.Collapse>
-      </Container>
+    <Navbar bg="primary" variant="dark" expand="lg" className="px-0">
+      <Container fluid className="px-0">
+        <Row className="w-100 gx-0">
+          <Col md={1} lg={1} /> {/* Spazio vuoto a sinistra */}
+          <Col md={10} lg={10}>
+            <Row>
+              <Col xs={12} lg={3}>
+                <Navbar.Brand href="#home">CodeKataBattle</Navbar.Brand>
+              </Col>
+              <Col xs={12} lg={6} className="d-flex align-items-center justify-content-center">
+                <Form className='d-flex flex-row justify-content-center' >
+                  <Col xs={12} lg={7} className="d-flex align-items-center justify-content-center">
+                    <FormControl type="text" placeholder="Search" style={{ width: 'auto' }} />
+                  </Col>
+                  <Col xs={12} lg={6} className="d-flex align-items-center justify-content-center">
+                  <Button variant="outline-light">Search</Button>
+                  </Col>
+                </Form>
+              </Col>
+              <Col xs={12} lg={3} className="d-flex justify-content-end">
+                <Nav>
+                  <Nav.Link href="#welcome">Welcome Luciano</Nav.Link>
+                  <Nav.Link href="#home">Home</Nav.Link>
+                  <Nav.Link href="#profile">Profile</Nav.Link>
+                </Nav>
+              </Col>
+            </Row>
+          </Col>
+          <Col md={1} lg={1} /> {/* Spazio vuoto a destra */}
+        </Row>
+      </Container>s
     </Navbar>
   );
-}
+};
 
 export default Header;
