@@ -242,7 +242,7 @@ The design document aims to explain in detail how we plan to build our system to
     \midrule
     7-Gen-2024 & 1.0 & Initial Release of the document \\
     \midrule
-    4-Feb-2024 & 2.0 & Adjustments implemented to conform to ITD Prototype. Altered logical design of database, leading to revised diagrams. Modified URL structure of some endpoints to comply with Spring standards. \\
+    4-Feb-2024 & 2.0 & Altered logical design of database, leading to revised diagrams. Modified URL structure of some endpoints to comply with Spring standards. \\
     \bottomrule
 \end{tabularx}
 
@@ -472,9 +472,29 @@ The diagram represented down below shows the process of a Student visualizing To
 \caption{A Student sees the tournaments he is enrolled in }
 \end{figure}
 
+\subsection*{Student gets the token to set up the GitHub Action for a battle}
+
+The diagram represented down below shows the process of a Student getting the token to setup the Github action to automatically notify CKB of a push in the repository. Upon successful authentication, the BattleManager communicates with the Model to validate the student's enrollment in the battle and obtain the battle's submission deadline to produce the token, then the BattleManager uses the AuthenticationManager to generate and return to the webapp a valid token.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.33]{Images/diagrams/sequences/getGitHubToken.png}\\
+\caption{A Student gets the token for a battle to setup the GitHub Action}
+\end{figure}
+
 \subsection*{Educator sees the tournaments they can manage}
 
-The diagram represented down below shows the process of a Student visualizing Tournaments they can manage. The TournamentsManager communicates with the Model to retrieve created Tournaments based on the Educator's ID. This triggers a database query executed by the EntityManager. Upon receiving the results, the TournamentsManager sends the list of Tournaments back to the WebApp.
+The diagram represented down below shows the process of a User visualizing Tournaments filtering by state. Upon successful authentication, the TournamentManager communicates with the Model to retrieve the Tournaments in the given state.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.33]{Images/diagrams/sequences/getTournamentsByState.png}\\
+\caption{A User sees the tournaments by state }
+\end{figure}
+
+\subsection*{User sees the tournaments by state}
+
+The diagram represented down below shows the process of an Educator visualizing Tournaments he can manage. The TournamentsManager communicates with the Model to retrieve created Tournaments based on the Educator's ID. This triggers a database query executed by the EntityManager. Upon receiving the results, the TournamentsManager sends the list of Tournaments back to the WebApp.
 
 \begin{figure}[H]
 \centering
@@ -482,7 +502,7 @@ The diagram represented down below shows the process of a Student visualizing To
 \caption{An Educator sees the tournaments he created}
 \end{figure}
 
-\subsection*{User sees battles in a tournament}
+\subsection*{Educator sees battles in a tournament}
 
 The diagram represented down below shows the process of a User visualizing the list of all the Battles in a Tournament. It comprehends the entire history of Battles ever created in the context of a Tournament. Although, as specified in section 2.5, it is possible to retrieve only the Battles in a certain status. Upon successful token validation, the TournamentsManager communicates with the Model to retrieve the Battles linked to the specified Tournament and the User's ID. This interaction triggers the EntityManager to execute a query on the DBMS. In a successful scenario, the Battles related to the Tournament flow back through the components, concluding with the TournamentsManager transmitting the list of Battles back to the WebApp. 
 
@@ -562,24 +582,34 @@ The diagram represented down below shows the process of a Student visualizing th
 \caption{A User sees the submissions of a battle}
 \end{figure}
 
-\subsection*{Student sees the battles they are enrolled in within a tournament}
+\subsection*{Student sees the battles he is enrolled in within a tournament}
 
 The diagram represented down below shows the process of a Student visualizing the Battles they are enrolled in within the context of a certain Tournament. It begins as the WebApp initiates a request for Battles, providing the Tournament ID. Upon successful token validation and role authorization, the BattleManager retrieves the Battles the Students are enrolled in from the Model based on the provided Tournament ID. An invalid Tournament ID triggers error handling, resulting in a null response. In a successful scenario, the Battles flow from the EntityManager to the Model, concluding with the BattleManager transmitting the submissions to the WebApp.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale = 0.33]{Images/diagrams/sequences/GetEnrolledBattles.png}\\
-\caption{Student sees the battles they are enrolled in within a tournament}
+\caption{Student sees the battles he is enrolled in within a tournament}
 \end{figure}
 
-\subsection*{Educator sees the battles of a tournament they can manage}
+\subsection*{Student accepts the invite in a group for a battle}
 
-The diagram represented down below shows the process of an Educator visualizing the list of Battles within the context of a Tournament that they can manage. It begins as the WebApp initiates a request for the Battles, providing the Tournament ID. Upon successful authentication, the BattleManager retrieves the Battles from the Model based on the provided Tournament ID. An invalid Tournament ID triggers error handling, resulting in a null response. In a successful scenario, the Battles flow from the EntityManager to the Model, concluding with the BattleManager transmitting the submissions to the WebApp.
+The diagram represented down below shows the process of a Student accepting the invite for a Battle of a tournament he is enrolled in. It begins as the Student initiates a request to accept the invite, using the token recieved as part of the notification. Upon successful token validation, the BattleManager accepts the Battle invite, and if enough students have accepted the invite the group is automatically enrolled in the battle. Either an invalid token, or an already accepted invite triggers error handling, resulting in a null response. In a successful scenario, the user is redirected to the Homepage.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.33]{Images/diagrams/sequences/acceptInvite.png}\\
+\caption{Student accepts an invite }
+\end{figure}
+
+\subsection*{Educator sees the battles of a tournament he manages}
+
+The diagram represented down below shows the process of an Educator visualizing the list of Battles within the context of a Tournament that he can manage. It begins as the WebApp initiates a request for the Battles, providing the Tournament ID. Upon successful authentication, the BattleManager retrieves the Battles from the Model based on the provided Tournament ID. An invalid Tournament ID triggers error handling, resulting in a null response. In a successful scenario, the Battles flow from the EntityManager to the Model, concluding with the BattleManager transmitting the submissions to the WebApp.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale = 0.33]{Images/diagrams/sequences/getCreatedBattles.png}\\
-\caption{An Educator sees the battles of a tournament they can manage}
+\caption{An Educator sees the battles of a tournament he manages}
 \end{figure}
 
 \subsection*{GitHub Notifies CKB of a new push in a main branch}
@@ -630,7 +660,7 @@ In this section, we use a class diagram to illustrate the component interfaces. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[angle=90, scale = 0.33]{Images/diagrams/ComponentSystem.png}\\
+\includegraphics[angle=90, scale = 0.5]{Images/diagrams/ComponentSystem.png}\\
 \caption{Class diagram with interfaces of the CodeKataBattle System}
 \end{figure}
 
@@ -639,173 +669,173 @@ In this section the API endpoints are presented. The focus is on the method used
 
 \subsubsection{POST api/user/login}
 \begin{description}
-    \item[Request Body:] User: Object
-    \item[200 Response:] UserObject + token
-    \item[400 Response:] String (“eMail not valid, “Password must contain at least 8 characters (at least one uppercase), at least 1 special symbol and at least 1 number”)
-    \item[401 Response:] error: String (“Email or Password are wrong”)
+    \item[Request Body:] User: Object 
+    \item[200 Response:] Username, token : Object
+    \item[400 Response:] validationError : Object 
+    \item[401 Response:] loginError : Object
 \end{description}
 
 \subsubsection{POST api/user/register}
 \begin{description}
     \item[Request Body:] User: Object
-    \item[200 Response:] String("User registered")
-    \item[400 Response:] error :String("Invalid parameters")
+    \item[201 Response:] Created
+    \item[400 Response:] validationError : Object
 \end{description}
 
 \subsubsection{GET api/tournaments}
 \begin{description}
-    \item[200 Response:] All Tournaments: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] tournaments: Array of Objects
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/state/\{state\}}
 \begin{description}
     \item[Request Parameters:] state: String
-    \item[200 Response:] All Tournaments in state {state}: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] tournaments: Array of Objects
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/managed}
 \begin{description}
     \item[200 Response:] managedTournaments: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/enrolled}
 \begin{description}
     \item[200 Response:] enrolledTournaments: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/tournaments/create}
 \begin{description}
     \item[Request Body:] tournament : Object
-    \item[200 Response:] createdTournament: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[201 Response:] Created
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/\{tournamentId\}}
 \begin{description}
     \item[Request Parameters:] tournamentId: int
     \item[200 Response:] tournament: Object
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/tournaments/\{tournamentId\}/enroll}
 \begin{description}
     \item[Request Parameters:] tournamentId: int
-    \item[200 Response:] String("User enrolled")
-    \item[400 Response:] error :String("Invalid parameters")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] "Enrollment successful." : String
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/tournaments/\{tournamentId\}/close}
 \begin{description}
     \item[Request Parameters:] tournamentId: int
-    \item[200 Response:] String("Tournament closed")
-    \item[400 Response:] error :String("Invalid parameters")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] tournament : Object
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/\{tournamentId\}/battles}
 \begin{description}
     \item[Request Parameters:] tournamentId: int
     \item[200 Response:] battles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/\{tournamentId\}/battles/enrolled}
 \begin{description}
     \item[200 Response:] enrolledBattles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/tournaments/\{tournamentId\}/ranking}
 \begin{description}
     \item[200 Response:] ranking: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/tournaments/\{tournamentId\}/createBattle}
 \begin{description}
     \item[Request Body:] battle : Object
-    \item[200 Response:] message: String "Battle created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] battle : Object
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
-\subsubsection{POST api/battles/enroll}
+\subsubsection{POST api/battles/\{battleId\}/enroll}
 \begin{description}
-    \item[Request Body:] BattlesId: int, InvitedUsernames: String
-    \item[200 Response:] String("User enrolled")
-    \item[400 Response:] error :String("Invalid parameters")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[Request Parameter:] BattlesId: int, InvitedUsernames: String
+    \item[200 Response:] "Enrolled successfully" : String
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/battles/\{battleId\}}
 \begin{description}
     \item[200 Response:] Battle: Object
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/battles/\{battleId\}/submissions}
 \begin{description}
     \item[200 Response:] submissions: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/battles/\{battleId\}/getGitHubToken}
 \begin{description}
     \item[200 Response:] token: String
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/battles/acceptInvitation/\{token\}}
 \begin{description}
     \item[300 Response:] redirectToHomePage
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/battles/\{battleId\}/ranking}
 \begin{description}
     \item[200 Response:] ranking: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/battles/commit}
 \begin{description}
     \item[Request Header:] custom JWT Token on purpose for the endpoint
     \item[Request Body:] commitHash : String, repositoryUrl : String
-    \item[400 Response:] error: String (“Invalid or missing BattleId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] success : Object
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/battles/\{battleId\}/closeBattle}
 \begin{description}
     \item[Request Parameter:] battleId: int
-    \item[200 Response:] message: String "Battle created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] battle : Object
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{POST api/battles/correctScore}
 \begin{description}
     \item[Request Body:] submissionId: int, correction: int
-    \item[200 Response:] message: String "Success"
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[200 Response:] score : Object
+    \item[400 Response:] error : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 
@@ -813,22 +843,30 @@ In this section the API endpoints are presented. The focus is on the method used
 \begin{description}
     \item[Request Parameters:] keyword: String, state: String
     \item[200 Response:] enrolledTournaments: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/profile/search}
 \begin{description}
     \item[Request Parameters:] keyword: String
     \item[200 Response:] profiles: Array of Objects
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[401 Response:] Unauthorized
+\end{description}
+
+\subsubsection{PUT api/profile/\{profileId\}}
+\begin{description}
+    \item[Request Parameters:] profileId: int
+    \item[200 Response:] profiles: Array of Objects
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 \subsubsection{GET api/profile/\{profileId\}}
 \begin{description}
     \item[Request Parameter:] profileId: int
     \item[200 Response:] profile: object
-    \item[400 Response:] error: String (“Invalid or missing profileId”)
-    \item[401 Response:] error: String (“Unauthorized”)
+    \item[400 Response:] validationError : Object
+    \item[401 Response:] Unauthorized
 \end{description}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
