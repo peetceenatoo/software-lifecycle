@@ -240,13 +240,16 @@ The design document aims to explain in detail how we plan to build our system to
     \toprule
     Revised on & Version & Description \\
     \midrule
-    7-Gen-2023 & 1.0 & Initial Release of the document \\
+    7-Gen-2024 & 1.0 & Initial Release of the document \\
+    \midrule
+    4-Feb-2024 & 2.0 & Adjustments implemented to conform to ITD Prototype. Altered logical design of database, leading to revised diagrams. Modified URL structure of some endpoints to comply with Spring standards. \\
     \bottomrule
 \end{tabularx}
-\vspace{0.33pt}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
+\newpage
+{\color{bluepoli}\rule{\linewidth}{0.1pt}}
 \section{Reference Documents}
 
 \begin{itemize}
@@ -333,15 +336,13 @@ In this section the ER diagram of CKB's data is shown. An ER diagram is a graphi
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.3]{Images/diagrams/ER_Diagram.png}\\
+\includegraphics[scale = 0.4]{Images/diagrams/ER_Diagram.png}\\
 \caption{ER Diagram of the ckbSP subsystem}
 \end{figure}
 
-Additional constraints and triggers must be established in the database management system to ensure data coherence and consistency.
+Additional constraints must be established in the database management system to ensure data coherence and consistency.
 
-When a battle deadline is reached and its status changes, a trigger should be implemented. This trigger will verify that each group meets the minimum required number of Students. Groups failing to meet this requirement will be automatically unsubscribed from the Battle.
-
-Furthermore, constraints are necessary to maintain role-specific restrictions. Educators must not be included in Battle subscriptions and invitations, and students should not be allowed to manage Tournaments.
+When a battle deadline is reached and its status changes, pending invites and groups that have not reached the minimum number of students should be rejected.
 
 Another important constraint is to prevent Users from being enrolled in the same Battle under different groups. This combination of triggers and constraints is crucial for upholding data integrity and consistency in the system.
 
@@ -642,7 +643,6 @@ In this section the API endpoints are presented. The focus is on the method used
     \item[200 Response:] UserObject + token
     \item[400 Response:] String (“eMail not valid, “Password must contain at least 8 characters (at least one uppercase), at least 1 special symbol and at least 1 number”)
     \item[401 Response:] error: String (“Email or Password are wrong”)
-    \item[410 Response:] error: String (“User not verified. Register a new account.”)
 \end{description}
 
 \subsubsection{POST api/user/register}
@@ -654,18 +654,23 @@ In this section the API endpoints are presented. The focus is on the method used
 
 \subsubsection{GET api/tournaments}
 \begin{description}
-    \item[Request Parameters:] state: String \{optional\}
-    \item[200 Response:] ongoingTournaments: Array of Objects
+    \item[200 Response:] All Tournaments: Array of Objects
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{GET api/tournaments/created}
+\subsubsection{GET api/tournaments/state/\{state\}}
 \begin{description}
-    \item[200 Response:] createdTournaments: Array of Objects
+    \item[Request Parameters:] state: String
+    \item[200 Response:] All Tournaments in state {state}: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/managed}
+\begin{description}
+    \item[200 Response:] managedTournaments: Array of Objects
     \item[400 Response:] error: String (“Invalid or missing tournamentId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
-
 
 \subsubsection{GET api/tournaments/enrolled}
 \begin{description}
@@ -674,41 +679,42 @@ In this section the API endpoints are presented. The focus is on the method used
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{POST api/tournaments/enroll}
+\subsubsection{POST api/tournaments/create}
 \begin{description}
-    \item[Request Body:] tournamentId: int, token : String
-    \item[200 Response:] String("User enrolled")
-    \item[400 Response:] error :String("Invalid parameters"
+    \item[Request Body:] tournament : Object
+    \item[200 Response:] createdTournament: Array of Objects
+    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
-
-\subsubsection{POST api/battles/enroll}
-\begin{description}
-    \item[Request Body:] BattlesId: int, token : String
-    \item[200 Response:] String("User enrolled")
-    \item[400 Response:] error :String("Invalid parameters"
-    \item[401 Response:] error: String (“Unauthorized”)
-\end{description}
-
 
 \subsubsection{GET api/tournaments/\{tournamentId\}}
 \begin{description}
+    \item[Request Parameters:] tournamentId: int
     \item[200 Response:] tournament: Object
     \item[400 Response:] error: String (“Invalid or missing tournamentId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles}
+\subsubsection{POST api/tournaments/\{tournamentId\}/enroll}
 \begin{description}
-    \item[Request Parameters:] state: String \{optional\}
-    \item[200 Response:] battles: Array of Objects
-    \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[Request Parameters:] tournamentId: int
+    \item[200 Response:] String("User enrolled")
+    \item[400 Response:] error :String("Invalid parameters")
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{GET api/tournaments/\{tournamentId\}/battles/created}
+\subsubsection{POST api/tournaments/\{tournamentId\}/close}
 \begin{description}
-    \item[200 Response:] createdBattles: Array of Objects
+    \item[Request Parameters:] tournamentId: int
+    \item[200 Response:] String("Tournament closed")
+    \item[400 Response:] error :String("Invalid parameters")
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/tournaments/\{tournamentId\}/battles}
+\begin{description}
+    \item[Request Parameters:] tournamentId: int
+    \item[200 Response:] battles: Array of Objects
     \item[400 Response:] error: String (“Invalid or missing tournamentId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
@@ -720,11 +726,26 @@ In this section the API endpoints are presented. The focus is on the method used
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-
 \subsubsection{GET api/tournaments/\{tournamentId\}/ranking}
 \begin{description}
     \item[200 Response:] ranking: Array of Objects
     \item[400 Response:] error: String (“Invalid or missing tournamentId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{POST api/tournaments/\{tournamentId\}/createBattle}
+\begin{description}
+    \item[Request Body:] battle : Object
+    \item[200 Response:] message: String "Battle created successfully."
+    \item[400 Response:] error: String("Missing values", "Values not valid")
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{POST api/battles/enroll}
+\begin{description}
+    \item[Request Body:] BattlesId: int, InvitedUsernames: String
+    \item[200 Response:] String("User enrolled")
+    \item[400 Response:] error :String("Invalid parameters")
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
@@ -742,6 +763,20 @@ In this section the API endpoints are presented. The focus is on the method used
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
+\subsubsection{GET api/battles/\{battleId\}/getGitHubToken}
+\begin{description}
+    \item[200 Response:] token: String
+    \item[400 Response:] error: String (“Invalid or missing BattleId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
+\subsubsection{GET api/battles/acceptInvitation/\{token\}}
+\begin{description}
+    \item[300 Response:] redirectToHomePage
+    \item[400 Response:] error: String (“Invalid or missing BattleId”)
+    \item[401 Response:] error: String (“Unauthorized”)
+\end{description}
+
 \subsubsection{GET api/battles/\{battleId\}/ranking}
 \begin{description}
     \item[200 Response:] ranking: Array of Objects
@@ -749,72 +784,51 @@ In this section the API endpoints are presented. The focus is on the method used
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{POST api/battles/\{battleId\}/commit}
+\subsubsection{POST api/battles/commit}
 \begin{description}
-    \item[Request Body:] commit Object
+    \item[Request Header:] custom JWT Token on purpose for the endpoint
+    \item[Request Body:] commitHash : String, repositoryUrl : String
     \item[400 Response:] error: String (“Invalid or missing BattleId”)
     \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{POST api/tournaments/create}
+\subsubsection{POST api/battles/\{battleId\}/closeBattle}
 \begin{description}
-    \item[Request Body:] educatorId: int, tournamentName: String, registrationDeadline: Date, badges: Array of Objects, educatorsInvited: Array of Strings
-    \item[200 Response:] message: String "Tournament created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{POST api/tournaments/close}
-\begin{description}
-    \item[Request Body:] tournamentId: int, educatorId: int
-    \item[200 Response:] message: String "Tournament closed successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{POST api/tournaments/\{tournamentId\}/createBattle}
-\begin{description}
-    \item[Request Body:] educatorId: int, BattleName: String, registrationDeadline: Date, endBattleDeadline: Date, minGroupSize: int, maxGroupSize: int, codingLanguage: String, codeKata: Object
+    \item[Request Parameter:] battleId: int
     \item[200 Response:] message: String "Battle created successfully."
     \item[400 Response:] error: String("Missing values", "Values not valid")
+    \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
-\subsubsection{POST api/battles/closeBattle}
+\subsubsection{POST api/battles/correctScore}
 \begin{description}
-    \item[Request Body:] battleId: int, token
-    \item[200 Response:] message: String "Battle created successfully."
-    \item[400 Response:] error: String("Missing values", "Values not valid")
-\end{description}
-
-\subsubsection{POST api/submissions/correctScore}
-\begin{description}
-    \item[Request Body:] submissionId: int, score: int, token
+    \item[Request Body:] submissionId: int, correction: int
     \item[200 Response:] message: String "Success"
     \item[400 Response:] error: String("Missing values", "Values not valid")
+    \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
 
-\subsubsection{GET api/tournaments/search}
+\subsubsection{GET api/tournaments/search/\{keyword\}}
 \begin{description}
     \item[Request Parameters:] keyword: String, state: String
     \item[200 Response:] enrolledTournaments: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
 \subsubsection{GET api/profile/search}
 \begin{description}
     \item[Request Parameters:] keyword: String
-\end{description}
-
-\subsubsection{PUT api/profile/personal-data}
-\begin{description}
-    \item[Request Body:] User: Object
-    \item[200 Response:] message: "Data updated successfully"
-    \item[400 Response:] error: String("Missing values", "Values not valid")
+    \item[200 Response:] profiles: Array of Objects
+    \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
 \subsubsection{GET api/profile/\{profileId\}}
 \begin{description}
-    
+    \item[Request Parameter:] profileId: int
     \item[200 Response:] profile: object
     \item[400 Response:] error: String (“Invalid or missing profileId”)
+    \item[401 Response:] error: String (“Unauthorized”)
 \end{description}
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
@@ -843,6 +857,8 @@ We selected a relational database for our system design because it is effective 
 \subsection{Token-Based Authentication and Authorization}
 
 The authentication and authorization will be implemented using a token-based process. These tokens are sent to the users each time they log in and they must be included with each request that requires authentication or authorization.
+
+JWT Token will also be used to safely send invites through emails, and to identify the users GitHub Actions.
 
 \subsection{Distributed MVC Pattern}
 
@@ -1377,6 +1393,7 @@ Once the backend and the frontend have been implemented, final tests can take pl
 \subsection{Testing Technologies}
 \begin{itemize}
     \item \textcolor{bluepoli}{JUnit}: JUnit provides a modern foundation for developer-side testing on the JVM. It will be used for unit and integration testing of server side classes.
+    \item \textcolor{bluepoli}{Mockito}: Mockito is a mocking framework that allows to easily create stub and drivers to unit test each component.
     \item \textcolor{bluepoli}{Jest}: Jest is a JavaScript Testing Framework with a focus on simplicity. It will be used for unit and integration testing of client side codebase.
     \item \textcolor{bluepoli}{Postman}: Postman is an API platform for building and using APIs. It will be used to efficiently test the REST API endpoints while the front-end is still under development.
 \end{itemize}
@@ -1399,9 +1416,9 @@ This section shows the amount of time that each member has spent to produce the 
 \hline
 SetUp & Piccinato & 2h \\ [1ex]
 \hline
-Component View Diagrams & Puglisi, Piccinato, Piazzalunga & 9h \\ [1ex]
+Component View Diagrams & Puglisi, Piccinato, Piazzalunga & 11h \\ [1ex]
 \hline
-DB Schema and ER Diagram & Piazzalunga & 6h \\ [1ex]
+DB Schema and ER Diagram & Piazzalunga & 7h \\ [1ex]
 \hline
 Deployment View Diagram & Piccinato & 1h \\ [1ex]
 \hline
