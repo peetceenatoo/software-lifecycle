@@ -16,9 +16,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 @Service
@@ -27,8 +31,6 @@ public class EvaluatorProcess {
 
     @Autowired
     private SubmissionService submissionService;
-
-    @Value("${java.io.tmpdir}")
     private String tempFolder;
 
     @Autowired
@@ -111,7 +113,17 @@ public class EvaluatorProcess {
     public void init(){
         log.info("Evaluator process started");
 
-        this.tempFolder = this.tempFolder.replaceFirst("^~", System.getProperty("user.home"));
+        //this.tempFolder = this.tempFolder.replaceFirst("^~", System.getProperty("user.home"));
+        Path tempDirectory;
+        try{
+            tempDirectory = Files.createTempDirectory("codekatabattle-evaluator");
+        }catch (IOException ex){
+            log.error("Error while creating temporary directory");
+            throw new RuntimeException(ex);
+        }
+        this.tempFolder = tempDirectory.toString();
+
+
 
         //Checking if there are any pending submissions
         List<SubmissionDTO> pendingSubmissions = submissionService.getPendingSubmissions();

@@ -4,7 +4,13 @@ import com.polimi.PPP.CodeKataBattle.DTOs.BattleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.SubmissionDTO;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.IGitHubAPI;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +20,16 @@ class JavaEvaluatorTest {
     void scoreOfFunctionalTests() {
 
         IGitHubAPI gitHubAPI = new GitHubAPI(true);
-        String tempFolder = System.getProperty("java.io.tmpdir");
+        Path tempDirectory;
+        try{
+            tempDirectory = Files.createTempDirectory("codekatabattle-evaluator");
+        }catch (IOException ex){
+            System.err.println("Error while creating temporary directory");
+            throw new RuntimeException(ex);
+        }
+        String tempFolder = tempDirectory.toString();
+
+
         JavaEvaluator javaEvaluator = new JavaEvaluator(gitHubAPI, tempFolder);
 
 
