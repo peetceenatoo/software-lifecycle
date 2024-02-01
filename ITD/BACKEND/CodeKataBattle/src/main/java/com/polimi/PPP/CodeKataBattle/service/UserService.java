@@ -1,21 +1,28 @@
 package com.polimi.PPP.CodeKataBattle.service;
 
 import com.polimi.PPP.CodeKataBattle.Assemblers.UserAssembler;
+import com.polimi.PPP.CodeKataBattle.DTOs.MessageDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.RoleDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserCreationDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.EmailAlreadyExistsException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.UsernameAlreadyExistsException;
 import com.polimi.PPP.CodeKataBattle.Model.Role;
+import com.polimi.PPP.CodeKataBattle.Model.RoleEnum;
 import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +36,7 @@ public class UserService {
     private ModelMapper modelMapper;
     @Autowired
     private UserAssembler userAssembler;
+
 
     @Transactional
     public UserDTO createUser(UserCreationDTO userDTO) {

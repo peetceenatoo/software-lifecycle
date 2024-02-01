@@ -25,10 +25,6 @@ public class TournamentController extends AuthenticatedController{
     private TournamentService tournamentService;
 
     @Autowired
-    @Qualifier("emailProvider")
-    private NotificationProvider notificationProvider;
-
-    @Autowired
     private BattleService battleService;
 
     @GetMapping("/{tournamentId}")
@@ -78,7 +74,6 @@ public class TournamentController extends AuthenticatedController{
 
         tournamentCreationDTO.getEducatorsInvited().add(authenticatedUser.getId());
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
-
 
         return ResponseEntity.ok(tournament);
     }

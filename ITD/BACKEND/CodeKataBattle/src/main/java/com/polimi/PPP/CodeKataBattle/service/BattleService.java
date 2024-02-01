@@ -6,6 +6,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import com.polimi.PPP.CodeKataBattle.Utilities.URLTrimmer;
 import org.apache.commons.io.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -54,12 +56,16 @@ public class BattleService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    @Qualifier("emailProvider")
+    private NotificationProvider notificationProvider;
+
 
     @Autowired
     public BattleService(BattleRepository battleRepository, BattleScoreRepository battleScoreRepository, TournamentRepository tournamentRepository,
                             GitHubAPI gitHubAPI, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository, UserRepository userRepository,
                                 BattleInviteRepository battleInviteRepository,
-                                ApplicationEventPublisher eventPublisher){
+                                ApplicationEventPublisher eventPublisher,
+                                NotificationProvider notificationProvider) {
         this.modelMapper = modelMapper;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
@@ -69,6 +75,7 @@ public class BattleService {
         this.battleSubscriptionRepository = battleSubscriptionRepository;
         this.battleInviteRepository = battleInviteRepository;
         this.eventPublisher = eventPublisher;
+        this.notificationProvider = notificationProvider;
 
 
     }
@@ -313,6 +320,11 @@ public class BattleService {
         catch(IOException e){
             throw new InternalErrorException("File system error while extracting the zip files.");
         }
+
+        // Send notification to all enrolled students
+        List<String> studentsEmail = tournament.getUsers().stream().map(User::getEmail).toList();
+        MessageDTO messageDTO = new MessageDTO("The new battle '" + result.getName() + "' of the tournament '" + tournament.getName() + "' has been created, check it out.", "New battle created");
+        notificationProvider.sendNotification(messageDTO, studentsEmail);
 
         return toBeReturned;
     }

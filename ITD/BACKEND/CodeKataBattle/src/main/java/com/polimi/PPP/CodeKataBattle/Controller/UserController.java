@@ -24,10 +24,6 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtHelper jwtHelper;
 
-    @Autowired
-    @Qualifier("emailProvider")
-    private NotificationProvider notificationProvider;
-
     public UserController(UserService userService, AuthenticationManager authenticationManager, JwtHelper jwtHelper) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;

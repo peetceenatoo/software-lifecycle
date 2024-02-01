@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Properties;
 
 @Component("emailProvider")
@@ -43,6 +44,40 @@ public class EmailProvider implements NotificationProvider{
                 return new PasswordAuthentication(username, password);
             }
         });
+    }
+
+    public void sendNotification(MessageDTO messageDTO, List<String> destinations){
+        new Thread(() -> {
+
+            Message message = new MimeMessage(session);
+            try{
+
+                message.setFrom(new InternetAddress(this.username, "CodeKataBattle"));
+
+
+                for(String destination : destinations){
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destination));
+                }
+
+                message.setSubject(messageDTO.getTitle());
+
+                MimeBodyPart mimeBodyPart = new MimeBodyPart();
+                mimeBodyPart.setContent(messageDTO.getBody(), "text/html; charset=utf-8");
+
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(mimeBodyPart);
+
+                message.setContent(multipart);
+
+                Transport.send(message);
+
+            }catch (AddressException ex){
+                throw new ErrorInNotificationException("Error in parsing sender email");
+            }catch (MessagingException | UnsupportedEncodingException ex){
+                throw new ErrorInNotificationException("Error in sending email");
+            }
+
+        }).start();
     }
 
     public void sendNotification(MessageDTO messageDTO, String destination) {

@@ -5,10 +5,12 @@ import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.DeadlineScheduler;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +24,25 @@ public class TournamentService {
 
     private final TournamentRepository tournamentRepository;
     private final BattleRepository battleRepository;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Qualifier("emailProvider")
+    private final NotificationProvider notificationProvider;
+
     @Autowired
-    public TournamentService(TournamentRepository tournamentRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper, ApplicationEventPublisher eventPublisher){
+    public TournamentService(TournamentRepository tournamentRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper, ApplicationEventPublisher eventPublisher,
+                             NotificationProvider notificationProvider, RoleRepository roleRepository){
         this.eventPublisher = eventPublisher;
         this.tournamentRepository = tournamentRepository;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.notificationProvider = notificationProvider;
+        this.roleRepository = roleRepository;
+
     }
 
     public Boolean hasUserRightsOnTournament(Long userId, Long tournamentId){
@@ -123,6 +133,14 @@ public class TournamentService {
         TournamentDTO toBeReturned = modelMapper.map(savedTournament, TournamentDTO.class);
 
         eventPublisher.publishEvent(new TournamentCreatedEvent(this,toBeReturned));
+
+        // Send email to students
+        Role studentRole = roleRepository.findByName(RoleEnum.ROLE_STUDENT).get();
+        List<User> students = userRepository.findByRole(studentRole);
+        List<String> studentsEmail = students.stream().map(User::getEmail).toList();
+
+        MessageDTO messageDTO = new MessageDTO("The new tournament '" + savedTournament.getName() + "' has been created, check it out.", "New tournament created");
+        notificationProvider.sendNotification(messageDTO, studentsEmail);
 
         return toBeReturned;
     }
