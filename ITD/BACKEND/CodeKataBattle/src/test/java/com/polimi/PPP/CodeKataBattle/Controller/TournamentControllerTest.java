@@ -617,11 +617,25 @@ class TournamentControllerTest {
 
         assertEquals(400, response3.getStatus());
 
+        final MockHttpServletResponse response8 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
+                                .file(jsonFile)
+                                .file(getBadZip1("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response8.getStatus());
+
         final MockHttpServletResponse response4 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
                                 .file(jsonFile)
                                 .file(getGoodZip("codeZip"))
-                                .file(getGoodZip("testZippppppp"))
+                                .file(getBadZip1("testZippppppp"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
 
@@ -683,7 +697,7 @@ class TournamentControllerTest {
         return mockMultipartFile;
     }
 
-    private MockMultipartFile getBadZip1() throws IOException{
+    private MockMultipartFile getBadZip1(String name) throws IOException{
         //Mock zip files
         MockMultipartFile mockMultipartFile;
 
@@ -692,7 +706,7 @@ class TournamentControllerTest {
             byte[] zipContent = readFileToByteArray(zipFile);
 
             mockMultipartFile = new MockMultipartFile(
-                    "file", // Parameter name for the multipart file
+                    name, // Parameter name for the multipart file
                     zipFile.getName(), // Filename
                     "application/zip", // Content type
                     zipContent // File content
