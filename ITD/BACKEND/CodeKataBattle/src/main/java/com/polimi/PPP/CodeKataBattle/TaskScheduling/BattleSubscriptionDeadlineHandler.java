@@ -33,6 +33,8 @@ public class BattleSubscriptionDeadlineHandler implements DeadlineHandler {
 
         //Reject all not accepted invites
         battleInviteService.changeBattleInvitesState(battleId, BattleInviteStateEnum.PENDING, BattleInviteStateEnum.REJECTED);
+        //Reject invites for groups that have not reached the minimum number of participants
+        battleInviteService.rejectGroupsNotReachedMinimum(battleId);
 
         // Move battle to Ongoing stage
         battleService.changeBattleState(battleId, BattleStateEnum.ONGOING);

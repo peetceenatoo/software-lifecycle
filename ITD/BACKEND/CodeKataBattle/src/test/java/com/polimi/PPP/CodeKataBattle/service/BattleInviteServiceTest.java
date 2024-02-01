@@ -3,14 +3,13 @@ package com.polimi.PPP.CodeKataBattle.service;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
-import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
+import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -47,12 +46,18 @@ class BattleInviteServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private NotificationProvider notificationProvider;
+
+    @Mock
+    private JwtHelper jwtHelper;
+
 
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
         this.modelMapper = new ModelMapper();
-        this.battleInviteService = new BattleInviteService(battleInviteRepository, battleRepository, userRepository, modelMapper, battleSubscriptionRepository);
+        this.battleInviteService = new BattleInviteService(battleInviteRepository, battleRepository, userRepository, modelMapper, battleSubscriptionRepository, jwtHelper, notificationProvider);
     }
 
     @Test
@@ -97,7 +102,7 @@ class BattleInviteServiceTest {
 
         List<BattleInvite> battleInviteList = new ArrayList<>();
         battleInviteList.add(invite);
-        when(battleInviteRepository.getAcceptedInvite(battleId, BattleInviteStateEnum.ACCEPTED, userId)).thenReturn(battleInviteList); // Assuming no existing accepted invite
+        when(battleInviteRepository.getInvitesByState(battleId, BattleInviteStateEnum.ACCEPTED, userId)).thenReturn(battleInviteList); // Assuming no existing accepted invite
 
         // Mock repository updates
         when(battleInviteRepository.updateStateForBattle(battleId, BattleInviteStateEnum.PENDING, BattleInviteStateEnum.ACCEPTED)).thenReturn(1);

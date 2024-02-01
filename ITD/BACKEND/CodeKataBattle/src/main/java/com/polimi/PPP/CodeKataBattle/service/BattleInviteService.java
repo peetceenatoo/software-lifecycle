@@ -12,7 +12,6 @@ import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class BattleInviteService {
@@ -152,7 +153,7 @@ public class BattleInviteService {
         // Count the accepted invites
         //Long acceptedInvitesCount = battleInviteRepository.countByBattleIdAndState(battleId, BattleInviteStateEnum.ACCEPTED, userId);
 
-        List<BattleInvite> invites = battleInviteRepository.getAcceptedInvite(battleId, BattleInviteStateEnum.ACCEPTED, userId);
+        List<BattleInvite> invites = battleInviteRepository.getInvitesByState(battleId, BattleInviteStateEnum.ACCEPTED, userId);
 
         // Check if the count meets the minimum group size constraint
         if (invites.size() == battle.getMinStudentsInGroup()) {
@@ -226,5 +227,24 @@ public class BattleInviteService {
         //this doesn't have id
         return inviteDTO;
         //TODO: check if the user is already enrolled in the battle
+    }
+
+    @Transactional
+    public void rejectGroupsNotReachedMinimum(Long battleId){
+        Battle battle = battleRepository.findById(battleId).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
+
+        List<BattleInvite> invites = battleInviteRepository.findBattleInvitesByBattle_IdAndState(battleId, BattleInviteStateEnum.ACCEPTED);
+        List<User> subscribed = battleSubscriptionRepository.findUsersByBattleId(battleId);
+
+        Stream<User> stream = subscribed.stream();
+
+        for(BattleInvite invite : invites){
+            if(stream.noneMatch(x -> Objects.equals(x.getId(), invite.getUser().getId()))) {
+                invite.setState(BattleInviteStateEnum.REJECTED);
+                battleInviteRepository.save(invite);
+            }
+        }
+
+
     }
 }
