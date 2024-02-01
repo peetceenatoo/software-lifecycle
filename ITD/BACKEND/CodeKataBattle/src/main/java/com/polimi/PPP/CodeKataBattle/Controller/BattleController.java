@@ -167,7 +167,7 @@ public class BattleController extends AuthenticatedController {
         return ResponseEntity.ok("Invited successfully");
     }
 
-    @GetMapping("/getGithubToken/{battleId}")
+    @GetMapping("/{battleId}/getGithubToken")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
     public ResponseEntity<?> getGithubToken(@PathVariable Long battleId) {
         UserDTO user = this.getAuthenticatedUser();
