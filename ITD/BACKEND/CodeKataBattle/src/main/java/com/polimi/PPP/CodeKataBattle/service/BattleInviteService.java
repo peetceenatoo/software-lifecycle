@@ -3,16 +3,20 @@ package com.polimi.PPP.CodeKataBattle.service;
 import com.polimi.PPP.CodeKataBattle.DTOs.BattleEnrollDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.BattleInviteDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.BattleSubscriptionDTO;
+import com.polimi.PPP.CodeKataBattle.DTOs.MessageDTO;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleInviteRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
+import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,15 +36,21 @@ public class BattleInviteService {
 
     private final BattleSubscriptionRepository battleSubscriptionRepository;
 
+    private final JwtHelper jwtHelper;
 
+    @Qualifier("emailProvider")
+    private final NotificationProvider notificationProvider;
 
     @Autowired
-    public BattleInviteService(BattleInviteRepository battleInviteRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository) {
+    public BattleInviteService(BattleInviteRepository battleInviteRepository, BattleRepository battleRepository, UserRepository userRepository, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository, JwtHelper jwtHelper,
+                                NotificationProvider notificationProvider) {
         this.battleInviteRepository = battleInviteRepository;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.battleSubscriptionRepository = battleSubscriptionRepository;
+        this.jwtHelper = jwtHelper;
+        this.notificationProvider = notificationProvider;
     }
     public void changeBattleInvitesState(Long battleInviteId, BattleInviteStateEnum oldState, BattleInviteStateEnum newState){
 
@@ -108,6 +118,15 @@ public class BattleInviteService {
             inviteDTO.setInvitedUserid(invite.getInvitedUser().getId());
             inviteDTO.setState(invite.getState());
             invites.add(inviteDTO);
+
+            String inviteToken = jwtHelper.generateInviteToken(invite.getId(), invite.getBattle().getSubscriptionDeadline());
+
+            String link = "<a href='http://localhost:8080/api/battles/acceptInvitation/" + inviteToken + "'>Join the gorup!</a>";
+
+            MessageDTO messageDTO = new MessageDTO(link,"You have been invited to take part in a battle!");
+
+            notificationProvider.sendNotification(messageDTO, user.getEmail());
+;
         }
         return invites;
     }
@@ -167,6 +186,15 @@ public class BattleInviteService {
             else if (invites.size() < battle.getMinStudentsInGroup()) return new ArrayList<>();
             else  throw new InvalidArgumentException("Too many users in the group");
         }
+
+        MessageDTO messageDTO = new MessageDTO("Subscription to battle '" + battle.getName() + "' confirmed!","Enroll confirmed!");
+
+
+        for (BattleSubscriptionDTO sub : subscriptions){
+            Optional<User> userForEmail =  userRepository.findById(sub.getUserId());
+            userForEmail.ifPresent(value -> notificationProvider.sendNotification(messageDTO, value.getEmail()));
+        }
+
         return subscriptions;
     }
 

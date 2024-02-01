@@ -16,11 +16,13 @@ import com.polimi.PPP.CodeKataBattle.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,9 @@ public class BattleController extends AuthenticatedController {
 
     @Autowired
     private EvaluatorProcess evaluatorProcess;
+
+    @Value("${frontendLink}")
+    private String frontendUrl;
 
     @Autowired
     JwtHelper jwtHelper;
@@ -186,7 +191,7 @@ public class BattleController extends AuthenticatedController {
 
 
     @GetMapping("/acceptInvitation/{token}")
-    public ResponseEntity<?> acceptInvitation(@PathVariable String token) {
+    public RedirectView acceptInvitation(@PathVariable String token) {
 
         if(token == null || !jwtHelper.validateToken(token)){
             throw new InvalidTokenException("Invalid token provided");
@@ -203,7 +208,11 @@ public class BattleController extends AuthenticatedController {
         if(battleInviteId < 0) throw new InvalidArgumentException("Invalid invite id");
 
         battleinvite.acceptBattleInvite(battleInviteId);
-        return ResponseEntity.ok("Accepted successfully");
+
+        //response to redirect to frontend homepage with react router to the home page
+
+        // TODO: redirect to frontend not google :/)
+        return new RedirectView(frontendUrl);
     }
 
 
