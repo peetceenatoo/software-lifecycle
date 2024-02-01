@@ -3,6 +3,7 @@ package com.polimi.PPP.CodeKataBattle.service;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InternalErrorException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidArgumentException;
+import com.polimi.PPP.CodeKataBattle.Exceptions.PendingSubmissionsException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.TaskScheduling.BattleCreatedEvent;
@@ -50,6 +51,8 @@ public class BattleService {
 
     private final BattleSubscriptionRepository battleSubscriptionRepository;
 
+    private final SubmissionRepository submissionRepository;
+
     private final UserRepository userRepository;
 
     private final BattleInviteRepository battleInviteRepository;
@@ -65,7 +68,8 @@ public class BattleService {
                             GitHubAPI gitHubAPI, ModelMapper modelMapper, BattleSubscriptionRepository battleSubscriptionRepository, UserRepository userRepository,
                                 BattleInviteRepository battleInviteRepository,
                                 ApplicationEventPublisher eventPublisher,
-                                NotificationProvider notificationProvider) {
+                                NotificationProvider notificationProvider,
+                                SubmissionRepository submissionRepository) {
         this.modelMapper = modelMapper;
         this.battleRepository = battleRepository;
         this.userRepository = userRepository;
@@ -76,6 +80,7 @@ public class BattleService {
         this.battleInviteRepository = battleInviteRepository;
         this.eventPublisher = eventPublisher;
         this.notificationProvider = notificationProvider;
+        this.submissionRepository = submissionRepository;
 
 
     }
@@ -145,15 +150,30 @@ public class BattleService {
 
     public BattleDTO closeBattle(Long battleId, UserDTO user) {
         if (!userHasPermissionToBattle(user, battleId)) {
-            throw new InvalidArgumentException("User not enrolled in the battle");
+            throw new InvalidArgumentException("User not an educator of the battle");
         }
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
-        if (battleOpt.isPresent()) {
-            Battle battle = battleOpt.get();
-            battle.setState(BattleStateEnum.ENDED);
-            battleRepository.save(battle);
+
+        if(battleOpt.isEmpty()){
+            throw new InvalidArgumentException("Battle not found");
         }
-        return modelMapper.map(battleOpt.get(), BattleDTO.class);
+
+        Battle battle = battleOpt.get();
+
+        List<Submission> submissions = submissionRepository.findByBattleId(battleId);
+
+        if(submissions.stream().anyMatch(submission -> submission.getState() == SubmissionStateEnum.PENDING)){
+            throw new PendingSubmissionsException("There are still submissions to be evaluated");
+        }
+
+        battle.setState(BattleStateEnum.ENDED);
+        Battle toBeReturned = battleRepository.save(battle);
+
+        List<User> users = battleSubscriptionRepository.findUsersByBattleId(toBeReturned.getId());
+        MessageDTO messageDTO = new MessageDTO("The battle '" + toBeReturned.getName() + "' of the tournament '" + toBeReturned.getTournament().getName() + "' has been closed.", "Battle closed");
+        notificationProvider.sendNotification(messageDTO, users.stream().filter(s -> s.getRole().getName() == RoleEnum.ROLE_STUDENT).map(User::getEmail).toList());
+
+        return modelMapper.map(toBeReturned, BattleDTO.class);
     }
 
     @Transactional
@@ -322,7 +342,7 @@ public class BattleService {
         }
 
         // Send notification to all enrolled students
-        List<String> studentsEmail = tournament.getUsers().stream().map(User::getEmail).toList();
+        List<String> studentsEmail = tournament.getUsers().stream().filter(s -> s.getRole().getName() == RoleEnum.ROLE_STUDENT).map(User::getEmail).toList();
         MessageDTO messageDTO = new MessageDTO("The new battle '" + result.getName() + "' of the tournament '" + tournament.getName() + "' has been created, check it out.", "New battle created");
         notificationProvider.sendNotification(messageDTO, studentsEmail);
 

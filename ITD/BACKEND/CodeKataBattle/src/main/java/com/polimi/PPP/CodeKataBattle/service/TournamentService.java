@@ -166,6 +166,11 @@ public class TournamentService {
     
         tournament.setState(TournamentStateEnum.ENDED);
         Tournament result = tournamentRepository.save(tournament);
+
+        List<String> studentsEmails = result.getUsers().stream().filter(s -> s.getRole().getName() == RoleEnum.ROLE_STUDENT).map(User::getEmail).toList();
+        MessageDTO messageDTO = new MessageDTO("The tournament '" + result.getName() + "' has ended, check it out.", "Tournament ended");
+        notificationProvider.sendNotification(messageDTO, studentsEmails);
+
         return modelMapper.map(result, TournamentDTO.class);
     }
 

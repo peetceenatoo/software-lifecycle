@@ -5,8 +5,10 @@ import com.polimi.PPP.CodeKataBattle.DTOs.TournamentDTO;
 import com.polimi.PPP.CodeKataBattle.DTOs.UserDTO;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
+import com.polimi.PPP.CodeKataBattle.Repositories.RoleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.TournamentRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,10 +47,16 @@ class TournamentServiceTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
 
+    @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
+    private NotificationProvider notificationProvider;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.tournamentService  = new TournamentService(tournamentRepository, battleRepository, userRepository, modelMapper, eventPublisher);
+        this.tournamentService  = new TournamentService(tournamentRepository, battleRepository, userRepository, modelMapper, eventPublisher, notificationProvider, roleRepository);
     }
 
     @Test
@@ -366,6 +374,12 @@ class TournamentServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(edu1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(edu2));
 
+        Role studentRole = new Role();
+        studentRole.setId(1L);
+        studentRole.setName(RoleEnum.ROLE_STUDENT);
+
+        when(roleRepository.findByName(RoleEnum.ROLE_STUDENT)).thenReturn(Optional.of(studentRole));
+
         assertEquals(resultDTO, tournamentService.createTournament(tournamentCreationDTO));
     }
     @Test
@@ -378,6 +392,7 @@ class TournamentServiceTest {
         noBattlesTournament.setState(TournamentStateEnum.ONGOING);
         noBattlesTournament.setDeadline(ZonedDateTime.now());
         noBattlesTournament.setBattles(new HashSet<>());
+        noBattlesTournament.setUsers(new HashSet<>());
 
         // Ended tournament
         Tournament endedTournament = new Tournament();
@@ -386,6 +401,7 @@ class TournamentServiceTest {
         endedTournament.setState(TournamentStateEnum.ENDED);
         endedTournament.setDeadline(ZonedDateTime.now());
         endedTournament.setBattles(new HashSet<>());
+        endedTournament.setUsers(new HashSet<>());
 
         // Tournament with ongoing battles
         Tournament ongoingBattlesTournament = new Tournament();
@@ -394,6 +410,7 @@ class TournamentServiceTest {
         ongoingBattlesTournament.setState(TournamentStateEnum.ONGOING);
         ongoingBattlesTournament.setDeadline(ZonedDateTime.now());
         ongoingBattlesTournament.setBattles(new HashSet<>());
+        ongoingBattlesTournament.setUsers(new HashSet<>());
 
         Battle ongoingBattle = new Battle();
         ongoingBattle.setId(1L);
@@ -409,6 +426,7 @@ class TournamentServiceTest {
         tournament.setState(TournamentStateEnum.ONGOING);
         tournament.setDeadline(ZonedDateTime.now());
         tournament.setBattles(new HashSet<>());
+        tournament.setUsers(new HashSet<>());
 
         Battle endedBattle = new Battle();
         endedBattle.setId(2L);
@@ -443,6 +461,12 @@ class TournamentServiceTest {
         modelMapper.map(noBattlesTournament, noBattlesEndedTournament);
         noBattlesEndedTournament.setState(TournamentStateEnum.ENDED);
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(noBattlesEndedTournament);
+
+        Role studentRole = new Role();
+        studentRole.setId(1L);
+        studentRole.setName(RoleEnum.ROLE_STUDENT);
+
+        when(roleRepository.findByName(RoleEnum.ROLE_STUDENT)).thenReturn(Optional.of(studentRole));
 
         TournamentDTO returned = tournamentService.closeTournament(1L, 1L);
 

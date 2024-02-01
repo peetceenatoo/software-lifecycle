@@ -15,6 +15,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     List<Submission> findByBattleIdAndUserId(Long battleId, Long userId);
 
+    List<Submission> findByBattleId(Long battleId);
+
     @Query("SELECT s FROM Submission s JOIN BattleSubscription bs ON s.user.id = bs.user.id WHERE bs.groupId = :groupId AND s.battle.id = :battleId")
     List<Submission> findSubmissionsByGroupIdAndBattleId(Long groupId, Long battleId);
 

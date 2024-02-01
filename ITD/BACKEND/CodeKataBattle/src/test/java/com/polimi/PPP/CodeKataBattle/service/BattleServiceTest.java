@@ -7,6 +7,7 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidBattleStateException;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
+import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,11 @@ class BattleServiceTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
 
+    @Mock
+    private SubmissionRepository submissionRepository;
+
+    @Mock
+    private NotificationProvider notificationProvider;
 
 
 
@@ -90,7 +96,7 @@ class BattleServiceTest {
     void setUp(){
         MockitoAnnotations.openMocks(this);
         this.battleService = new BattleService(battleRepository, battleScoreRepository, tournamentRepository, gitHubAPI, modelMapper, battleSubscriptionRepository
-                ,userRepository, battleInviteRepository, eventPublisher);
+                ,userRepository, battleInviteRepository, eventPublisher, notificationProvider, submissionRepository);
     }
     
     @Test

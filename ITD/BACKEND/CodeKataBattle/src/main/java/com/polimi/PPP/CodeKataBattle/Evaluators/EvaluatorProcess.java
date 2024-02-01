@@ -35,6 +35,8 @@ public class EvaluatorProcess {
     public void processSubmission(SubmissionDTO submissionDTO){
         //Process submission
 
+
+
         if(submissionDTO.getBattle().getProgrammingLanguage() != ProgrammingLanguageEnum.JAVA) {
             submissionService.createSubmissionScore(submissionDTO.getId(),
                     SubmissionStateEnum.FAILED,

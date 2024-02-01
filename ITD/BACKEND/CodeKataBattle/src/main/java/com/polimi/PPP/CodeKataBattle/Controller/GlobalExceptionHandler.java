@@ -104,6 +104,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(PendingSubmissionsException.class)
+    public ResponseEntity<Object> handlePendingSubmissionsException(PendingSubmissionsException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
     @ExceptionHandler(InternalErrorException.class)
     public ResponseEntity<Object> handleInternalErrorException(InvalidUserIdException ex) {
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
