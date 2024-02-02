@@ -136,7 +136,7 @@ public class JwtHelper {
         Claims tokenBody = getTokenBody(token);
 
         if(tokenBody.get("useCase", String.class).equals(JWTTokenUseCase.SUBMISSION.name()))
-            return Long.parseLong(tokenBody.get("battleId", String.class));
+            return tokenBody.get("battleId", Long.class);
 
         else
             throw new AccessDeniedException("Access denied: Invalid token use case");

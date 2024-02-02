@@ -262,6 +262,8 @@ class BattleControllerTest {
         Battle battle = battleRepository.findById(this.battle.getId()).get();
         TournamentDTO tournament = tournamentService.getTournamentById(battle.getTournament().getId());
 
+        // Getting original enrolled battles for students
+
         final MockHttpServletResponse responseOriginalEnrolled = mockMvc.perform(
                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournament.getId()+"/battles/enrolled")
                         .header("Authorization", "Bearer " + studentToken)
@@ -277,9 +279,8 @@ class BattleControllerTest {
         assertEquals(200, responseOriginalEnrolled2.getStatus());
         int originalEnrolled2 = objectMapper.readValue(responseOriginalEnrolled.getContentAsString(), List.class).size();
 
+        // Enroll stud1, inviting stud2
 
-        EnrollmentBattleDTO enrollmentBattleDTO = new EnrollmentBattleDTO();
-        enrollmentBattleDTO.setBattleId(battle.getId());
         List<String> usernames =  List.of(student2.getUsername());
 
         final MockHttpServletResponse responseEnrollBattle = mockMvc.perform(
@@ -290,7 +291,7 @@ class BattleControllerTest {
 
         assertEquals(200, responseEnrollBattle.getStatus());
 
-        // Enroll stud2
+        // Enroll stud2, accepting invite
         BattleInvite battleInvite = battleInviteRepository.findByBattleIdAndInvitedUserId(battle.getId(), student2.getId()).get();
 
         String inviteToken = jwtHelper.generateInviteToken(battleInvite.getId(), battleInvite.getBattle().getSubscriptionDeadline());
@@ -298,9 +299,11 @@ class BattleControllerTest {
         final MockHttpServletResponse responseEnrollBattle2 = mockMvc.perform(
                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/acceptInvitation/"+inviteToken)
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsBytes(enrollmentBattleDTO))).andReturn().getResponse();
+                        ).andReturn().getResponse();
 
         assertEquals(302, responseEnrollBattle2.getStatus());
+
+        // Checking subscrption worked
 
         final MockHttpServletResponse responseEnrolled = mockMvc.perform(
                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournament.getId()+"/battles/enrolled")
@@ -316,11 +319,12 @@ class BattleControllerTest {
                         .header("Authorization", "Bearer " + student2Token)
                         .contentType("application/json")).andReturn().getResponse();
 
-        assertEquals(200, responseEnrolled.getStatus());
+        assertEquals(200, responseEnrolled2.getStatus());
         List<BattleStudentDTO> enrolledBattles2 = objectMapper.readValue(responseEnrolled2.getContentAsString(), List.class);
-        assertEquals(1, enrolledBattles.size() - originalEnrolled2);
+        assertEquals(1, enrolledBattles2.size() - originalEnrolled2);
 
         // Enroll stud2 to battle2
+
         final MockHttpServletResponse responseEnroll2Battle2 = mockMvc.perform(
                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/"+battle2.getId()+"/enroll")
                         .header("Authorization", "Bearer " + student2Token)
@@ -328,6 +332,8 @@ class BattleControllerTest {
                         .content(objectMapper.writeValueAsBytes(new ArrayList<>()))).andReturn().getResponse();
 
         assertEquals(200, responseEnroll2Battle2.getStatus());
+
+        // Checking enrollment worked
 
         final MockHttpServletResponse responseEnrolled3 = mockMvc.perform(
                 org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournament.getId()+"/battles/enrolled")
@@ -337,6 +343,27 @@ class BattleControllerTest {
         List<BattleStudentDTO> enrolledBattles3 = objectMapper.readValue(responseEnrolled3.getContentAsString(), List.class);
 
         assertEquals(2, enrolledBattles3.size() - originalEnrolled2);
+
+        // Trying to enroll stud2 to battle2 again
+
+        final MockHttpServletResponse responseDoubleEnroll = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/"+battle2.getId()+"/enroll")
+                        .header("Authorization", "Bearer " + student2Token)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(new ArrayList<>()))).andReturn().getResponse();
+
+        assertEquals(400, responseDoubleEnroll.getStatus());
+
+        // Trying to invite stud2 to battle2, should fail
+
+        final MockHttpServletResponse responseInvite = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/"+battle2.getId()+"/enroll")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(List.of(student2.getUsername())))).andReturn().getResponse();
+
+        assertEquals(400, responseInvite.getStatus());
+
     }
 
     @Test
@@ -346,6 +373,39 @@ class BattleControllerTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
+
+        Battle battle = battleRepository.findById(this.battle.getId()).get();
+        TournamentDTO tournament = tournamentService.getTournamentById(battle.getTournament().getId());
+
+        final MockHttpServletResponse responseGetEnrolled = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournament.getId()+"/battles/enrolled")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetEnrolled.getStatus());
+
+        int originalEnrolled = objectMapper.readValue(responseGetEnrolled.getContentAsString(), List.class).size();
+
+        final MockHttpServletResponse responseEnroll = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/"+battle.getId()+"/enroll")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(new ArrayList<>()))).andReturn().getResponse();
+
+        assertEquals(200, responseEnroll.getStatus());
+
+        final MockHttpServletResponse responseGetEnrolledAfter = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournament.getId()+"/battles/enrolled")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetEnrolledAfter.getStatus());
+
+        int firstEnrolled = objectMapper.readValue(responseGetEnrolledAfter.getContentAsString(), List.class).size();
+
+        assertEquals(1, firstEnrolled - originalEnrolled);
+
+        battleService.changeBattleState(battle.getId(), BattleStateEnum.ONGOING);
 
         String invalidToken = "oefnodsfoidsfosdfnbodsi";
 
@@ -360,6 +420,47 @@ class BattleControllerTest {
                         .content(objectMapper.writeValueAsBytes(commitDTO))).andReturn().getResponse();
 
         assertEquals(200, responseGetToken.getStatus());
+
+        String token = objectMapper.readValue(responseGetToken.getContentAsString(), StudentGithubTokenDTO.class).getToken();
+
+        assertTrue(jwtHelper.validateToken(token));
+
+        final MockHttpServletResponse responseGetToken2 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/commit")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(commitDTO))).andReturn().getResponse();
+
+        assertEquals(200, responseGetToken2.getStatus());
+
+        final MockHttpServletResponse responseGetTokenInvalid = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/commit")
+                        .header("Authorization", "Bearer " + invalidToken)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(commitDTO))).andReturn().getResponse();
+
+        assertEquals(401, responseGetTokenInvalid.getStatus());
+
+        commitDTO.setCommitHash(null);
+
+        final MockHttpServletResponse responseGetToken3 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/commit")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(commitDTO))).andReturn().getResponse();
+
+        assertEquals(400, responseGetToken3.getStatus());
+
+        commitDTO.setCommitHash("hash");
+        commitDTO.setRepositoryUrl(null);
+
+        final MockHttpServletResponse responseGetToken4 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/commit")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(commitDTO))).andReturn().getResponse();
+
+        assertEquals(400, responseGetToken4.getStatus());
 
         // Enroll student to battle
 

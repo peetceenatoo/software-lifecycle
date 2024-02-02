@@ -77,7 +77,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         // Checking if the token is valid for the request
         if(useCase == JWTTokenUseCase.SUBMISSION){
-            if (!request.getMethod().equals("POST") || !requestURI.startsWith("api/battles/") || !requestURI.endsWith("/commit")){
+            if (!request.getMethod().equals("POST") || !requestURI.equals("/api/battles/commit")){
                 throw new InvalidTokenException("Invalid token for the request");
             }
         }
@@ -145,7 +145,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         // Extract information from token (e.g., username, roles)
         Long userId = jwtHelper.extractUserId(token);
         Long battleId = jwtHelper.extractBattleId(token);
-        return new SubmissionAuthenticationToken(userId, battleId, "TEST");
+        return new SubmissionAuthenticationToken(userId, battleId);
     }
 
 

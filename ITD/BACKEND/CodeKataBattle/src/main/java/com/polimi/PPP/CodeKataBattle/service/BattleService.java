@@ -144,8 +144,9 @@ public class BattleService {
                     return false;
             }
         } else {
-            Optional<BattleSubscription> battleSubscriptionOpt = battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, user.getId());
-            if (battleSubscriptionOpt.isEmpty()) {
+
+            boolean isUserSubscribed = battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, user.getId());
+            if (!isUserSubscribed) {
                 return false;
             }
         }

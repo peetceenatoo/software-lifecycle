@@ -47,7 +47,6 @@ public class BattleController extends AuthenticatedController {
     JwtHelper jwtHelper;
 
     @PostMapping("/commit")
-    @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
     public ResponseEntity<?> registerCommit(@RequestBody @Valid CommitDTO commitDTO) {
         SubmissionAuthenticationToken submissionAuth = this.getCommitToken();
         Long bId = submissionAuth.getBattleId();

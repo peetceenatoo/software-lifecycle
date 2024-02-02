@@ -73,6 +73,14 @@ public class BattleInviteService {
         this.battleInviteRepository.updateStateForBattle(battleInviteId, oldState, newState);
     }
 
+    private boolean isUserEnrolledInBattle(Long battleId, Long userId) {
+        return battleInviteRepository.findByBattleIdAndUserId(battleId, userId).isPresent();
+    }
+
+    private boolean hasUserAcceptedInviteForBattle(Long battleId, Long userId) {
+        return battleInviteRepository.findByBattleIdAndUserIdAndState(battleId, userId, BattleInviteStateEnum.ACCEPTED).isPresent();
+    }
+
     //I can remove some checks to improve it
     @Transactional
     public void enrollAndInviteBattle(BattleEnrollDTO battleEnrollDTO) {
@@ -85,6 +93,17 @@ public class BattleInviteService {
         if(battleEnrollDTO.getUsernames().size() + 1  < battle.getMinStudentsInGroup()) {
             throw new InvalidArgumentException("Too few users to invite");
         }
+
+        // Check invites
+        for (String username : battleEnrollDTO.getUsernames()) {
+            User invitedUser = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new InvalidArgumentException("Invited user not found"));
+            if (isUserEnrolledInBattle(battleEnrollDTO.getBattleId(), invitedUser.getId())
+                    || hasUserAcceptedInviteForBattle(battleEnrollDTO.getBattleId(), invitedUser.getId())){
+                throw new InvalidArgumentException("User already enrolled");
+            }
+        }
+
         enrollBattle(battleEnrollDTO);
         inviteUserToBattle(battleEnrollDTO);
     }

@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface BattleSubscriptionRepository extends JpaRepository<BattleSubscription, Long> {
     boolean existsByBattleIdAndUserId(Long battleId, Long userId);
 
+    @Query("SELECT bs FROM BattleSubscription bs WHERE bs.battle.id = :battleId AND bs.user.id = :userId")
     Optional<BattleSubscription> getBattleSubscriptionByBattleIdAndUserId(Long battleId, Long userId);
 
     @Query("SELECT u FROM BattleSubscription bs JOIN bs.user u WHERE bs.battle.id = :battleId")
