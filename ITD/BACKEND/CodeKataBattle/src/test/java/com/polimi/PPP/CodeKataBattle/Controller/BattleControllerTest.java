@@ -468,6 +468,120 @@ class BattleControllerTest {
 
     }
 
+    @Test
+    @Order(3)
+    void testGetBattle() throws Exception{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        final MockHttpServletResponse responseGetBattle = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId())
+                        .header("Authorization", "Bearer " + student2Token)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle.getStatus());
+
+        // Enroll student in battle
+
+        final MockHttpServletResponse enrollStud = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/battles/"+battle.getId()+"/enroll")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsBytes(new ArrayList<>()))).andReturn().getResponse();
+
+        assertEquals(200, enrollStud.getStatus());
+
+        final MockHttpServletResponse responseGetBattleOk = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId())
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetBattleOk.getStatus());
+
+        final MockHttpServletResponse responseGetBattle2 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId())
+                        .header("Authorization", "Bearer " + educatorToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetBattle2.getStatus());
+
+        final MockHttpServletResponse responseGetBattle3 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId())
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(401, responseGetBattle3.getStatus());
+
+        final MockHttpServletResponse responseGetBattle4 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/86686688668")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle4.getStatus());
+
+        final MockHttpServletResponse responseGetBattle5 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/86686688668")
+                        .header("Authorization", "Bearer " + educatorToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle5.getStatus());
+
+
+
+    }
+
+    @Test
+    @Order(4)
+    void testGetSubmissions() throws Exception{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        final MockHttpServletResponse responseGetBattle = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId())
+                        .header("Authorization", "Bearer " + student2Token)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle.getStatus());
+
+        final MockHttpServletResponse responseGetBattleOk = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId()+"/submissions")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetBattleOk.getStatus());
+
+        final MockHttpServletResponse responseGetBattle2 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId() + "/submissions")
+                        .header("Authorization", "Bearer " + educatorToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(200, responseGetBattle2.getStatus());
+
+        final MockHttpServletResponse responseGetBattle3 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/"+battle.getId() +"/submissions")
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(401, responseGetBattle3.getStatus());
+
+        final MockHttpServletResponse responseGetBattle4 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/86686688668/submissions")
+                        .header("Authorization", "Bearer " + studentToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle4.getStatus());
+
+        final MockHttpServletResponse responseGetBattle5 = mockMvc.perform(
+                org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/battles/86686688668/submissions")
+                        .header("Authorization", "Bearer " + educatorToken)
+                        .contentType("application/json")).andReturn().getResponse();
+
+        assertEquals(400, responseGetBattle5.getStatus());
+
+
+
+    }
+
     @AfterAll
     void tearDown() {
     }

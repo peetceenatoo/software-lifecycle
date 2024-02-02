@@ -565,7 +565,7 @@ class BattleServiceTest {
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId)).thenReturn(usernamesList.get(0));
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 1)).thenReturn(usernamesList.get(1));
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 2)).thenReturn(usernamesList.get(2));
-
+        when(battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, studentDTO.getId())).thenReturn(true);
 
         List<BattleRankingDTO> battleRankingDTOList = new ArrayList<>();
 
@@ -576,6 +576,7 @@ class BattleServiceTest {
             battleRankingDTO.setUsernames(usernames);
             battleRankingDTOList.add(battleRankingDTO);
         }
+
 
         List<BattleRankingDTO> result = battleService.getBattleRanking(battleId, studentDTO);
 
