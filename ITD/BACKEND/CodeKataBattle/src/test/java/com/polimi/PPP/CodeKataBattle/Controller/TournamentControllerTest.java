@@ -7,6 +7,7 @@ import com.polimi.PPP.CodeKataBattle.Model.Tournament;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
+import com.polimi.PPP.CodeKataBattle.service.BattleService;
 import com.polimi.PPP.CodeKataBattle.service.TournamentService;
 import com.polimi.PPP.CodeKataBattle.service.UserService;
 import org.junit.jupiter.api.*;
@@ -33,8 +34,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 
@@ -52,6 +52,9 @@ class TournamentControllerTest {
 
     @Autowired
     private TournamentService tournamentService;
+
+    @Autowired
+    private BattleService battleService;
 
     private String studentToken;
 
@@ -671,6 +674,254 @@ class TournamentControllerTest {
                 .andReturn().getResponse();
 
         assertEquals(400, response6.getStatus());
+
+
+        BattleCreationDTO battleCreationDTO2 = new BattleCreationDTO();
+        battleCreationDTO2.setName("Battle1");
+        battleCreationDTO2.setManualScoringRequired(false);
+        battleCreationDTO2.setSubmissionDeadline(ZonedDateTime.now().plusDays(4));
+        battleCreationDTO2.setSubscriptionDeadline(ZonedDateTime.now().plusDays(5));
+        battleCreationDTO2.setMinStudentsInGroup(1);
+        battleCreationDTO2.setMaxStudentsInGroup(2);
+        battleCreationDTO2.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+
+        MockMultipartFile jsonFile2 = new MockMultipartFile("battle", "", "application/json", objectMapper.writeValueAsBytes(battleCreationDTO));
+
+        final MockHttpServletResponse response7 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+tournament.getId()+"/createBattle")
+                                .file(jsonFile2)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response7.getStatus());
+
+        battleCreationDTO2.setSubscriptionDeadline(ZonedDateTime.now().plusDays(3));
+        battleCreationDTO2.setMinStudentsInGroup(10);
+        battleCreationDTO2.setMaxStudentsInGroup(2);
+
+        final MockHttpServletResponse response9 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+tournament.getId()+"/createBattle")
+                                .file(jsonFile2)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response9.getStatus());
+
+        battleCreationDTO2.setMinStudentsInGroup(1);
+        battleCreationDTO2.setMaxStudentsInGroup(2);
+        battleCreationDTO2.setName(null);
+
+        final MockHttpServletResponse response10 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+tournament.getId()+"/createBattle")
+                                .file(jsonFile2)
+                                .file(getGoodZip("codeZip"))
+                                .file(getGoodZip("testZip"))
+                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                                .header("Authorization", "Bearer " + this.educatorToken)
+
+                )
+
+                .andReturn().getResponse();
+
+        assertEquals(400, response10.getStatus());
+
+
+    }
+
+    @Test
+    @Order(10)
+    void getTournamentBattles() throws Exception{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        when(gitHubAPI.createRepository(anyString(), anyString(),anyBoolean())).thenReturn("name/repo");
+
+
+        List<TournamentDTO> tournaments = tournamentService.searchTournamentsByKeyword("TournamentSub");
+        long tournamentId = -1;
+        if(tournaments.isEmpty()){
+            TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
+            tournamentCreationDTO.setTournamentName("TournamentSub");
+            tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+            tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+
+            TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+            tournamentId = tournament.getId();
+
+            tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
+
+
+            BattleCreationDTO battleCreationDTO = new BattleCreationDTO();
+            battleCreationDTO.setName("BattleNewForTest");
+            battleCreationDTO.setManualScoringRequired(false);
+            battleCreationDTO.setSubmissionDeadline(ZonedDateTime.now().plusDays(4));
+            battleCreationDTO.setSubscriptionDeadline(ZonedDateTime.now().plusDays(3));
+            battleCreationDTO.setMinStudentsInGroup(1);
+            battleCreationDTO.setMaxStudentsInGroup(2);
+            battleCreationDTO.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+
+            //Mock status of the tournament to ongoing
+
+            BattleDTO battle = battleService.createBattle(tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
+
+
+
+        }
+        else{
+            tournamentId = tournaments.get(0).getId();
+            if(tournaments.get(0).getState() == TournamentStateEnum.SUBSCRIPTION)
+                tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
+
+        }
+
+        final MockHttpServletResponse response = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.studentToken))
+                .andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+
+        List<BattleDTO> battles = objectMapper.readValue(response.getContentAsString(), List.class);
+
+        assertEquals(1, battles.size());
+
+        final MockHttpServletResponse response2 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.educatorToken))
+                .andReturn().getResponse();
+
+        assertEquals(200, response2.getStatus());
+
+        List<BattleDTO> battles2 = objectMapper.readValue(response2.getContentAsString(), List.class);
+
+        assertEquals(1, battles2.size());
+
+        final MockHttpServletResponse responseNoAuth = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
+                                .contentType("application/json"))
+                .andReturn().getResponse();
+
+        assertEquals(401, responseNoAuth.getStatus());
+
+        final MockHttpServletResponse response3 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/7757577575/battles")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.studentToken))
+                .andReturn().getResponse();
+
+        assertEquals(400, response3.getStatus());
+
+
+
+
+    }
+
+    @Test
+    @Order(11)
+    void testCloseTournament() throws Exception{
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        when(gitHubAPI.createRepository(anyString(), anyString(),anyBoolean())).thenReturn("name/repo");
+
+
+        List<TournamentDTO> tournaments = tournamentService.searchTournamentsByKeyword("TournamentSub");
+        long tournamentId = -1;
+        if(tournaments.isEmpty()){
+            TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
+            tournamentCreationDTO.setTournamentName("TournamentSub");
+            tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+            tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+
+            TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+            tournamentId = tournament.getId();
+
+            tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
+
+            BattleCreationDTO battleCreationDTO = new BattleCreationDTO();
+            battleCreationDTO.setName("BattleNewForTest");
+            battleCreationDTO.setManualScoringRequired(false);
+            battleCreationDTO.setSubmissionDeadline(ZonedDateTime.now().plusDays(4));
+            battleCreationDTO.setSubscriptionDeadline(ZonedDateTime.now().plusDays(3));
+            battleCreationDTO.setMinStudentsInGroup(1);
+            battleCreationDTO.setMaxStudentsInGroup(2);
+            battleCreationDTO.setProgrammingLanguage(ProgrammingLanguageEnum.JAVA);
+
+            //Mock status of the tournament to ongoing
+
+            BattleDTO battle = battleService.createBattle(tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
+
+        }
+        else{
+            tournamentId = tournaments.get(0).getId();
+            if(tournaments.get(0).getState() == TournamentStateEnum.SUBSCRIPTION)
+                tournamentService.updateStateForTournament(tournamentId, TournamentStateEnum.ONGOING);
+
+        }
+
+        final MockHttpServletResponse response = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.studentToken))
+                .andReturn().getResponse();
+
+        assertEquals(401, response.getStatus());
+
+        final MockHttpServletResponse response2 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.educatorToken))
+                .andReturn().getResponse();
+
+        // Ongoing battle
+        assertEquals(400, response2.getStatus());
+
+        TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
+        tournamentCreationDTO.setTournamentName("TournamentSub2");
+        tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+
+        TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+        tournamentId = tournament.getId();
+
+        final MockHttpServletResponse response3 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.educatorToken))
+                .andReturn().getResponse();
+
+        assertEquals(200, response3.getStatus());
+
+        final MockHttpServletResponse response4 = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/86868686868/close")
+                                .contentType("application/json")
+                                .header("Authorization", "Bearer " + this.educatorToken))
+                .andReturn().getResponse();
+
+        assertEquals(400, response4.getStatus());
+
+        final MockHttpServletResponse responseNoAuth = mockMvc.perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/86868686868/close")
+                                .contentType("application/json"))
+                .andReturn().getResponse();
+
+        assertEquals(401, responseNoAuth.getStatus());
 
     }
 
