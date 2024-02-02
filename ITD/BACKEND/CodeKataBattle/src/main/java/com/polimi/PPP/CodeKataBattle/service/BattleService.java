@@ -387,6 +387,7 @@ public class BattleService {
                 ZipEntry entry;
                 boolean hasSrcDirectory = false;
                 boolean hasPomFile = false;
+                boolean hasMvnw = false;
 
                 while ((entry = zipInputStream.getNextEntry()) != null) {
                     String entryName = entry.getName();
@@ -406,6 +407,8 @@ public class BattleService {
                         if(entryName.contains(".DS_Store")) continue;
                         if (entryName.equals("pom.xml"))
                             hasPomFile = true;
+                        if (entryName.equals("mvnw"))
+                            hasMvnw = true;
 
                         try (OutputStream outputStream = new FileOutputStream(entryFile)) {
                             byte[] buffer = new byte[1024];
@@ -417,7 +420,7 @@ public class BattleService {
                     }
                 }
 
-                if (hasSrcDirectory && hasPomFile)
+                if (hasSrcDirectory && hasPomFile && hasMvnw)
                     return tempDirectory;
                 else {
                     deleteDirectory(tempDirectory);

@@ -990,6 +990,13 @@ class TournamentControllerTest {
             zos.write(pomContent.getBytes());
             zos.closeEntry();
 
+            // Adding mvnw file
+            ZipEntry mvnwEntry = new ZipEntry("mvnw");
+            zos.putNextEntry(mvnwEntry);
+            String mvnwContent = "<project>...</project>"; // Replace with actual mvnw.xml content
+            zos.write(mvnwContent.getBytes());
+            zos.closeEntry();
+
             // Adding src directory
             ZipEntry srcDirEntry = new ZipEntry("src/");
             zos.putNextEntry(srcDirEntry);
