@@ -35,10 +35,10 @@ class JavaEvaluatorTest {
 
         SubmissionDTO submissionDTO = new SubmissionDTO();
         BattleDTO battleDTO = new BattleDTO();
-        battleDTO.setTestRepositoryLink("Jacopopiazza/TestRepo");
+        battleDTO.setTestRepositoryLink("codekatabattle-se2/TestRepo");
         submissionDTO.setBattle(battleDTO);
-        submissionDTO.setRepositoryUrl("Jacopopiazza/RepoCode");
-        submissionDTO.setCommitHash("076fe4d");
+        submissionDTO.setRepositoryUrl("codekatabattle-se2/RepoCode");
+        submissionDTO.setCommitHash("e70459c");
 
         Float score;
 

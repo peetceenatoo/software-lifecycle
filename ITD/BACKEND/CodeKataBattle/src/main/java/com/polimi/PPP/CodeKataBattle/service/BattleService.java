@@ -139,16 +139,13 @@ public class BattleService {
     private boolean userHasPermissionToBattle(UserDTO user, Long battleId) {
         if (user.getRole().getName() == RoleEnum.ROLE_EDUCATOR) {
             Optional<Battle> battle = battleRepository.findById(battleId);
-            if (battle.isEmpty()) {
+            if (battle.isPresent()) {
                 if (battle.get().getTournament().getUsers().stream().anyMatch(user1 -> user1.getId().equals(user.getId())))
-                    return false;
-            }
-        } else {
+                    return true;
+            }else return false;
 
-            boolean isUserSubscribed = battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, user.getId());
-            if (!isUserSubscribed) {
-                return false;
-            }
+        } else {
+            return battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, user.getId());
         }
         return true;
     }
