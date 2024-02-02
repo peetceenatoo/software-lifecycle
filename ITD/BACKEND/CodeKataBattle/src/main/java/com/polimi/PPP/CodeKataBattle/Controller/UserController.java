@@ -37,7 +37,7 @@ public class UserController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserDTO userDTO = userService.findByEmail(request.getEmail());
         String token = this.jwtHelper.generateToken(userDTO.getId(), userDTO.getRole().getName());
-        return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token));
+        return ResponseEntity.ok(new UserLoggedDTO(request.getEmail(), token, userDTO.getRole().getName()));
     }
 
     @PostMapping("/signup")
