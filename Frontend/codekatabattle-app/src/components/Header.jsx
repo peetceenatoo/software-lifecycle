@@ -33,7 +33,7 @@ const Header = () => {
           </Col>
           <Col md={1} lg={1} /> {/* Spazio vuoto a destra */}
         </Row>
-      </Container>s
+      </Container>
     </Navbar>
   );
 };
