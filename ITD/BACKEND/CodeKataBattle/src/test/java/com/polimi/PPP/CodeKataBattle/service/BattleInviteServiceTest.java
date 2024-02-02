@@ -100,7 +100,7 @@ class BattleInviteServiceTest {
         when(battleInviteRepository.findById(inviteId)).thenReturn(Optional.of(invite));
         when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(battleSubscriptionRepository.findGroupIdByBattleIdAndUserId(battleId, userId)).thenReturn(1L); // Assuming no existing subscription
+        when(battleSubscriptionRepository.findGroupIdByBattleIdAndUserId(battleId, userId)).thenReturn(Optional.of(1L)); // Assuming no existing subscription
         when(battleInviteRepository.countByBattleIdAndState(battleId, BattleInviteStateEnum.ACCEPTED, userId)).thenReturn(1); // Assuming this is the first acceptance
 
         // Mock repository saves
@@ -109,7 +109,7 @@ class BattleInviteServiceTest {
 
         List<BattleInvite> battleInviteList = new ArrayList<>();
         battleInviteList.add(invite);
-        when(battleInviteRepository.getInvitesByState(battleId, BattleInviteStateEnum.ACCEPTED, userId)).thenReturn(battleInviteList); // Assuming no existing accepted invite
+        when(battleInviteRepository.getInvitesByBattleIdAndStateAndUserId(battleId, BattleInviteStateEnum.ACCEPTED, userId)).thenReturn(battleInviteList); // Assuming no existing accepted invite
 
         // Mock repository updates
         when(battleInviteRepository.updateStateForBattle(battleId, BattleInviteStateEnum.PENDING, BattleInviteStateEnum.ACCEPTED)).thenReturn(1);

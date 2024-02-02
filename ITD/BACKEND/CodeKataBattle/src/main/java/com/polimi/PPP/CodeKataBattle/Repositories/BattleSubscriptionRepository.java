@@ -28,8 +28,10 @@ public interface BattleSubscriptionRepository extends JpaRepository<BattleSubscr
 
     Optional<BattleSubscription> findByUserIdAndBattleId(Long userId, Long battleId);
 
-    @Query("SELECT MAX(bs.groupId) FROM BattleSubscription bs WHERE bs.battle.id = :battleId")
+    @Query("SELECT COALESCE(MAX(bs.groupId), 0) FROM BattleSubscription bs WHERE bs.battle.id = :battleId")
     Long findMaxGroupIdInBattle(Long battleId);
 
-    long findGroupIdByBattleIdAndUserId(Long battleId, Long userId);
+    @Query("SELECT bs.groupId FROM BattleSubscription bs WHERE bs.battle.id = :battleId AND bs.user.id = :userId")
+    Optional<Long> findGroupIdByBattleIdAndUserId(Long battleId, Long userId);
 }
+

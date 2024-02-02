@@ -11,7 +11,6 @@ import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
-import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -77,9 +76,7 @@ public class BattleInviteService {
     //I can remove some checks to improve it
     @Transactional
     public void enrollAndInviteBattle(BattleEnrollDTO battleEnrollDTO) {
-        if (battleEnrollDTO.getUsernames().isEmpty()) {
-            throw new InvalidArgumentException("No users to invite");
-        }
+
         Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
         User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
         if(battleEnrollDTO.getUsernames().size() + 1 > battle.getMaxStudentsInGroup()) {
@@ -122,7 +119,7 @@ public class BattleInviteService {
             invite.setUser(user);
             invite.setInvitedUser(invitedUser);
             invite.setState(BattleInviteStateEnum.PENDING); // Assuming an enum for the invite state
-            battleInviteRepository.save(invite);
+            BattleInvite createdInvite = battleInviteRepository.save(invite);
             BattleInviteDTO inviteDTO = new BattleInviteDTO();
             inviteDTO.setBattleId(invite.getBattle().getId());
             inviteDTO.setUserId(invite.getUser().getId());
@@ -182,8 +179,7 @@ public class BattleInviteService {
 
         // Count the accepted invites
         //Long acceptedInvitesCount = battleInviteRepository.countByBattleIdAndState(battleId, BattleInviteStateEnum.ACCEPTED, userId);
-
-        List<BattleInvite> invites = battleInviteRepository.getInvitesByState(battleId, BattleInviteStateEnum.ACCEPTED, userId);
+        List<BattleInvite> invites = battleInviteRepository.getInvitesByBattleIdAndStateAndUserId(battleId, BattleInviteStateEnum.ACCEPTED, userId);
 
         // Check if the count meets the minimum group size constraint
         if (invites.size() == battle.getMinStudentsInGroup()) {
@@ -205,10 +201,13 @@ public class BattleInviteService {
             if (invites.size() > battle.getMinStudentsInGroup() && invites.size() <= battle.getMaxStudentsInGroup()) {
                 BattleSubscription subscription = new BattleSubscription();
                 subscription.setBattle(battle);
-                subscription.setUser(user);
+                subscription.setUser(invite.getInvitedUser());
                 //find the group id of the other users that accepted that battle
-                long groupId = battleSubscriptionRepository.findGroupIdByBattleIdAndUserId(battleId, userId);
-                subscription.setGroupId(groupId);
+                Optional<Long> groupId = battleSubscriptionRepository.findGroupIdByBattleIdAndUserId(battleId, userId);
+
+                if(groupId.isEmpty()) throw new InvalidArgumentException("Group not found");
+
+                subscription.setGroupId(groupId.get());
                 battleSubscriptionRepository.save(subscription);
                 BattleSubscriptionDTO subscriptionDTO = new BattleSubscriptionDTO();
                 modelMapper.map(subscription, subscriptionDTO);
@@ -268,7 +267,20 @@ public class BattleInviteService {
         battleInviteRepository.save(invite);
         BattleInviteDTO inviteDTO = new BattleInviteDTO();
         modelMapper.map(invite, inviteDTO);
-        //this doesn't have id
+
+        // If the min of the battle is 1, the user is automatically enrolled
+        if(battle.getMinStudentsInGroup() == 1){
+            BattleSubscription subscription = new BattleSubscription();
+            subscription.setBattle(battle);
+            subscription.setUser(user);
+
+            // Get the max group id and add 1
+            Long groupId = battleSubscriptionRepository.findMaxGroupIdInBattle(battle.getId()) + 1;
+            subscription.setGroupId(groupId);
+
+            battleSubscriptionRepository.save(subscription);
+        }
+
         return inviteDTO;
         //TODO: check if the user is already enrolled in the battle
     }
