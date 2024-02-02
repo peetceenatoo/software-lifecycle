@@ -1,9 +1,13 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 function LoginPage() {
+
+  const navigate = useNavigate();
+
   const handleLoginSubmit = (event) => {
     console.log(event.target.elements.formBasicEmail.value);
     console.log(event.target.elements.formBasicPassword.value);
@@ -19,8 +23,12 @@ function LoginPage() {
     axios.post('http://localhost:8080/api/users/login', credentials)
       .then(response => {
         console.log('Login Success:', response.data);
-        // Handle success here
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', response.data.role);
+        navigate('/home');
       })
+
       .catch(error => {
         console.error('Login Error:', error.response ? error.response.data : error.message);
         // Handle errors here
@@ -86,9 +94,9 @@ function LoginPage() {
         {/* Right column for the information panel */}
         <Col md={6} className="bg-primary text-white d-flex align-items-center justify-content-center px-5 rounded-end">
           <div>
-            <h1 class="display-1 font-weight-bold">CodeKataBattle</h1>
-            <h1 class="display-5 font-weight-bold">Begin Your Journey to Coding Excellence</h1>
-            <h1 class="display-5 ">Ready for Your Next Kata?</h1>
+            <h1 className="display-1 font-weight-bold">CodeKataBattle</h1>
+            <h1 className="display-5 font-weight-bold">Begin Your Journey to Coding Excellence</h1>
+            <h1 className="display-5 ">Ready for Your Next Kata?</h1>
           </div>
         </Col>
       </Row>
