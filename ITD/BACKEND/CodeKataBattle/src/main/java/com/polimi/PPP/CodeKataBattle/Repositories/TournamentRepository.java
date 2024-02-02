@@ -16,6 +16,10 @@ import java.util.Set;
 public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     List<Tournament> findByState(TournamentStateEnum state);
     List<Tournament> findByNameContainingIgnoreCaseOrIdIs(String name, Long id);
+
+    @Query(value = "SELECT t FROM Tournament t WHERE (t.name LIKE %:name% OR t.id = :id) AND t.state = :state")
+    List<Tournament> findByNameContainingIgnoreCaseOrIdIsAndState(String name, Long id, TournamentStateEnum state);
+
     List<Tournament> findByUsers_Id(Long userId); // For enrolled tournaments
 
     @Query(value = "SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END " +

@@ -84,6 +84,13 @@ public class TournamentController extends AuthenticatedController{
         return ResponseEntity.ok(tournaments);
     }
 
+    @GetMapping("/search/{keyword}/{state}")
+    public ResponseEntity<?> searchTournament(@PathVariable String keyword, @PathVariable(required = false) TournamentStateEnum state) {
+
+        List<TournamentDTO> tournaments = tournamentService.searchTournamentsByKeywordAndState(keyword, state);
+        return ResponseEntity.ok(tournaments);
+    }
+
     @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<?> getRankingTournament(@PathVariable Long tournamentId) {
         return ResponseEntity.ok(tournamentService.getTournamentRanking(tournamentId));

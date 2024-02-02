@@ -212,6 +212,22 @@ public class TournamentService {
         return ranking;
     }
 
+    public List<TournamentDTO> searchTournamentsByKeywordAndState(String keyword, TournamentStateEnum state) {
+
+        long id = -1L;
+        try {
+            id = Long.parseLong(keyword);
+        } catch (NumberFormatException e) {
+            // Do nothing
+        }
+
+        List<Tournament> tournaments = tournamentRepository.findByNameContainingIgnoreCaseOrIdIsAndState(keyword, id, state);
+        return tournaments.stream()
+                .map(tournament -> modelMapper.map(tournament, TournamentDTO.class))
+                .collect(Collectors.toList());
+
+    }
+
     public List<TournamentDTO> searchTournamentsByKeyword(String keyword) {
 
         long id = -1L;
