@@ -8,14 +8,11 @@ import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidTokenException;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.*;
 import com.polimi.PPP.CodeKataBattle.Model.*;
-import com.polimi.PPP.CodeKataBattle.Repositories.TournamentRepository;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Security.SubmissionAuthenticationToken;
-import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,8 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -40,7 +35,7 @@ public class BattleController extends AuthenticatedController {
     private BattleService battleService;
 
     @Autowired
-    private BattleInviteService battleinvite;
+    private BattleInviteService battleInviteService;
 
     @Autowired
     private EvaluatorProcess evaluatorProcess;
@@ -143,15 +138,15 @@ public class BattleController extends AuthenticatedController {
         }
     }
 
-    @PostMapping("/enroll")
+    @PostMapping("/{battleId}/enroll")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_STUDENT)")
-    public ResponseEntity<?> enrollToBattle(@RequestBody EnrollmentBattleDTO enrollmentBattleDTO) {
+    public ResponseEntity<?> enrollToBattle(@PathVariable Long battleId, @RequestBody List<String> usernames) {
         UserDTO user = this.getAuthenticatedUser();
         BattleEnrollDTO battleEnrollDTO = new BattleEnrollDTO();
-        battleEnrollDTO.setBattleId(enrollmentBattleDTO.getBattleId());
+        battleEnrollDTO.setBattleId(battleId);
         battleEnrollDTO.setUserId(user.getId());
-        battleEnrollDTO.setUsernames(enrollmentBattleDTO.getUsernames());
-        battleinvite.enrollAndInviteBattle(battleEnrollDTO);
+        battleEnrollDTO.setUsernames(usernames);
+        battleInviteService.enrollAndInviteBattle(battleEnrollDTO);
         return ResponseEntity.ok("Enrolled successfully");
     }
 
@@ -163,7 +158,7 @@ public class BattleController extends AuthenticatedController {
         battleEnrollDTO.setBattleId(enrollmentBattleDTO.getBattleId());
         battleEnrollDTO.setUserId(user.getId());
         battleEnrollDTO.setUsernames(enrollmentBattleDTO.getUsernames());
-        battleinvite.inviteUserToBattle(battleEnrollDTO);
+        battleInviteService.inviteUserToBattle(battleEnrollDTO);
         return ResponseEntity.ok("Invited successfully");
     }
 
@@ -207,7 +202,7 @@ public class BattleController extends AuthenticatedController {
 
         if(battleInviteId < 0) throw new InvalidArgumentException("Invalid invite id");
 
-        battleinvite.acceptBattleInvite(battleInviteId);
+        battleInviteService.acceptBattleInvite(battleInviteId);
 
         //response to redirect to frontend homepage with react router to the home page
 

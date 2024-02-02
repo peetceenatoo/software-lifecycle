@@ -5,11 +5,14 @@ import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 class BattleInviteServiceTest {
 
     private BattleInviteService battleInviteService;
@@ -46,7 +50,7 @@ class BattleInviteServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
+    @MockBean
     private NotificationProvider notificationProvider;
 
     @Mock
@@ -60,7 +64,10 @@ class BattleInviteServiceTest {
         this.battleInviteService = new BattleInviteService(battleInviteRepository, battleRepository, userRepository, modelMapper, battleSubscriptionRepository, jwtHelper, notificationProvider);
     }
 
+
+
     @Test
+    @Transactional
     void testAcceptBattleInvite() {
         Long inviteId = 1L;
         Long battleId = 1L;
@@ -117,6 +124,7 @@ class BattleInviteServiceTest {
     }
 
     @Test
+    @Transactional
     void testEnrollBattle() {
         Long battleId = 1L;
         Long userId = 1L;
@@ -160,6 +168,7 @@ class BattleInviteServiceTest {
     }
 
     @Test
+    @Transactional
     void testInviteUserToBattle() {
         Long battleId = 1L;
         Long userId = 1L;

@@ -925,7 +925,7 @@ class TournamentControllerTest {
 
     }
 
-    private MockMultipartFile getGoodZip(String name) throws IOException {
+    public static MockMultipartFile getGoodZip(String name) throws IOException {
 
         MockMultipartFile mockMultipartFile;
 
@@ -948,7 +948,7 @@ class TournamentControllerTest {
         return mockMultipartFile;
     }
 
-    private MockMultipartFile getBadZip1(String name) throws IOException{
+    public static MockMultipartFile getBadZip1(String name) throws IOException{
         //Mock zip files
         MockMultipartFile mockMultipartFile;
 
@@ -971,7 +971,7 @@ class TournamentControllerTest {
         return mockMultipartFile;
     }
 
-    private File createGoodTempZipFile() throws IOException {
+    private static File createGoodTempZipFile() throws IOException {
 
         // Temp dir
         Path tempDir = Files.createTempDirectory("myTempDir");
@@ -1007,7 +1007,7 @@ class TournamentControllerTest {
         return tempZipFile;
     }
 
-    private File createBadTempZipFile1() throws IOException {
+    private static File createBadTempZipFile1() throws IOException {
 
         // Temp dir
         Path tempDir = Files.createTempDirectory("myTempDir");

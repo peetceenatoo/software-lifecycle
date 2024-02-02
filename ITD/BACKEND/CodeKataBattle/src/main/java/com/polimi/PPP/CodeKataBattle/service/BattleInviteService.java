@@ -11,12 +11,15 @@ import com.polimi.PPP.CodeKataBattle.Repositories.BattleRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.BattleSubscriptionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import com.polimi.PPP.CodeKataBattle.Security.JwtHelper;
+import com.polimi.PPP.CodeKataBattle.TaskScheduling.TournamentCreatedEvent;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +110,8 @@ public class BattleInviteService {
         }
 
         User user = battleInvite.get().getUser();
+        List<String> emails = new ArrayList<>();
+        List<MessageDTO> messageDTOS = new ArrayList<>();
 
         for (String username : battleEnrollDTO.getUsernames()) {
             User invitedUser = userRepository.findByUsername(username)
@@ -130,10 +135,30 @@ public class BattleInviteService {
             String link = "<a href='http://localhost:8080/api/battles/acceptInvitation/" + inviteToken + "'>Join the gorup!</a>";
 
             MessageDTO messageDTO = new MessageDTO(link,"You have been invited to take part in a battle!");
-
-            notificationProvider.sendNotification(messageDTO, user.getEmail());
+            emails.add(invitedUser.getEmail());
+            messageDTOS.add(messageDTO);
 ;
         }
+
+
+        // Callback after the transaction is committed
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+
+            @Override
+            public void afterCommit() {
+
+            for (int i = 0;i<emails.size();i++){
+                notificationProvider.sendNotification(messageDTOS.get(i), emails.get(i));
+            }
+
+            }
+
+            // Implement other methods as needed or leave them as default
+        });
+
+
+
+
         return invites;
     }
 
@@ -193,13 +218,27 @@ public class BattleInviteService {
             else  throw new InvalidArgumentException("Too many users in the group");
         }
 
-        MessageDTO messageDTO = new MessageDTO("Subscription to battle '" + battle.getName() + "' confirmed!","Enroll confirmed!");
 
 
-        for (BattleSubscriptionDTO sub : subscriptions){
-            Optional<User> userForEmail =  userRepository.findById(sub.getUserId());
-            userForEmail.ifPresent(value -> notificationProvider.sendNotification(messageDTO, value.getEmail()));
-        }
+        // Callback after the transaction is committed
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+
+            @Override
+            public void afterCommit() {
+
+            MessageDTO messageDTO = new MessageDTO("Subscription to battle '" + battle.getName() + "' confirmed!","Enroll confirmed!");
+
+            for (BattleSubscriptionDTO sub : subscriptions){
+                Optional<User> userForEmail =  userRepository.findById(sub.getUserId());
+                userForEmail.ifPresent(value -> notificationProvider.sendNotification(messageDTO, value.getEmail()));
+            }
+
+            }
+
+            // Implement other methods as needed or leave them as default
+        });
+
+
 
         return subscriptions;
     }
