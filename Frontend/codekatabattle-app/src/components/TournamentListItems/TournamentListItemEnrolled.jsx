@@ -8,7 +8,7 @@ const TournamentListItemEnrollled = ({ id, nameTournament, ranking }) => {
         <div className="fw-bold">#{id} - {nameTournament}</div>
         Current Ranking: {ranking}
       </div>
-      <Button className="me-2" variant="info">Info</Button>
+      <Button className="me-2" >Info</Button>
     </ListGroup.Item>
   );
 };

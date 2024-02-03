@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.scrollable {
+  max-height: 500px; /* Adjust as needed */
+  overflow-y: auto;
+}

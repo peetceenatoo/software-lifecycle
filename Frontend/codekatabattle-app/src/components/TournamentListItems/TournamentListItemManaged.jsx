@@ -8,8 +8,8 @@ const TournamentListItemMananaged = ({ id, nameTournament, status }) => {
         <div className="fw-bold">#{id} - {nameTournament}</div>
         Status: {status}
       </div>
-      <Button variant="info" className="me-2">End</Button>
-      <Button variant="info">Info</Button>
+      <Button className="me-2">End</Button>
+      <Button>Info</Button>
     </ListGroup.Item>
   );
 };

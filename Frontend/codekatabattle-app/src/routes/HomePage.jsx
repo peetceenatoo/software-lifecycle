@@ -1,7 +1,7 @@
 import React from "react";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import axios from "axios";
+import { Container, Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
+
 
 import TournamentsList from "../components/TournamentsList";
 import CreateTournament from "../components/CreateTournament";
@@ -38,7 +38,6 @@ function HomePage() {
             </Row>
         </Container>
     );
-    
-    }
+}
 
 export default HomePage;

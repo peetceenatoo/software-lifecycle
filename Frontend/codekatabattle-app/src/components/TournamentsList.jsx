@@ -30,7 +30,8 @@ const TournamentsList = ({ type, name}) => {
       try {
         let response = null;
         if(type == 'Ongoing') {
-          response = await api.get('/tournaments/state/ONGOING'); // Update the API endpoint as needed
+          //response = await api.get('/tournaments/state/ONGOING'); // Update the API endpoint as needed
+          response = await api.get('/tournaments');
         }else if(type == 'Managed/Enrolled') {
           if(localStorage.getItem('role') == 'ROLE_STUDENT')
             response = await api.get('/tournaments/enrolled'); // Update the API endpoint as needed
@@ -54,9 +55,9 @@ const TournamentsList = ({ type, name}) => {
   };
 
   const formatDateTime = (dateTime) => {
-    return new Date(dateTime).toLocaleString();
-  };
-  
+  return new Date(dateTime).toLocaleString();
+};
+
 
   return (
     <div>
@@ -68,11 +69,11 @@ const TournamentsList = ({ type, name}) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button variant="outline-secondary" id="button-search" onClick={handleSearchClick}>
+        <Button variant="outline-primary" id="button-search" onClick={handleSearchClick}>
           Search
         </Button>
       </InputGroup>
-      <ListGroup>
+      <ListGroup className="scrollable">
         {tournaments.map((tournament) => {
           if (type === 'Ongoing') {
             return (
@@ -82,6 +83,7 @@ const TournamentsList = ({ type, name}) => {
                 nameTournament={tournament.name}
                 subscriptionDeadline={formatDateTime(tournament.deadline)}
                 role={localStorage.getItem('role')}
+                status={tournament.state}
               />
             );
           } else if (type === 'Managed/Enrolled') {

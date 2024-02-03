@@ -14,3 +14,25 @@
 }
 
 
+
+.scrollable {
+  max-height: 500px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+/* Style the scrollbar */
+.scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: #6f42c1;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #492c7f;
+}
