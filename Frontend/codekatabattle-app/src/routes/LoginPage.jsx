@@ -20,7 +20,7 @@ function LoginPage() {
   };
 
   const login = (credentials) => {
-    axios.post('http://localhost:8080/api/users/login', credentials)
+    axios.post('https://localhost:8443/api/users/login', credentials)
       .then(response => {
         console.log('Login Success:', response.data);
         const token = response.data.token;

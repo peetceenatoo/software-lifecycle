@@ -17,7 +17,7 @@ const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, r
       });
   }
 
-  const isDeadlinePassed = new Date(subscriptionDeadline) > new Date();
+  const isDeadlinePassed = new Date(subscriptionDeadline) < new Date();
 
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-start">
