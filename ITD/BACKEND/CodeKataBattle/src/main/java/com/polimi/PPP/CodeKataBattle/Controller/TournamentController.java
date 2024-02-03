@@ -3,7 +3,9 @@ package com.polimi.PPP.CodeKataBattle.Controller;
 import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidActionException;
 import com.polimi.PPP.CodeKataBattle.Exceptions.InvalidRightsForActionException;
+import com.polimi.PPP.CodeKataBattle.Model.BattleStateEnum;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
+import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.*;
 import jakarta.validation.Valid;
@@ -99,6 +101,12 @@ public class TournamentController extends AuthenticatedController{
     @GetMapping("/{tournamentId}/battles")
     public ResponseEntity<?> getBattles(@PathVariable Long tournamentId) {
         return ResponseEntity.ok(battleService.getBattlesByTournamentId(tournamentId));
+    }
+
+    @GetMapping("/{tournamentId}/battles/state/{state}")
+    public ResponseEntity<?> getBattlesByState(@PathVariable Long tournamentId, @PathVariable BattleStateEnum state) {
+        UserDTO authenticatedUser = this.getAuthenticatedUser();
+        return ResponseEntity.ok(battleService.getBattlesByTournamentIdAndState(authenticatedUser,tournamentId, state));
     }
 
     @GetMapping("/{tournamentId}/battles/enrolled")

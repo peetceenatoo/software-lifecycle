@@ -111,6 +111,16 @@ public class BattleService {
                 .collect(Collectors.toList());
     }
 
+    public List<Battle> getBattlesByTournamentIdAndState(UserDTO user, Long tournamentId, BattleStateEnum state) {
+
+        if (!tournamentRepository.hasUserRightsOnTournament(user.getId(), tournamentId)) {
+            throw new InvalidArgumentException("Invalid tournament id for authenticated user");
+        }
+
+        return battleRepository.findByTournamentIdAndState(tournamentId, state);
+    }
+
+
     public Optional<BattleDTO> getBattleByIdEducator(Long battleId, Long userId) {
         Optional<Battle> battleOpt = battleRepository.findById(battleId);
         if (battleOpt.isPresent()) {

@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface BattleRepository extends JpaRepository<Battle, Long> {
     List<Battle> findByTournamentId(Long tournamentId);
 
+    List<Battle> findByTournamentIdAndState(Long tournamentId, BattleStateEnum state);
+
     @Query("SELECT b FROM Battle b WHERE (b.id = :id OR b.name LIKE %:keyword%) AND b.state = :state")
     List<Battle> findByKeywordOrIdAndState(String keyword, Long id, BattleStateEnum state);
 
