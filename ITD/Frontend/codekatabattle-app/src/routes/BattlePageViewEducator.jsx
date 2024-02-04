@@ -25,6 +25,8 @@ function BattlePageViewEducator() {
           console.log(response.data);
         } catch (error) {
           console.error('Error fetching battle info', error);
+          alert('You dont have the permission to view this battle' );
+          navigate('/');
         }
       };
   

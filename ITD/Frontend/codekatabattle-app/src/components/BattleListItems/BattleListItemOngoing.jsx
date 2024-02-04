@@ -4,7 +4,6 @@ import axios from 'axios';
 import api from '../../utilities/api';
 import { useNavigate } from 'react-router-dom';
 
-// TODO: check the numbers of invitations
 
 
 
@@ -55,9 +54,12 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
       .then((response) => {
         console.log(response);
         console.log('Enrolled in Battle', response.data);
+        alert('Enrolled in battle: ' + response.data)
+        navigate(0);
       })
       .catch((error) => {
         console.error('Error enrolling in Battle', error);
+        alert('Error enrolling in battle\n' + error.response.data.message)
       });
   }
 

@@ -10,6 +10,7 @@ import BattleInfoCard from "../components/BattleInfoCard";
 import CodeSubmissions from "../components/CodeSubmissions";
 import CodeSubmissionsStudent from "../components/CodeSubmissionStudent";
 import { RankingBattle } from "../components/RankingBattle";
+import { useNavigate } from "react-router-dom";
 
 
 function BattlePageViewStudent() {
@@ -17,6 +18,8 @@ function BattlePageViewStudent() {
     renderCount.current += 1;
     const { battleId } = useParams();
     const [battle, setBattle] = useState({});
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log(`Rendered: ${renderCount.current} times`);
@@ -27,6 +30,8 @@ function BattlePageViewStudent() {
           console.log(response.data);
         } catch (error) {
           console.error('Error fetching battle info', error);
+          alert('You dont have the permission to view this battle' );
+          navigate('/');
         }
       };
   
@@ -34,7 +39,18 @@ function BattlePageViewStudent() {
         fetchBattle();
       }
     }, [battleId]);
-  
+
+    const getGithubToken = async () => {
+      try {
+        const response = await api.get(`/battles/${battleId}/getGithubToken`);
+        console.log(response.data);
+        alert('In the next alert you will see the GitHub token. Please copy it and use it to submit your code, remember that it will only be shown once. Store it in the secrets (in the example JWT_TOKEN) of your GitHub reository.\nAn example of GitHub Action can be found at https://shorturl.at/gtXZ4');
+        alert('GitHub token: ' + response.data.token);
+      } catch (error) {
+        alert(error.response.data.message)
+        console.error('Error fetching battle info', error);
+      }
+    }
 
     return (
       <Container fluid className="px-0 min-vh-100">
@@ -57,6 +73,7 @@ function BattlePageViewStudent() {
             <Col md={1}></Col>
           </Row>
           {Object.keys(battle).length > 0 && ( 
+            <Container>
           <Row style={{ padding: '20px' }}>
           <Col md={1}></Col>
           <Col md={3} className="my-auto">
@@ -70,7 +87,17 @@ function BattlePageViewStudent() {
               <Col md={2} className="my-auto">
                 <RankingBattle battleId={battleId}/> 
               </Col>
+
               </Row>
+              {battle.battle.state == "ONGOING" &&
+                <Row>
+                <Col md={1}></Col>
+                <Col md={3}>
+                <button onClick={getGithubToken} className="btn btn-danger">GitHub Token</button>
+                </Col>
+                </Row>
+              } 
+            </Container>
             )}
         </Container>
       );

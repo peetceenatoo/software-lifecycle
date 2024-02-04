@@ -6,6 +6,11 @@ import {onclickButtonNotYetImplemented} from '../utilities/alerting'
 const Header = () => {
   const navigate = useNavigate();
 
+  const logOut = () => {
+    localStorage.clear();
+    navigate('/login');
+  }
+
   const goToHome = () => {
     navigate('/');
   }
@@ -35,6 +40,7 @@ const Header = () => {
                   <Nav.Link>Welcome {localStorage.getItem('username')}</Nav.Link>
                   <Nav.Link onClick={goToHome}>Home</Nav.Link>
                   <Nav.Link onClick={onclickButtonNotYetImplemented}>Profile</Nav.Link>
+                  <Nav.Link onClick={logOut}>Logout</Nav.Link>
                 </Nav>
               </Col>
             </Row>

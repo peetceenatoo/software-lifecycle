@@ -8,6 +8,7 @@ function SignupPage() {
 
   const handleSignupSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submit action
+
     const userData = {
       name: event.target.elements.formBasicName.value,
       surname: event.target.elements.formBasicSurname.value,
@@ -15,7 +16,7 @@ function SignupPage() {
       email: event.target.elements.formBasicEmail.value,
       password: event.target.elements.formBasicPassword.value,
       linkBio: event.target.elements.formBasicLinkBio.value,
-      role: event.target.elements.formHorizontalRadios1.checked ? 'ROLE_STUDENT' : 'ROLE_EDUCATOR',
+      roleName: event.target.elements.formHorizontalRadios1.checked ? 'ROLE_STUDENT' : 'ROLE_EDUCATOR',
       // Add other form fields as necessary
     };
 
@@ -31,8 +32,8 @@ function SignupPage() {
       })
       .catch(error => {
         //console.error('Signup Error:', error.response ? error.response.data : error.message); // Log any errors
-        console.log('Signup Error:', error.response.data.message); // Log any errors (specifically the error message
-        alert('Signup Error: ' + error.response.data.message); // Alert the user to any errors
+        console.log('Signup Error:', error); // Log any errors (specifically the error message
+        alert('Signup Error: ' + error); // Alert the user to any errors
       });
   };
 
@@ -86,6 +87,7 @@ function SignupPage() {
                     label="Student"
                     name="formHorizontalRadios"
                     id="formHorizontalRadios1"
+                    
                   />
                   <Form.Check
                     type="radio"

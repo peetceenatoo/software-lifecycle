@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./Frontend/codekatabattle-app
+      dockerfile: Dockerfile  # Adjusted to the correct path of your frontend directory
+    ports:
+      - "80:80" 
+      - "443:443"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./BACKEND/CodeKataBattle  # Adjusted to the correct path of your backend directory
+      dockerfile: Dockerfile  # Assuming the Dockerfile is directly inside the BACKEND directory
+    ports:
+      - "8443:8443"  # Expose the backend service port
+    env_file:
+      - ./ckb_backend.env

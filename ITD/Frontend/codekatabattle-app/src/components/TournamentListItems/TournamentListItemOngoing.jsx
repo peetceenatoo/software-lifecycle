@@ -17,6 +17,8 @@ const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, r
       .then((response) => {
         console.log(response);
         console.log('Enrolled in tournament', response.data);
+        alert('Enrolled in tournament: ' + nameTournament)
+        navigate(0);
       })
       .catch((error) => {
 

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import api from '../utilities/api';
-import { Card, Form, Button, Container, InputGroup } from 'react-bootstrap';
+import { Card, Form, Button, Container, InputGroup, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 
 const CreateBattleForm = ({ tournamentId }) => {
@@ -15,6 +16,9 @@ const CreateBattleForm = ({ tournamentId }) => {
     const [manualScoring, setManualScoring] = useState(false);
     const [fileProject, setFileProject] = useState(null);
     const [fileTests, setFileTests] = useState(null);
+
+    
+    const navigate = useNavigate();
   
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -43,6 +47,8 @@ const CreateBattleForm = ({ tournamentId }) => {
         formData.append('testZip', fileTests);
       }
   
+      
+
       try {
         // Send a POST request
         const response = await api.post(`/tournaments/${tournamentId}/createBattle`, formData, {
@@ -51,9 +57,12 @@ const CreateBattleForm = ({ tournamentId }) => {
           },
         });
         console.log(response.data);
+        alert('Battle created');
+        navigate(0);
         // Handle the response here (e.g., show a success message, redirect, etc.)
       } catch (error) {
         console.error(error.response.data);
+        alert('Error creating battle: ' + error.response.data.message)
         // Handle the error here (e.g., show an error message)
       }
     };
@@ -130,6 +139,8 @@ const CreateBattleForm = ({ tournamentId }) => {
                     onChange={(e) => setMaxGroupSize(e.target.value)}
                   />
                 </InputGroup>
+
+
       
                 <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>Upload CodeKata Project</Form.Label>
@@ -148,12 +159,19 @@ const CreateBattleForm = ({ tournamentId }) => {
                     onChange={(e) => setCodingLanguage(e.target.value)}
                   >
                     <option>Select language</option>
-                    <option value="PYTHON">Python</option>
-                    <option value="JAVASCRIPT">JavaScript</option>
                     <option value="JAVA">Java</option>
                     {/* ... other options ... */}
                   </Form.Select>
                 </Form.Group>
+
+                <Alert variant="warning">
+                  <Alert.Heading>Correctness of ZIP files</Alert.Heading>
+                  <p>
+                    They MUST be Maven Projects, including the pom.xml file, the src folders, and maven wrapper.
+                    Remember to check .mvn folder is included.
+                  </p>
+                </Alert>
+
 
                 <Form.Group className="mb-3">
                   <Form.Check

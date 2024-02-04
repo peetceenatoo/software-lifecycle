@@ -115,6 +115,11 @@ public class TournamentService {
         modelMapper.map(tournamentDTO, tournament);
 
         ZonedDateTime utcDeadline = TimezoneUtil.convertToUtc(tournamentDTO.getRegistrationDeadline());
+
+        if(utcDeadline.isBefore(ZonedDateTime.now())){
+            throw new IllegalArgumentException("Deadline cannot be in the past");
+        }
+
         tournament.setDeadline(utcDeadline);
         tournament.setState(TournamentStateEnum.SUBSCRIPTION);
         tournament.setBattles(new java.util.HashSet<>());

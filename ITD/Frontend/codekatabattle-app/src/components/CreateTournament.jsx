@@ -5,13 +5,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios'; // Make sure to import axios
 import api from '../utilities/api';
+import { useNavigate } from 'react-router-dom';
 
-const CreateTournament = ({ onCreationSuccess }) => {
+const CreateTournament = () => {
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [tournamentName, setTournamentName] = useState(''); // State for tournament name
     const [invitations, setInvitations] = useState([]);
     const [username, setUsername] = useState('');
+
+    const navigate = useNavigate();
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
@@ -44,11 +47,13 @@ const CreateTournament = ({ onCreationSuccess }) => {
           .then(response => {
             console.log('Tournament created successfully:', response.data);
             // You might want to clear the form here or provide some notification to the user
-            onCreationSuccess();
+            alert('Created tournament!');
+            navigate(0);
             handleClose(); // Close the modal after submitting
           })
           .catch(error => {
             console.error('Error creating tournament:', error);
+            alert('Error creating tournament: ' + error.response.data.message);
             // Handle specific error scenarios here, potentially showing error messages to the user
           });
       };
