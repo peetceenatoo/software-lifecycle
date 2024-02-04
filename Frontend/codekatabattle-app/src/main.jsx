@@ -15,11 +15,11 @@ import BattlePage from "./routes/BattlePage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: "/home",
+    path: "/",
     element: (
       <ProtectedRoute>
         <HomePage />
