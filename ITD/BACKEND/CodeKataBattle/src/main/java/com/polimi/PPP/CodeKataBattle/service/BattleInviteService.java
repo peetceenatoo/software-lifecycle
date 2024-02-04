@@ -148,7 +148,7 @@ public class BattleInviteService {
 
             String inviteToken = jwtHelper.generateInviteToken(invite.getId(), invite.getBattle().getSubscriptionDeadline());
 
-            String link = "<a href='http://localhost:8080/api/battles/acceptInvitation/" + inviteToken + "'>Join the gorup!</a>";
+            String link = "<a href='https://api.codekatabattle.it:8443/api/battles/acceptInvitation/" + inviteToken + "'>Join the gorup!</a>";
 
             MessageDTO messageDTO = new MessageDTO(link,"You have been invited to take part in a battle!");
             emails.add(invitedUser.getEmail());
@@ -207,7 +207,12 @@ public class BattleInviteService {
             for (BattleInvite x: invites) {
                 BattleSubscription subscription = new BattleSubscription();
                 subscription.setBattle(battle);
-                subscription.setUser(x.getUser());
+                if(x.getInvitedUser() == null){
+                    subscription.setUser(x.getUser());
+                }
+                else{
+                    subscription.setUser(x.getInvitedUser());
+                }
                 //generate a group id getting the max group id and adding 1
                 subscription.setGroupId(groupId);
                 battleSubscriptionRepository.save(subscription);
@@ -311,10 +316,10 @@ public class BattleInviteService {
         List<BattleInvite> invites = battleInviteRepository.findBattleInvitesByBattle_IdAndState(battleId, BattleInviteStateEnum.ACCEPTED);
         List<User> subscribed = battleSubscriptionRepository.findUsersByBattleId(battleId);
 
-        Stream<User> stream = subscribed.stream();
+        //Stream<User> stream = subscribed.stream();
 
         for(BattleInvite invite : invites){
-            if(stream.noneMatch(x -> Objects.equals(x.getId(), invite.getUser().getId()))) {
+            if(subscribed.stream().noneMatch(x -> Objects.equals(x.getId(), invite.getUser().getId()))) {
                 invite.setState(BattleInviteStateEnum.REJECTED);
                 battleInviteRepository.save(invite);
             }
