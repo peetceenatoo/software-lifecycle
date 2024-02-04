@@ -26,13 +26,12 @@ function TournamentPageViewStudent() {
       if (tournamentId) {
         fetchTournament();
       }
-    }, [tournamentId]);
-  
+    }, [tournamentId]);  
 
     return (
-        <Container fluid className="px-0">
+        <Container fluid className="px-0 min-vh-100">
           <Header className="header-margin"/>
-          <Row className="min-vh-100">
+          <Row>
             <Col md={1}></Col>
             <Col md={3}>
               <div className="ms-2 me-auto">
@@ -50,7 +49,7 @@ function TournamentPageViewStudent() {
             <Col md={1}></Col>
           </Row>
           {Object.keys(tournament).length > 0 && ( // Check if tournament is not empty
-            <Row className="min-vh-100">
+            <Row>
               <Col md={1}></Col>
               <Col md={3} className="my-auto">
                 <BattleList

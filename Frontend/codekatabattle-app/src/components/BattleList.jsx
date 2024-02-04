@@ -45,38 +45,46 @@ const BattleList = ({ type, name, tournamentId}) => {
     <div>
       <h2>{name}</h2>
       <ListGroup className="scrollable">
-        {battles.map((battle) => {
-          if (type === 'Ongoing') {
-            return (
-              <BattleListItemOngoing
-                key={battle.id}
-                id={battle.id}
-                nameTournament={battle.name}
-                subscriptionDeadline={formatDateTime(battle.deadline)}
-                role={localStorage.getItem('role')}
-                status={battle.state}
-              />
-            );
-          } else if (type === 'Managed/Enrolled') {
-            if(localStorage.getItem('role') === 'ROLE_STUDENT') {
+        {battles.length > 0 ? (
+          battles.map((battle) => {
+            if (type === 'Ongoing') {
               return (
-                <BattleListItemInfo
+                <BattleListItemOngoing
                   key={battle.id}
                   id={battle.id}
-                  score= 'X'
+                  nameTournament={battle.name}
+                  subscriptionDeadline={formatDateTime(battle.deadline)}
+                  role={localStorage.getItem('role')}
+                  status={battle.state}
                 />
               );
-            } else {
-              return (
-                <BattleListItemInfo
-                key={battle.id}
-                id={battle.id}
-                score= 'X'
-                />
-              );
+            } else if (type === 'Managed' || type==='Enrolled') {
+              if(localStorage.getItem('role') === 'ROLE_STUDENT') {
+                return (
+                  <BattleListItemInfo
+                    key={battle.id}
+                    id={battle.id}
+                    nameBattle={battle.name}
+                    score= 'X'
+                  />
+                );
+              } else {
+                return (
+                  <BattleListItemInfo
+                  key={battle.id}
+                  id={battle.id}
+                  nameBattle={battle.name}
+                  score = {null}
+                  />
+                );
+              }
             }
-          }
-        })}
+          })
+        ) : 
+        (
+          // If there are no battles, display a message
+          <ListGroup.Item>No battles available</ListGroup.Item>
+        )}
       </ListGroup>
     </div>
   );

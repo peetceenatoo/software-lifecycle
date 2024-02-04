@@ -13,26 +13,39 @@ const CreateBattleForm = ({ tournamentId }) => {
     const [maxGroupSize, setMaxGroupSize] = useState('');
     const [codingLanguage, setCodingLanguage] = useState('');
     const [manualScoring, setManualScoring] = useState(false);
-    const [file, setFile] = useState(null);
+    const [fileProject, setFileProject] = useState(null);
+    const [fileTests, setFileTests] = useState(null);
   
     const handleSubmit = async (event) => {
       event.preventDefault();
       // Construct form data
       const formData = new FormData();
-      formData.append('battleName', battleName);
-      formData.append('subscriptionDeadline', subscriptionDeadline.toISOString());
-      formData.append('endBattleDeadline', endBattleDeadline.toISOString());
-      formData.append('minGroupSize', minGroupSize);
-      formData.append('maxGroupSize', maxGroupSize);
-      formData.append('codingLanguage', codingLanguage);
-      formData.append('manualScoring', manualScoring);
-      if (file) {
-        formData.append('file', file);
+
+      let jsonBattle = {
+        name: battleName,
+        subscriptionDeadline: subscriptionDeadline.toISOString(),
+        submissionDeadline: endBattleDeadline.toISOString(),
+        minStudentsInGroup: minGroupSize,
+        maxStudentsInGroup: maxGroupSize,
+        programmingLanguage: codingLanguage,
+        manualScoring: manualScoring
+      }
+
+      formData.append(
+        'battle', 
+        new Blob([JSON.stringify(jsonBattle)], { type: 'application/json' })
+      );
+
+      if (fileProject) {
+        formData.append('codeZip', fileProject);
+      }
+      if (fileTests) {
+        formData.append('testZip', fileTests);
       }
   
       try {
         // Send a POST request
-        const response = await axios.post(`/${tournamentId}/createBattle`, formData, {
+        const response = await api.post(`/tournaments/${tournamentId}/createBattle`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -40,13 +53,17 @@ const CreateBattleForm = ({ tournamentId }) => {
         console.log(response.data);
         // Handle the response here (e.g., show a success message, redirect, etc.)
       } catch (error) {
-        console.error('Error submitting form', error);
+        console.error(error.response.data);
         // Handle the error here (e.g., show an error message)
       }
     };
   
-    const handleFileChange = (event) => {
-      setFile(event.target.files[0]);
+    const handleFileChangeProject = (event) => {
+      setFileProject(event.target.files[0]);
+    };
+
+    const handleFileChangeTests = (event) => {
+      setFileTests(event.target.files[0]);
     };
 
     return (
@@ -67,21 +84,35 @@ const CreateBattleForm = ({ tournamentId }) => {
                 <Form.Group className="mb-3">
                   <Form.Label className='m-2'>Subscription Deadline</Form.Label>
                   <DatePicker
-                    selected={subscriptionDeadline}
-                    onChange={(date) => setSubscriptionDeadline(date)}
-                    className="form-control"
-                    placeholderText="Select date"
-                  />
+                                selected={subscriptionDeadline}
+                                onChange={(date) => setSubscriptionDeadline(date)}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="time"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                minDate={new Date()}
+                                placeholderText="Select date"
+                                className="form-control"
+                            />
+
                 </Form.Group>
       
                 <Form.Group className="mb-3">
-                  <Form.Label className='m-2'>End Battle Deadline</Form.Label>
+                  <Form.Label className='m-2'>Submission Battle Deadline</Form.Label>
                   <DatePicker
                     selected={endBattleDeadline}
                     onChange={(date) => setEndBattleDeadline(date)}
-                    className="form-control"
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    minDate={new Date()}
                     placeholderText="Select date"
+                    className="form-control"
                   />
+                  
                 </Form.Group>
       
                 <InputGroup className="mb-3">
@@ -101,8 +132,13 @@ const CreateBattleForm = ({ tournamentId }) => {
                 </InputGroup>
       
                 <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Upload Codekata</Form.Label>
-                  <Form.Control type="file" onChange={handleFileChange} />
+                  <Form.Label>Upload CodeKata Project</Form.Label>
+                  <Form.Control type="file" onChange={handleFileChangeProject} />
+                </Form.Group>
+
+                <Form.Group controlId="formFile" className="mb-3">
+                  <Form.Label>Upload CodeKata Tests</Form.Label>
+                  <Form.Control type="file" onChange={handleFileChangeTests} />
                 </Form.Group>
       
                 <Form.Group className="mb-3">
@@ -112,9 +148,9 @@ const CreateBattleForm = ({ tournamentId }) => {
                     onChange={(e) => setCodingLanguage(e.target.value)}
                   >
                     <option>Select language</option>
-                    <option value="python">Python</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="java">Java</option>
+                    <option value="PYTHON">Python</option>
+                    <option value="JAVASCRIPT">JavaScript</option>
+                    <option value="JAVA">Java</option>
                     {/* ... other options ... */}
                   </Form.Select>
                 </Form.Group>

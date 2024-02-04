@@ -32,9 +32,9 @@ function TournamentPageViewEducator() {
   
 
     return (
-        <Container fluid className="px-0">
+      <Container fluid className="px-0 min-vh-100">
           <Header/>
-          <Row>
+          <Row style={{ padding: '20px' }}>
             <Col md={1}></Col>
             <Col md={3}>
               <div className="ms-2 me-auto">
@@ -51,7 +51,7 @@ function TournamentPageViewEducator() {
             </Col>
             <Col md={1}></Col>
           </Row>
-          <Row>
+          <Row style={{ padding: '20px' }}>
             <Col md={1}></Col>
             <Col md={4} className="my-auto d-flex flex-row">
               <h3 className="m-2">Educators Invited</h3>
@@ -59,7 +59,7 @@ function TournamentPageViewEducator() {
             </Col>
           </Row>
           {Object.keys(tournament).length > 0 && ( // Check if tournament is not empty
-          <Row className="min-vh-100">
+          <Row style={{ padding: '20px' }}>
           <Col md={1}></Col>
           <Col md={4} className="my-auto">
             <CreateBattleForm tournamentId={tournamentId} />

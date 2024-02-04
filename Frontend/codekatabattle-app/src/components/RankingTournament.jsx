@@ -33,6 +33,8 @@ const RankingTournament = ({ tournamentId }) => {
     fetchRanking();
   }, [tournamentId]);
 
+
+
   return (
     <div>
       <h3>Ranking</h3>

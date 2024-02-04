@@ -76,10 +76,6 @@ const TournamentsList = ({ type, name}) => {
       <ListGroup className="scrollable">
         {tournaments.map((tournament) => {
           if (type === 'Ongoing') {
-
-            console.log(tournament.deadline);
-            console.log(formatDateTime(tournament.deadline));
-
             return (
               <TournamentListItemOngoing
                 key={tournament.id}
