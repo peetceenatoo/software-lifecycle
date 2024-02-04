@@ -1,0 +1,11 @@
+.heading {
+    color: #4d3455; /* This is a blue color, adjust the hex as needed */
+    font-size: 1.5rem; /* Adjust the size as needed */
+    font-weight: bold;
+  }
+  
+  .status {
+    color: #7ED321; /* This is a green color, adjust the hex as needed */
+    font-size: 1rem; /* Adjust the size as needed */
+  }
+

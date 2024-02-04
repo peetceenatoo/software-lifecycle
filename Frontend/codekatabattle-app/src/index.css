@@ -1,0 +1,38 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+.scrollable {
+  max-height: 500px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+/* Style the scrollbar */
+.scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: #6f42c1;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #492c7f;
+}
