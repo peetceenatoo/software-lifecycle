@@ -36,10 +36,7 @@ const BattleList = ({ type, name, tournamentId}) => {
     fetchBattles();
   }, []);
 
-  const formatDateTime = (dateTime) => {
-  return new Date(dateTime).toLocaleString();
-  };
-
+  
 
   return (
     <div>
@@ -51,9 +48,11 @@ const BattleList = ({ type, name, tournamentId}) => {
               return (
                 <BattleListItemOngoing
                   key={battle.id}
-                  id={battle.id}
+                  battleId={battle.id}
+                  battleState={battle.state}
+                  nameBattle={battle.name}
                   nameTournament={battle.name}
-                  subscriptionDeadline={formatDateTime(battle.deadline)}
+                  subscriptionDeadline={battle.submissionDeadline}
                   role={localStorage.getItem('role')}
                   status={battle.state}
                 />

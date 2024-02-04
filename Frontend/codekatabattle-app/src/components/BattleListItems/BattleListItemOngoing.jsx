@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Container, ListGroup } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Container, ListGroup, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import api from '../../utilities/api';
 
@@ -8,7 +8,7 @@ import api from '../../utilities/api';
 
 
 
-const BattleListItemOngoing = ({ battleId,  nameBattle, subscriptionDeadline, role, status }) => {
+const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptionDeadline, role, status }) => {
   const [show, setShow] = useState(false);
   const [invitations, setInvitations] = useState([]);
   const [username, setUsername] = useState('');
@@ -48,6 +48,10 @@ const BattleListItemOngoing = ({ battleId,  nameBattle, subscriptionDeadline, ro
   }
 
   const isDeadlinePassed = new Date(subscriptionDeadline) < new Date();
+
+  const formatDateTime = (dateTime) => {
+    return new Date(dateTime).toLocaleString();
+  };
 
   return (
     <Container>
@@ -93,7 +97,7 @@ const BattleListItemOngoing = ({ battleId,  nameBattle, subscriptionDeadline, ro
       <div className="ms-2 me-auto">
         <div className="fw-bold">#{battleId} - {nameBattle}</div>
         <div style={{ color: isDeadlinePassed ? 'red' : 'green' }}>
-          {isDeadlinePassed ? status : subscriptionDeadline}
+        {battleState } - {isDeadlinePassed ? status : formatDateTime(subscriptionDeadline)}
         </div>
       </div>
       <Button className="me-2" >Info</Button>
