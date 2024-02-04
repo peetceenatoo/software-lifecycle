@@ -350,7 +350,8 @@ public class BattleService {
             FileUtils.deleteDirectory(testDir);
         }
         catch(IOException e){
-            throw new InternalErrorException("File system error while extracting the zip files.");
+            //Do nothing... we'll cleanup later
+            //throw new InternalErrorException("File system error while extracting the zip files.");
         }
 
         // Register an after-commit lambda
