@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import './custom.scss';
+import BattlePage from "./routes/BattlePage";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <TournamentPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/battle/:battleId", // Add this route
+    element: (
+      <ProtectedRoute>
+        <BattlePage />
       </ProtectedRoute>
     ),
   },

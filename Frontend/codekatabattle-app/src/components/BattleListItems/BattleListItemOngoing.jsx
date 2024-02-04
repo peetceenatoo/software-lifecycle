@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Container, ListGroup, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import api from '../../utilities/api';
+import { useNavigate } from 'react-router-dom';
 
 // TODO: check the numbers of invitations
 
@@ -12,6 +13,11 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
   const [show, setShow] = useState(false);
   const [invitations, setInvitations] = useState([]);
   const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+
+  const handleInfoClick = () => {
+    navigate(`/battle/${battleId}`);
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -26,6 +32,12 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
       }
   };
 
+  const handleInvite = () => {
+    addInvitation();
+    handleClose();
+  };
+
+
   const deleteInvitation = (usernameToDelete) => {
       setInvitations(invitations.filter((uname) => uname !== usernameToDelete));
   };
@@ -36,19 +48,22 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
       educatorsInvited: invitations,
     };
 
+    console.log(data);
+    console.log(battleId);
 
-    api.post(`/tournaments/${battleId}/enroll`, data)
+    api.post(`/battles/${battleId}/enroll`, invitations)
       .then((response) => {
         console.log(response);
-        console.log('Enrolled in tournament', response.data);
+        console.log('Enrolled in Battle', response.data);
       })
       .catch((error) => {
-        console.error('Error enrolling in tournament', error);
+        console.error('Error enrolling in Battle', error);
       });
   }
 
   const isSubscriptionDeadlinePassed = new Date(subscriptionDeadline) < new Date();
   const isSubmissionDeadlinePassed = new Date(submissionDeadline) < new Date();
+  
 
   const formatDateTime = (dateTime) => {
     return new Date(dateTime).toLocaleString();
@@ -97,12 +112,16 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
                     </ListGroup>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
+                    <Button variant="secondary" onClick={handleInvite}>
+                      Invite
                     </Button>
                     <Button variant="primary" onClick={addInvitation}>
                         Add
                     </Button>
+                    <Button variant="primary" onClick={handleEnroll}>
+                      Enroll
+                    </Button>
+                    
                 </Modal.Footer>
             </Modal>
     <ListGroup.Item className="d-flex justify-content-between align-items-start">
@@ -113,9 +132,9 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
           </div>
         </div>
       
-      <Button className="me-2" >Info</Button>
+      <Button className="me-2" onClick={handleInfoClick}>Info</Button>
       {/* Only show Join button if user is a student */}
-      {role === 'ROLE_STUDENT' && battleState === 'SUBSCRIPTION' && <Button variant={isSubscriptionDeadlinePassed && isSubmissionDeadlinePassed ? 'secondary' : 'primary'} onClick={handleEnroll} disabled={isSubscriptionDeadlinePassed}>Join</Button>}
+      {role === 'ROLE_STUDENT' && battleState === 'SUBSCRIPTION' && <Button variant={isSubscriptionDeadlinePassed && isSubmissionDeadlinePassed ? 'secondary' : 'primary'} onClick={handleShow} disabled={isSubscriptionDeadlinePassed}>Join</Button>}
     </ListGroup.Item>
     </Container>
   );
