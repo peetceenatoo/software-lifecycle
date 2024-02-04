@@ -52,7 +52,7 @@ const RankingTournament = ({ tournamentId }) => {
               <RankingTournamentItem
                 key={index}
                 rank={index + 1}
-                name={item.name}
+                name={item.username}
                 score={item.score}
               />
             ))
