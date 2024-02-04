@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Header from "../components/Header";
 
@@ -7,6 +7,15 @@ import TournamentsList from "../components/TournamentsList";
 import CreateTournament from "../components/CreateTournament";
 
 function HomePage() {
+
+    const [refreshTournaments, setRefreshTournaments] = useState(false);
+
+    // Function to toggle the refresh state
+    const handleRefresh = () => {
+        setRefreshTournaments(prev => !prev);
+    };
+
+
     return (
         <Container fluid className="px-0">
             <Header />
@@ -14,7 +23,7 @@ function HomePage() {
             <Row>
                 <Col md={3}></Col>
                 <Col md={6} className="my-auto">
-                    <CreateTournament />
+                    <CreateTournament onCreationSuccess={handleRefresh}/>
                 </Col>
                 <Col md={3}></Col>
             </Row>
@@ -25,6 +34,7 @@ function HomePage() {
                     <TournamentsList
                     type = "Ongoing"
                     name = "Available Tournaments"
+                    refreshKey={refreshTournaments}
                     />
                 </Col>
                 <Col md={2}></Col>
@@ -32,6 +42,7 @@ function HomePage() {
                     <TournamentsList
                     type = "Managed/Enrolled"
                     name = "Your Tournaments"
+                    refreshKey={refreshTournaments}
                     />
                 </Col>
                 <Col md={1}></Col>

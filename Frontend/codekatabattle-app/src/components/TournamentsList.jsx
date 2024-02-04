@@ -6,7 +6,7 @@ import TournamentListItemManaged from './TournamentListItems/TournamentListItemM
 import TournamentListItemOngoing from './TournamentListItems/TournamentListItemOngoing';
 import api from '../utilities/api';
 
-const TournamentsList = ({ type, name}) => {
+const TournamentsList = ({ type, name, refreshKey}) => {
   const [tournaments, setTournaments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -25,29 +25,33 @@ const TournamentsList = ({ type, name}) => {
     }
   };
 
-  useEffect(() => {
-    const fetchTournaments = async () => {
-      try {
-        let response = null;
-        if(type == 'Ongoing') {
-          //response = await api.get('/tournaments/state/ONGOING'); // Update the API endpoint as needed
-          response = await api.get('/tournaments');
-        }else if(type == 'Managed/Enrolled') {
-          if(localStorage.getItem('role') == 'ROLE_STUDENT')
-            response = await api.get('/tournaments/enrolled'); // Update the API endpoint as needed
-          else
-            response = await api.get('/tournaments/managed'); // Update the API endpoint as needed
-        }
-        console.log(response.data);
-        setTournaments(response.data);
-      } catch (error) {
-        console.error('Error fetching tournaments', error);
+  const fetchTournaments = async () => {
+    try {
+      let response = null;
+      if(type == 'Ongoing') {
+        //response = await api.get('/tournaments/state/ONGOING'); // Update the API endpoint as needed
+        response = await api.get('/tournaments');
+      }else if(type == 'Managed/Enrolled') {
+        if(localStorage.getItem('role') == 'ROLE_STUDENT')
+          response = await api.get('/tournaments/enrolled'); // Update the API endpoint as needed
+        else
+          response = await api.get('/tournaments/managed'); // Update the API endpoint as needed
       }
-    };
+      console.log(response.data);
+      setTournaments(response.data);
+    } catch (error) {
+      console.error('Error fetching tournaments', error);
+    }
+  };
 
-
+  useEffect(() => {
     fetchTournaments();
   }, []);
+
+  useEffect(() => {
+    // Function to fetch tournaments list
+    fetchTournaments();
+  }, [refreshKey]);
 
    // Function to handle the search button click
    const handleSearchClick = () => {

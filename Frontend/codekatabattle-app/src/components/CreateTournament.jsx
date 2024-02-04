@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios'; // Make sure to import axios
 import api from '../utilities/api';
 
-const CreateTournament = () => {
+const CreateTournament = ({ onCreationSuccess }) => {
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [tournamentName, setTournamentName] = useState(''); // State for tournament name
@@ -44,6 +44,7 @@ const CreateTournament = () => {
           .then(response => {
             console.log('Tournament created successfully:', response.data);
             // You might want to clear the form here or provide some notification to the user
+            onCreationSuccess();
             handleClose(); // Close the modal after submitting
           })
           .catch(error => {
