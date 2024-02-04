@@ -12,6 +12,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "BattleScores")
 public class BattleScore {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 

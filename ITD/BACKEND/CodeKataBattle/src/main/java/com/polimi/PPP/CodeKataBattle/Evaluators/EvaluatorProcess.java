@@ -52,7 +52,7 @@ public class EvaluatorProcess {
 
         Float functionalScore;
         try{
-            functionalScore = evaluator.scoreOfFunctionalTests(submissionDTO);
+            functionalScore = 100 * evaluator.scoreOfFunctionalTests(submissionDTO);
         }catch (ErrorDuringEvaluationException ex){
             //TODO: Handle error, set submission status to error and post log
 
@@ -71,7 +71,7 @@ public class EvaluatorProcess {
 
         Float staticAnalysisScore;
         try{
-            staticAnalysisScore = evaluator.scoreOfStaticAnalysis(submissionDTO);
+            staticAnalysisScore = 100 * evaluator.scoreOfStaticAnalysis(submissionDTO);
         }catch (ErrorDuringEvaluationException ex){
             //TODO: Handle error, set submission status to error and post log
             try{
@@ -91,7 +91,7 @@ public class EvaluatorProcess {
         Timestamp submissionTimestamp =submissionDTO.getTimestamp();
 
         // 100 if submitted at subscriptionDeadline, 0 if submitted at submissionDeadline
-        Float timelinessScore = 100 - (float) (submissionTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) / (float) (submissionDeadlineTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) * 100;
+        Float timelinessScore = (1 - (float) (submissionTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) / (float) (submissionDeadlineTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime())) * 100;
 
         Float automaticScore = (functionalScore + timelinessScore + staticAnalysisScore) / 3;
 
@@ -102,6 +102,10 @@ public class EvaluatorProcess {
                     "Log publishing yet to be implemented");
         }catch (InvalidSubmissionStateException e){
             // Do nothing
+            submissionService.createSubmissionScore(submissionDTO.getId(),
+                    SubmissionStateEnum.FAILED,
+                    0,
+                    "Log publishing yet to be implemented");
         }
 
         evaluator.cleanUp();
