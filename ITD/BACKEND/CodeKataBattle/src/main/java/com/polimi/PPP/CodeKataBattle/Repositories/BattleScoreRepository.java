@@ -16,16 +16,9 @@ public interface BattleScoreRepository extends JpaRepository<BattleScore, Long> 
 
 
     @Query(
-            value = "SELECT new com.polimi.PPP.CodeKataBattle.DTOs.BattleRankingGroupDTO(bs.groupId, MAX(bScore.automaticScore + COALESCE(bScore.manualCorrection, 0))) " +
-                    "FROM Submission sub " +
-                    "JOIN sub.user u " +
-                    "JOIN BattleSubscription bs ON bs.user.id = u.id AND bs.battle.id = sub.battle.id " +
-                    "JOIN BattleScore bScore ON bScore.submission.id = sub.id " +
-                    "WHERE sub.battle.id = :battleId " +
-                    "GROUP BY bs.groupId " +
-                    "ORDER BY MAX(bScore.automaticScore + COALESCE(bScore.manualCorrection, 0)) DESC"
+            value = "SELECT bestScore, group_id FROM BestBattleScores WHERE battle_fk = :battleId", nativeQuery = true
     )
-    List<BattleRankingGroupDTO> calculateStudentRankingForBattle(Long battleId);
+    List<Object[]> calculateStudentRankingForBattle(Long battleId);
 
 }
 

@@ -193,25 +193,24 @@ public class BattleService {
         if (!userHasPermissionToBattle(user, battleId)) {
             throw new InvalidArgumentException("User not enrolled in the battle");
         }
-        List<BattleRankingGroupDTO> group_ranking = battleScoreRepository.calculateStudentRankingForBattle(battleId);
+
+        List<Object[]> group_ranking = battleScoreRepository.calculateStudentRankingForBattle(battleId);
+
         List<BattleRankingDTO> ranking = new ArrayList<>();
-        for (BattleRankingGroupDTO x: group_ranking) {
-            List<String> usernames = battleSubscriptionRepository.findUsernamesByBattleId(battleId, x.getGroupId());
+        for (Object[] x: group_ranking) {
+
+            long group_id = ((Number) x[1]).longValue();
+            int score = ((Number) x[0]).intValue();
+
+            List<String> usernames = battleSubscriptionRepository.findUsernamesByBattleId(battleId, group_id);
             BattleRankingDTO battleRankingDTO = new BattleRankingDTO();
-            battleRankingDTO.setGroupId(x.getGroupId());
+            battleRankingDTO.setGroupId(group_id);
             battleRankingDTO.setUsernames(usernames);
-            battleRankingDTO.setHighestScore(x.getHighestScore());
+            battleRankingDTO.setHighestScore(score);
             ranking.add(battleRankingDTO);
         }
         return ranking;
     }
-
-
-
-
-
-
-
 
 
     public BattleDTO getBattleById(Long battleId) {
