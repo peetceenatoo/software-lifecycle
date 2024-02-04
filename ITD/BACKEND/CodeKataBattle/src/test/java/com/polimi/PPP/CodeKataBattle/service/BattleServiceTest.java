@@ -548,6 +548,15 @@ class BattleServiceTest {
 
         List<BattleRankingGroupDTO> battleRankingGroupDTOList = new ArrayList<>();
 
+        List<Object[]> battleRankingGroupDTOArray = new ArrayList<>();
+
+        for(int i = 0;i< 3;i++){
+            Object[] obj = new Object[2];
+            obj[0] = 100 - 10 * i;
+            obj[1] = groupId + i;
+            //battleRankingGroupDTOArray.add(obj);
+        }
+
         for(int i = 0; i < 3; i ++) {
             BattleRankingGroupDTO battleRankingGroupDTO1 = new BattleRankingGroupDTO();
             battleRankingGroupDTO1.setGroupId(groupId + i);
@@ -568,7 +577,7 @@ class BattleServiceTest {
 
         when(battleSubscriptionRepository.getBattleSubscriptionByBattleIdAndUserId(battleId, userId)).thenReturn(Optional.of(battleSubscription));
         when(battleRepository.findById(battleId)).thenReturn(Optional.of(battle));
-        when(battleScoreRepository.calculateStudentRankingForBattle(battleId)).thenReturn(battleRankingGroupDTOList);
+        when(battleScoreRepository.calculateStudentRankingForBattle(battleId)).thenReturn(battleRankingGroupDTOArray);
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId)).thenReturn(usernamesList.get(0));
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 1)).thenReturn(usernamesList.get(1));
         when(battleSubscriptionRepository.findUsernamesByBattleId(battleId, groupId + 2)).thenReturn(usernamesList.get(2));
