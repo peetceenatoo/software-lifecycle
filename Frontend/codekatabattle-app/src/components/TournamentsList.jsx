@@ -55,8 +55,8 @@ const TournamentsList = ({ type, name}) => {
   };
 
   const formatDateTime = (dateTime) => {
-  return new Date(dateTime).toLocaleString();
-};
+    return new Date(dateTime).toLocaleString();
+  };
 
 
   return (
@@ -76,12 +76,16 @@ const TournamentsList = ({ type, name}) => {
       <ListGroup className="scrollable">
         {tournaments.map((tournament) => {
           if (type === 'Ongoing') {
+
+            console.log(tournament.deadline);
+            console.log(formatDateTime(tournament.deadline));
+
             return (
               <TournamentListItemOngoing
                 key={tournament.id}
                 id={tournament.id}
                 nameTournament={tournament.name}
-                subscriptionDeadline={formatDateTime(tournament.deadline)}
+                subscriptionDeadline={tournament.deadline}
                 role={localStorage.getItem('role')}
                 status={tournament.state}
               />

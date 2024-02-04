@@ -23,6 +23,10 @@ const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, r
       });
   }
 
+  const formatDateTime = (dateTime) => {
+    return new Date(dateTime).toLocaleString();
+  };
+
   const isDeadlinePassed = new Date(subscriptionDeadline) < new Date();
 
   return (
@@ -30,7 +34,7 @@ const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, r
       <div className="ms-2 me-auto">
         <div className="fw-bold">#{id} - {nameTournament}</div>
         <div style={{ color: isDeadlinePassed ? 'red' : 'green' }}>
-          {isDeadlinePassed ? status : subscriptionDeadline}
+          {isDeadlinePassed ? status : formatDateTime(subscriptionDeadline)}
         </div>
       </div>
       <Button className="me-2" onClick={handleInfoClick}>Info</Button>
