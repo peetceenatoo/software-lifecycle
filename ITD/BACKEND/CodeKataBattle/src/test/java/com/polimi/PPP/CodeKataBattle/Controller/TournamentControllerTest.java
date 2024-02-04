@@ -107,7 +107,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseStudentLogin = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/users/login")
                                 .contentType("application/json")
-                                .content(objectMapper.writeValueAsBytes(studLogin)))
+                                .content(objectMapper.writeValueAsBytes(studLogin)).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, responseStudentLogin.getStatus());
@@ -115,7 +115,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseEducatorLogin = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/users/login")
                                 .contentType("application/json")
-                                .content(objectMapper.writeValueAsBytes(eduLogin))).andReturn().getResponse();
+                                .content(objectMapper.writeValueAsBytes(eduLogin)).secure(true)).andReturn().getResponse();
 
         assertEquals(200, responseEducatorLogin.getStatus());
 
@@ -143,7 +143,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -151,20 +151,20 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                         .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
 
         ObjectMapper objectMapper = new ObjectMapper();
-
+        objectMapper.findAndRegisterModules();
 
         List<TournamentDTO> tournaments = objectMapper.readValue(response.getContentAsString(), List.class);
 
@@ -189,7 +189,7 @@ class TournamentControllerTest {
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/create")
                                 .contentType("application/json")
                                 .header("Authorization", "Bearer " + this.educatorToken)
-                                .content(objectMapper.writeValueAsBytes(failedTournamentCreationDTO)))
+                                .content(objectMapper.writeValueAsBytes(failedTournamentCreationDTO)).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response.getStatus());
@@ -203,7 +203,7 @@ class TournamentControllerTest {
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/create")
                                 .contentType("application/json")
                                 .header("Authorization", "Bearer " + this.educatorToken)
-                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)))
+                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response3.getStatus());
@@ -216,7 +216,7 @@ class TournamentControllerTest {
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/create")
                                 .contentType("application/json")
                                 .header("Authorization", "Bearer " + this.studentToken)
-                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)))
+                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, response4.getStatus());
@@ -224,7 +224,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/create")
                                 .contentType("application/json")
-                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)))
+                                .content(objectMapper.writeValueAsBytes(tournamentCreationDTO)).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -240,14 +240,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/managed")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/managed")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -255,7 +255,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseStudent = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/managed")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseStudent.getStatus());
@@ -275,14 +275,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/enrolled")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/enrolled")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -290,7 +290,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseEducator = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/enrolled")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseEducator.getStatus());
@@ -310,7 +310,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/enrolled")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -323,7 +323,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/1/enroll")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
@@ -331,7 +331,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/enrolled")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response3.getStatus());
@@ -343,7 +343,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response4 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/1/enroll")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response4.getStatus());
@@ -351,14 +351,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response5 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/1/enroll")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, response5.getStatus());
 
         final MockHttpServletResponse response6 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/1/enroll")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, response6.getStatus());
@@ -372,7 +372,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/1")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -380,14 +380,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/1")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/1")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -402,7 +402,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/-1")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response3.getStatus());
@@ -422,7 +422,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse responseEdu = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/SUBSCRIPTION")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, responseEdu.getStatus());
@@ -430,7 +430,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/SUBSCRIPTION")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -444,7 +444,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/ONGOING")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
@@ -454,7 +454,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/ENDED")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response3.getStatus());
@@ -464,7 +464,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response4 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/HFHFHFHF")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response4.getStatus());
@@ -472,14 +472,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response5 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(404, response5.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/state/SUBSCRIPTION")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -496,7 +496,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/search/ourn")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -508,7 +508,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/search/ourn")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
@@ -519,7 +519,7 @@ class TournamentControllerTest {
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/search/ourn")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -527,7 +527,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/search/voihvsdoifhosdihf")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response3.getStatus());
@@ -539,7 +539,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response4 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/search/1")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response4.getStatus());
@@ -585,7 +585,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -599,7 +599,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.studentToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -613,7 +613,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -627,7 +627,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -641,7 +641,7 @@ class TournamentControllerTest {
                                 .file(getBadZip1("testZippppppp"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -655,7 +655,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -668,7 +668,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -694,7 +694,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -712,7 +712,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -730,7 +730,7 @@ class TournamentControllerTest {
                                 .file(getGoodZip("testZip"))
                                 .contentType(MediaType.MULTIPART_FORM_DATA)
                                 .header("Authorization", "Bearer " + this.educatorToken)
-
+                                .secure(true)
                 )
 
                 .andReturn().getResponse();
@@ -790,7 +790,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response.getStatus());
@@ -802,7 +802,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response2.getStatus());
@@ -813,7 +813,7 @@ class TournamentControllerTest {
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/"+tournamentId+"/battles")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
@@ -821,7 +821,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/tournaments/7757577575/battles")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response3.getStatus());
@@ -878,7 +878,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.studentToken))
+                                .header("Authorization", "Bearer " + this.studentToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, response.getStatus());
@@ -886,7 +886,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response2 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         // Ongoing battle
@@ -903,7 +903,7 @@ class TournamentControllerTest {
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/"+tournamentId+"/close")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(200, response3.getStatus());
@@ -911,14 +911,14 @@ class TournamentControllerTest {
         final MockHttpServletResponse response4 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/86868686868/close")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + this.educatorToken))
+                                .header("Authorization", "Bearer " + this.educatorToken).secure(true))
                 .andReturn().getResponse();
 
         assertEquals(400, response4.getStatus());
 
         final MockHttpServletResponse responseNoAuth = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/86868686868/close")
-                                .contentType("application/json"))
+                                .contentType("application/json").secure(true))
                 .andReturn().getResponse();
 
         assertEquals(401, responseNoAuth.getStatus());
