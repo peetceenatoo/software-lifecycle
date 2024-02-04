@@ -23,7 +23,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     @Query(value = "SELECT s.id, s.timestamp, s.repository_url, s.commit_hash, bs.automatic_score, bs.manual_correction, bs.log_scoring, bsub.group_id\n" +
             "FROM submissions s " +
-            "    JOIN se_project.battle_scores bs on s.id = bs.submission_fk " +
+            "    JOIN battle_scores bs on s.id = bs.submission_fk " +
             "    JOIN battle_subscriptions bsub on (bsub.battle_id = s.battle_fk and bsub.user_id = s.user_fk) " +
             "where battle_id=:battleId and group_id = (SELECT group_id FROM battle_subscriptions " +
             "                                  WHERE battle_id = :battleId AND user_id = :userId)", nativeQuery = true)
@@ -31,7 +31,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     @Query(value = "SELECT s.id, s.timestamp, s.repository_url, s.commit_hash, bs.automatic_score, bs.manual_correction, bs.log_scoring, bsub.group_id\n" +
             "FROM submissions s " +
-            "    JOIN se_project.battle_scores bs on s.id = bs.submission_fk " +
+            "    JOIN battle_scores bs on s.id = bs.submission_fk " +
             "    JOIN battle_subscriptions bsub on (bsub.battle_id = s.battle_fk and bsub.user_id = s.user_fk) " +
             "where battle_id=:battleId and group_id IN (SELECT group_id FROM battle_subscriptions " +
             "                                  WHERE battle_id = :battleId)", nativeQuery = true)
