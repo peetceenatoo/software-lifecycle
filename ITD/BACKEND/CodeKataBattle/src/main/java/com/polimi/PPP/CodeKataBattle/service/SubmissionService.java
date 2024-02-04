@@ -131,18 +131,51 @@ public class SubmissionService {
 
 
     public List<GroupSubmissionDTO> getSubmissionsByUserGroupInBattle(Long userId, Long battleId) {
-        return submissionRepository.findSubmissionsByUserGroupInBattle(userId, battleId);
+
+
+        List<Object[]> submissions = submissionRepository.findSubmissionsByUserGroupInBattle(userId, battleId);
+
+        List<GroupSubmissionDTO> groupSubmissions = new ArrayList<>();
+
+        for (Object[] submission : submissions) {
+            GroupSubmissionDTO groupSubmission = new GroupSubmissionDTO();
+            groupSubmission.setSubmissionId(((Number) submission[0]).longValue());
+            groupSubmission.setSubmissionTimestamp((Timestamp) submission[1]);
+            groupSubmission.setRepositoryUrl((String) submission[2]);
+            groupSubmission.setCommitHash((String) submission[3]);
+            groupSubmission.setAutomaticScore((Integer) submission[4]);
+            groupSubmission.setManualCorrection((Integer) submission[5]);
+            groupSubmission.setLogScoring((String) submission[6]);
+            groupSubmission.setGroupId(((Number) submission[7]).longValue());
+            groupSubmissions.add(groupSubmission);
+        }
+
+
+
+
+        return groupSubmissions;
     }
     public List<GroupSubmissionDTO> getAllSubmissionsWithScoresByBattle(Long battleId) {
-        return submissionRepository.findAllSubmissionsWithScoresByBattleId(battleId);
+
+        List<Object[]> submissions = submissionRepository.findAllSubmissionsWithScoresByBattleId(battleId);
+
+        List<GroupSubmissionDTO> groupSubmissions = new ArrayList<>();
+
+        for (Object[] submission : submissions) {
+            GroupSubmissionDTO groupSubmission = new GroupSubmissionDTO();
+            groupSubmission.setSubmissionId(((Number) submission[0]).longValue());
+            groupSubmission.setSubmissionTimestamp((Timestamp) submission[1]);
+            groupSubmission.setRepositoryUrl((String) submission[2]);
+            groupSubmission.setCommitHash((String) submission[3]);
+            groupSubmission.setAutomaticScore((Integer) submission[4]);
+            groupSubmission.setManualCorrection((Integer) submission[5]);
+            groupSubmission.setLogScoring((String) submission[6]);
+            groupSubmission.setGroupId(((Number) submission[7]).longValue());
+            groupSubmissions.add(groupSubmission);
+        }
+
+
+        return groupSubmissions;
     }
-
-    public Map<Long, List<GroupSubmissionDTO>> getSubmissionsGroupedByGroupInBattle(Long battleId) {
-        List<GroupSubmissionDTO> submissions = submissionRepository.findAllSubmissionsWithScoresByBattleId(battleId);
-
-        // Grouping the submissions by groupId
-        return submissions.stream().collect(Collectors.groupingBy(GroupSubmissionDTO::getGroupId));
-    }
-
 
 }
