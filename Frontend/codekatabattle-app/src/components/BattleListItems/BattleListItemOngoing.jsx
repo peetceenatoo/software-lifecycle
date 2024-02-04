@@ -8,7 +8,7 @@ import api from '../../utilities/api';
 
 
 
-const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptionDeadline, role, status }) => {
+const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptionDeadline, submissionDeadline, role, status }) => {
   const [show, setShow] = useState(false);
   const [invitations, setInvitations] = useState([]);
   const [username, setUsername] = useState('');
@@ -47,11 +47,23 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
       });
   }
 
-  const isDeadlinePassed = new Date(subscriptionDeadline) < new Date();
+  const isSubscriptionDeadlinePassed = new Date(subscriptionDeadline) < new Date();
+  const isSubmissionDeadlinePassed = new Date(submissionDeadline) < new Date();
 
   const formatDateTime = (dateTime) => {
     return new Date(dateTime).toLocaleString();
   };
+
+  function renderDeadline(state, subscriptionDeadline, submissionDeadline) {
+    if (state === 'SUBSCRIPTION') {
+      return formatDateTime(subscriptionDeadline);
+    } else if (state === 'ONGOING') {
+      return formatDateTime(submissionDeadline);
+    }
+    // Optionally return something if neither condition is met
+    return null;
+  }
+  
 
   return (
     <Container>
@@ -96,13 +108,14 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
     <ListGroup.Item className="d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
         <div className="fw-bold">#{battleId} - {nameBattle}</div>
-        <div style={{ color: isDeadlinePassed ? 'red' : 'green' }}>
-        {battleState } - {isDeadlinePassed ? status : formatDateTime(subscriptionDeadline)}
+          <div style={{ color: isSubscriptionDeadlinePassed && isSubmissionDeadlinePassed ? 'red' : 'green' }}>
+            {battleState} - {renderDeadline(battleState, subscriptionDeadline, submissionDeadline)}
+          </div>
         </div>
-      </div>
+      
       <Button className="me-2" >Info</Button>
       {/* Only show Join button if user is a student */}
-      {role === 'ROLE_STUDENT' && <Button  variant={isDeadlinePassed ? 'secondary' : 'primary'} onClick={handleEnroll} disabled={isDeadlinePassed}>Join</Button>}
+      {role === 'ROLE_STUDENT' && battleState === 'SUBSCRIPTION' && <Button variant={isSubscriptionDeadlinePassed && isSubmissionDeadlinePassed ? 'secondary' : 'primary'} onClick={handleEnroll} disabled={isSubscriptionDeadlinePassed}>Join</Button>}
     </ListGroup.Item>
     </Container>
   );

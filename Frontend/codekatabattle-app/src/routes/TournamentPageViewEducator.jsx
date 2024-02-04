@@ -39,7 +39,7 @@ function TournamentPageViewEducator() {
             <Col md={3}>
               <div className="ms-2 me-auto">
                 {/* Apply the heading class here */}
-                <h1 className="heading">#{tournament.id} - {tournament.name}</h1>
+                <h1 className="heading">Tournament #{tournament.id} - {tournament.name}</h1>
               </div>
             </Col>
             <Col md={4}></Col>

@@ -52,7 +52,8 @@ const BattleList = ({ type, name, tournamentId}) => {
                   battleState={battle.state}
                   nameBattle={battle.name}
                   nameTournament={battle.name}
-                  subscriptionDeadline={battle.submissionDeadline}
+                  submissionDeadline={battle.submissionDeadline}
+                  subscriptionDeadline={battle.subscriptionDeadline}
                   role={localStorage.getItem('role')}
                   status={battle.state}
                 />
