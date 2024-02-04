@@ -19,6 +19,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -208,8 +209,19 @@ public class TournamentService {
     }
 
     public List<TournamentRankingDTO> getTournamentRanking(Long tournamentId){
-        List<TournamentRankingDTO> ranking = tournamentRepository.calculateStudentRankingForTournament(tournamentId);
-        return ranking;
+
+        if (tournamentRepository.findById(tournamentId).isEmpty()){
+            throw new IllegalArgumentException("Tournament not found");
+        }
+
+        List<Object[]> results = tournamentRepository.calculateStudentRankingForTournament(tournamentId);
+        List<TournamentRankingDTO> rankings = new ArrayList<>();
+        for (Object[] result : results) {
+            String username = (String) result[0];
+            Long totalScore = ((Number) result[1]).longValue(); // Convert to Long, assuming SUM returns a numeric type
+            rankings.add(new TournamentRankingDTO(username, totalScore));
+        }
+        return rankings;
     }
 
     public List<TournamentDTO> searchTournamentsByKeywordAndState(String keyword, TournamentStateEnum state) {

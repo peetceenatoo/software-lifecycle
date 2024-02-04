@@ -28,14 +28,14 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
             "WHERE u.id = :userId AND t.id = :tournamentId")
     Boolean hasUserRightsOnTournament(@Param("userId") Long userId, @Param("tournamentId") Long tournamentId);
 
-    @Query(value = "SELECT new com.polimi.PPP.CodeKataBattle.DTOs.TournamentRankingDTO(u.username, SUM(v.bestScore)) " +
+    @Query(value = "SELECT u.username, SUM(v.bestScore) as totalScore " +
             "FROM BestBattleScores v " +
-            "JOIN Users u ON v.user_id = u.id " +
-            "JOIN Battles b ON v.battle_id = b.id " +
-            "WHERE v.tournament_id = :tournamentId " +
+            "JOIN users u ON v.user_id = u.id " +
+            "JOIN battles b ON v.battle_id = b.id " +
+            "WHERE b.tournament_fk = :tournamentId " +
             "GROUP BY u.username " +
-            "ORDER BY SUM(v.bestScore) DESC", nativeQuery = true)
-    List<TournamentRankingDTO> calculateStudentRankingForTournament(@Param("tournamentId") Long tournamentId);
+            "ORDER BY totalScore DESC", nativeQuery = true)
+    List<Object[]> calculateStudentRankingForTournament(@Param("tournamentId") Long tournamentId);
 
 
 }
