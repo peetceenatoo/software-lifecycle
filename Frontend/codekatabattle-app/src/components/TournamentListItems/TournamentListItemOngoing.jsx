@@ -2,9 +2,15 @@ import React from 'react';
 import { Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import api from '../../utilities/api';
-
+import { useNavigate } from 'react-router-dom';
 
 const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, role, status }) => {
+
+  const navigate = useNavigate();
+
+  const handleInfoClick = () => {
+    navigate(`/tournament/${id}`);
+  };
 
   const handleEnroll = async () => {
     api.post(`/tournaments/${id}/enroll`, {})
@@ -27,7 +33,7 @@ const TournamentListItemOngoing = ({ id, nameTournament, subscriptionDeadline, r
           {isDeadlinePassed ? status : subscriptionDeadline}
         </div>
       </div>
-      <Button className="me-2" >Info</Button>
+      <Button className="me-2" onClick={handleInfoClick}>Info</Button>
       {/* Only show Join button if user is a student */}
       {role === 'ROLE_STUDENT' && <Button  variant={isDeadlinePassed ? 'secondary' : 'primary'} onClick={handleEnroll} disabled={isDeadlinePassed}>Join</Button>}
     </ListGroup.Item>

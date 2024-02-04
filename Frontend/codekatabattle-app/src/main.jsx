@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import LoginPage from "./routes/LoginPage";
 import SignupPage from "./routes/SignupPage";
 import HomePage from "./routes/HomePage";
+import TournamentPage from "./routes/TournamentPageViewStudent"; // Import TournamentPage
 import ProtectedRoute from "./components/ProtectedRoute";
 import {
   createBrowserRouter,
@@ -21,6 +22,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <HomePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/tournament/:tournamentId", // Add this route
+    element: (
+      <ProtectedRoute>
+        <TournamentPage />
       </ProtectedRoute>
     ),
   },
