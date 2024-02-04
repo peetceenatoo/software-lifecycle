@@ -143,7 +143,7 @@ public class TournamentController extends AuthenticatedController{
 
     @PostMapping("/{tournamentId}/createBattle")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
-    public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
+    public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") @Valid BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
         BattleDTO battle = battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
         return ResponseEntity.ok(battle);
     }

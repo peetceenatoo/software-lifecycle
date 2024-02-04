@@ -37,7 +37,7 @@ public class BattleCreationDTO {
     @NotNull(message = "manualScoringRequired is mandatory")
     private boolean manualScoringRequired;
 
-    @NotBlank(message = "programmingLanguage is mandatory")
+    @NotNull(message = "programmingLanguage is mandatory")
     private ProgrammingLanguageEnum programmingLanguage;
 }
 
