@@ -20,12 +20,13 @@ function LoginPage() {
   };
 
   const login = (credentials) => {
-    axios.post('https://localhost:8443/api/users/login', credentials)
+    axios.post('https://api.codekatabattle.it:8443/api/users/login', credentials)
       .then(response => {
         console.log('Login Success:', response.data);
         const token = response.data.token;
         localStorage.setItem('token', token);
         localStorage.setItem('role', response.data.role);
+        localStorage.setItem('username', response.data.username);
         navigate('/home');
       })
 

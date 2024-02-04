@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://localhost:8443/api',
+  baseURL: 'https://api.codekatabattle.it:8443/api',
 });
 
 // Add a request interceptor
