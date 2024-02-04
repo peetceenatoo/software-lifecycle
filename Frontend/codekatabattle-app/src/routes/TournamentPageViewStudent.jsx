@@ -44,7 +44,7 @@ function TournamentPageViewStudent() {
             <Col md={3}>
               <div className="ms-2 me-auto">
                 {/* Apply the status-ongoing class here */}
-                <div className="status">Status: {tournament.state}</div>
+                <h3>Status: {tournament.state}</h3>
               </div>
             </Col>
             <Col md={1}></Col>
@@ -68,7 +68,7 @@ function TournamentPageViewStudent() {
                 />
               </Col>
               <Col md={1}></Col>
-              <Col md={3} className="my-auto">
+              <Col md={2} className="my-auto">
                 <RankingTournament
                   tournamentId={tournamentId}
                 />

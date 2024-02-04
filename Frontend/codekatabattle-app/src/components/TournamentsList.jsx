@@ -6,7 +6,8 @@ import TournamentListItemManaged from './TournamentListItems/TournamentListItemM
 import TournamentListItemOngoing from './TournamentListItems/TournamentListItemOngoing';
 import api from '../utilities/api';
 
-const TournamentsList = ({ type, name, refreshKey}) => {
+const TournamentsList = ({ type, name}) => {
+  const [refreshKey, setRefreshKey] = useState(0);
   const [tournaments, setTournaments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -44,14 +45,11 @@ const TournamentsList = ({ type, name, refreshKey}) => {
     }
   };
 
-  useEffect(() => {
-    fetchTournaments();
-  }, []);
 
   useEffect(() => {
     // Function to fetch tournaments list
     fetchTournaments();
-  }, [refreshKey]);
+  }, []);
 
    // Function to handle the search button click
    const handleSearchClick = () => {
@@ -66,6 +64,8 @@ const TournamentsList = ({ type, name, refreshKey}) => {
   return (
     <div>
       <h2>{name}</h2>
+      {/* show the search bar only if is type ongoing*/}
+      {type === 'Ongoing' && (
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Search"
@@ -77,6 +77,7 @@ const TournamentsList = ({ type, name, refreshKey}) => {
           Search
         </Button>
       </InputGroup>
+      )}
       <ListGroup className="scrollable">
         {tournaments.map((tournament) => {
           if (type === 'Ongoing') {
@@ -97,7 +98,7 @@ const TournamentsList = ({ type, name, refreshKey}) => {
                   key={tournament.id}
                   id={tournament.id}
                   nameTournament={tournament.name}
-                  ranking= 'X'
+                  status={tournament.state}
                 />
               );
             } else {

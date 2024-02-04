@@ -154,15 +154,38 @@ const CreateBattleForm = ({ tournamentId }) => {
                     {/* ... other options ... */}
                   </Form.Select>
                 </Form.Group>
-      
+
                 <Form.Group className="mb-3">
                   <Form.Check
                     type="checkbox"
                     label="Manual Scoring"
-                    checked={manualScoring}
-                    onChange={(e) => setManualScoring(e.target.checked)}
                   />
                 </Form.Group>
+      
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Security Scoring"
+                    disabled
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Reliability Scoring"
+                    disabled
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Maintanaibility Scoring"
+                    disabled
+                  />
+                </Form.Group>
+
       
                 <Button variant="primary" type="submit">
                   Create

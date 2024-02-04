@@ -1,6 +1,7 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import api from "../utilities/api";
+import { onclickButtonNotYetImplemented } from '../utilities/alerting';
 
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -53,7 +54,16 @@ function BattlePageViewEducator() {
             </Col>
             <Col md={1}></Col>
           </Row>
-          {Object.keys(battle).length > 0 && ( // Check if tournament is not empty
+          {Object.keys(battle).length > 0 && (
+          <Container>
+          {battle.state == "CONSOLIDATION" &&
+            <Row>
+              <Col md={1}></Col>
+              <Col md={3}>
+              <button onClick={onclickButtonNotYetImplemented} className="btn btn-danger">Manage Consolidation</button>
+              </Col>
+            </Row>
+          }
           <Row style={{ padding: '20px' }}>
             <Col md={1}></Col>
             <Col md={3} className="my-auto">
@@ -61,13 +71,14 @@ function BattlePageViewEducator() {
             </Col>
                 <Col md={1}></Col>
                 <Col md={3} className="my-auto">
-                  <CodeSubmissions battleId={battleId}/>
+                  <CodeSubmissionsStudent battleId={battleId}/>
                 </Col>
                 <Col md={1}></Col>
                 <Col md={2} className="my-auto">
                   <RankingBattle battleId={battleId}/> 
                 </Col>
             </Row>
+          </Container>
             )}
         </Container>
       );

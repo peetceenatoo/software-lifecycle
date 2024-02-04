@@ -1,9 +1,10 @@
+import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Header from "../components/Header";
 import api from "../utilities/api";
 
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import '../styles/TournamentPage.css';
 import BattleInfoCard from "../components/BattleInfoCard";
 import CodeSubmissions from "../components/CodeSubmissions";
@@ -12,10 +13,13 @@ import { RankingBattle } from "../components/RankingBattle";
 
 
 function BattlePageViewStudent() {
+    const renderCount = useRef(0);
+    renderCount.current += 1;
     const { battleId } = useParams();
     const [battle, setBattle] = useState({});
 
     useEffect(() => {
+        console.log(`Rendered: ${renderCount.current} times`);
       const fetchBattle = async () => {
         try {
           const response = await api.get(`/battles/${battleId}`);

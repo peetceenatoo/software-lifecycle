@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 function LoginPage() {
@@ -27,7 +27,7 @@ function LoginPage() {
         localStorage.setItem('token', token);
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('username', response.data.username);
-        navigate('/home');
+        navigate('/');
       })
 
       .catch(error => {
@@ -85,7 +85,7 @@ function LoginPage() {
             </Button>
           </Form>
           <div className="mt-3">
-            Don't have an account? <a href="#signup">Sign up</a>
+            Don't have an account? <Link to="/signup">Sign up</Link>
           </div>
         </Col>
 

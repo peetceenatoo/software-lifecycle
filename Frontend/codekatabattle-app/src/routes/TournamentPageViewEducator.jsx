@@ -29,7 +29,17 @@ function TournamentPageViewEducator() {
         fetchTournament();
       }
     }, [tournamentId]);
-  
+
+    const handleEndBattle = async () => {
+      try {
+        const response = await api.post(`/tournaments/${tournamentId}/close`);
+        console.log(response.data);
+        setTournament(response.data);
+      } catch (error) {
+        alert('Error ending tournament: '+ error.response.data.message);
+        console.error('Error ending tournament', error);
+      }
+    }
 
     return (
       <Container fluid className="px-0 min-vh-100">
@@ -46,7 +56,7 @@ function TournamentPageViewEducator() {
             <Col md={3}>
               <div className="ms-2 me-auto">
                 {/* Apply the status-ongoing class here */}
-                <h1 className="status">Status: {tournament.state}</h1>
+                <h3 >Status: {tournament.state}</h3>
               </div>
             </Col>
             <Col md={1}></Col>
@@ -56,6 +66,10 @@ function TournamentPageViewEducator() {
             <Col md={4} className="my-auto d-flex flex-row">
               <h3 className="m-2">Educators Invited</h3>
               <Button >show</Button>
+            </Col>
+            <Col md={1}></Col>
+            <Col md={4} className="my-auto d-flex flex-row">
+              <Button onClick={handleEndBattle}>End Tournament</Button>
             </Col>
           </Row>
           {Object.keys(tournament).length > 0 && ( // Check if tournament is not empty

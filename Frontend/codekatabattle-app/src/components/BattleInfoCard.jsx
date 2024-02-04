@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Button, Form, DropdownButton, Dropdown } from 'react-bootstrap';
 import api from '../utilities/api';
+import { onclickButtonNotYetImplemented } from '../utilities/alerting';
 
 const BattleInfoCard = ({ battle }) => {
   if (!battle) { // Check if battle is defined
@@ -45,7 +46,7 @@ const BattleInfoCard = ({ battle }) => {
               MinStudents: {battle.minStudentsInGroup}, MaxStudents: {battle.maxStudentsInGroup}
             </Form.Label>
           </Form.Group>
-          <Button variant="primary">Show codekata</Button>
+          <Button variant="primary" onClick={onclickButtonNotYetImplemented}>Show codekata</Button>
           <Form.Group controlId="programmingLanguage">
             <DropdownButton className="m-2"  title={battle.programmingLanguage || 'Select language'}>
               {/* Map through enum if it's available */}

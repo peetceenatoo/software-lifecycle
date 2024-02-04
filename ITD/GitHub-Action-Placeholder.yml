@@ -4,15 +4,4 @@ on:
   push:
     branches:
       - main
-
-jobs:
-  make_http_post_request:
-    runs-on: ubuntu-latest
-    steps:
-    - name: HTTP Request Action
-      uses: fjogeleit/http-request-action@master
-      with:
-        url: "http://IPADDRESS:PORT/" # Replace with IPADDRESS and PORT of CKB Server
-        method: "POST"
-        data: '{"chiave": "valore http request on push"}' # Replace with the data you want to send in your POST request
-        customHeaders: '{"Authorization": "Bearer ${{ secrets.JWT_TOKEN }}", "Content-Type": "application/json"}'
+x

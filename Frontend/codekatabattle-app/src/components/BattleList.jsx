@@ -65,7 +65,7 @@ const BattleList = ({ type, name, tournamentId}) => {
                     key={battle.id}
                     id={battle.id}
                     nameBattle={battle.name}
-                    score= 'X'
+                    status={battle.state}
                   />
                 );
               } else {
@@ -74,7 +74,7 @@ const BattleList = ({ type, name, tournamentId}) => {
                   key={battle.id}
                   id={battle.id}
                   nameBattle={battle.name}
-                  score = {null}
+                  status = {battle.state}
                   />
                 );
               }

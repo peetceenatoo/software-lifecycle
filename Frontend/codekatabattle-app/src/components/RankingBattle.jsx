@@ -33,6 +33,7 @@ const RankingBattle = ({ battleId }) => {
     fetchRanking();
   }, [battleId]);
 
+  
 
 
   return (
@@ -52,8 +53,8 @@ const RankingBattle = ({ battleId }) => {
               <RankingBattleItem
                 key={index}
                 rank={index + 1}
-                name={item.username}
-                score={item.score}
+                name={' '.concat(item.usernames)}
+                score={item.highestScore}
               />
             ))
           ) : ( 
