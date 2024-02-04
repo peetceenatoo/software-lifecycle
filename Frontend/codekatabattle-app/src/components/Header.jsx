@@ -10,9 +10,9 @@ const Header = () => {
           <Col md={10} lg={10}>
             <Row>
               <Col xs={12} lg={3}>
-                <Navbar.Brand href="#home">CodeKataBattle</Navbar.Brand>
+                <Navbar.Brand href="/home">CodeKataBattle</Navbar.Brand>
               </Col>
-              <Col xs={12} lg={6} className="d-flex align-items-center justify-content-center">
+              <Col xs={12} lg={5} className="d-flex align-items-center justify-content-center">
                 <Form className='d-flex flex-row justify-content-center' >
                   <Col xs={12} lg={7} className="d-flex align-items-center justify-content-center">
                     <FormControl type="text" placeholder="Search" style={{ width: 'auto' }} />
@@ -22,9 +22,9 @@ const Header = () => {
                   </Col>
                 </Form>
               </Col>
-              <Col xs={12} lg={3} className="d-flex justify-content-end">
+              <Col xs={12} lg={4} className="d-flex justify-content-end">
                 <Nav>
-                  <Nav.Link href="#welcome">Welcome Luciano</Nav.Link>
+                  <Nav.Link href="#welcome">Welcome {localStorage.getItem('username')}</Nav.Link>
                   <Nav.Link href="#home">Home</Nav.Link>
                   <Nav.Link href="#profile">Profile</Nav.Link>
                 </Nav>
