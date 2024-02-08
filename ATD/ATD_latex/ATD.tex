@@ -96,6 +96,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs,xltabular}
 \usepackage{hyperref}
+\usepackage{listings}
 
 %----------------------------------------------------------------------------
 %	ADD YOUR DEFINITIONS AND COMMANDS (be careful of existing commands)
@@ -189,11 +190,42 @@
 % --------------------------------------------------------------------------
 \chapter{Installation}
 
+\begin{itemize}
+
+    \item \textbf{1.} We used a Windows Sandbox as testing environment.
+    \item \textbf{2.} We cloned the repository.
+    \item \textbf{3.} We moved the folder "IT/Implementazione" to the desktop.
+    \item \textbf{4.} We installed Python 3.10.0 on the machine.
+    \item \textbf{5.} We added the path to python.exe to the PATH environemnt variable.
+    \item \textbf{6.} We opened the Command Prompt.
+    \item \textbf{7.} We navigated to the folder Implementazione on the Desktop.
+    \item \textbf{8.} We ran the following commands:
+
+    \begin{lstlisting}
+        python -m venv env
+        env\Scripts\activate
+        pip install django
+        pip install django-crispy-forms
+        pip install github
+        pip install PyGithub
+        pip install flake8
+        cd codekatabattle
+        python manage.py runserver 
+    \end{lstlisting}
+
+    \item \textbf{9.} We accessed the login interface at http://127.0.0.1:8000/ckbapp/login
+    
+\end{itemize}
+
+The installation process proceeded smoothly without any issues.
+
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
 % THIRD CHAPTER
 % --------------------------------------------------------------------------
 \chapter{Test cases}
+
+
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
@@ -209,7 +241,7 @@ This section shows the amount of time that each member has spent to produce the 
 \hline
 \textbf{UNIT} & \textbf{MEMBERS} & \textbf{HOURS} \\ [1ex]
 \hline
-Testing & Piccinato, Piazalunga, Puglisi & 15h \\ [1ex]
+Testing & Piccinato, Piazzalunga, Puglisi & 15h \\ [1ex]
 Report & Piccinato & 2h \\ [1ex]
 \hline
 \end{tabularx}
