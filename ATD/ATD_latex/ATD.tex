@@ -241,19 +241,23 @@ The installation process proceeded smoothly without any issues.
 
 It is our responsibility to specify that, upon starting the server locally, some issues arose with the display of the contents, resulting in a subsequent loss in terms of usability.
 
-Specifically, the pages would repeatedly redirect to themselves until manually interrupted. Upon clicking, the browser would display the page's HTML without CSS.
+Specifically, the pages would repeatedly redirect to themselves until manually interrupted. Additionally, upon clicking, the browser would display the page's HTML without CSS.
 
-Although, during testing, we observed that after extensive navigation, the server began to display the pages correctly.
+However, during testing, we observed that after sufficient navigation, the server stabilized and began displaying the pages correctly.
 
-However, when we requested the developers to grant us online access to a functional version of the application, we were provided with a version that did not exhibit this problem in any way. In conclusion, we advise the development team to double-check the versioning indicated in the installation guide.
+Thus, we were able to conduct testing without encountering any other issues.
+
+This premise merely serves to highlight such undesirable behavior, which warrants greater attention.
 
 \section{Testing}
 
 This section will outline the testing procedures we conducted to evaluate both functionality and adherence to the project's product functions as outlined in the provided RASD.
 
-Each test case was meticulously designed to encompass the most relevant usage scenarios from the user's perspective.
+Each test case was designed to encompass the most relevant usage scenarios from the User's perspective.
 
-Below is a comprehensive list of the test cases executed to validate the product's performance and compliance. For each, we have stated the goal, the steps performed, the cases considered, and the results obtained.\\
+Below is a comprehensive list of the test cases executed to validate the product's performance and compliance.
+
+For each, we have stated the goal, the steps performed, the cases considered, and the results obtained.\\
 
 \begin{itemize}
 
@@ -310,7 +314,7 @@ Below is a comprehensive list of the test cases executed to validate the product
             4. Log out\\
             4. Access the database with administration privilege\\
             5. Move up the subscription deadline of the Tournament\\
-            6. Move up thesubscription deadline of the Battle\\
+            6. Move up the subscription deadline of the Battle\\
             7. Go back to the login interface\\
             8. Log in as a Student\\
             9. Visualize the Battle repository link in the Battle's status page\\
@@ -691,7 +695,13 @@ Below is a comprehensive list of the test cases executed to validate the product
 
 \section{Further notes}
 
-At the conclusion of the entire testing process, it's important to note the system's behavior regarding HTTP status codes. We observed instances where the system returned inappropriate codes, such as frequently issuing a status code of 200 even when the request wasn't adequately fulfilled. We advise the development team to ensure adherence to the HTTP communication standard to improve interoperability, compatibility, and integration with third-party services. Aligning with this standard would indeed result in a more robust and user-friendly experience for all stakeholders involved.
+At the conclusion of the entire testing process, it's important to note the system's behavior regarding HTTP status codes.
+
+We observed instances where the system returned inappropriate codes, such as frequently issuing a status code of 200 even when the request wasn't adequately fulfilled.
+
+We advise the development team to ensure adherence to the HTTP communication standard to improve interoperability, compatibility, and integration with third-party services. Aligning with this standard would indeed result in a more robust and user-friendly experience for all stakeholders involved.
+
+Nevertheless, the prototype provided to us is fully functional and appears to implement all the intended functions correctly, securely, and in a user-friendly manner.
 
 {\color{bluepoli}\rule{\linewidth}{0.1pt}}
 
