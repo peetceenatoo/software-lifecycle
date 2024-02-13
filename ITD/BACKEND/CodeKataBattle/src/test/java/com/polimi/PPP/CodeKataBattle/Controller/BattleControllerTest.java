@@ -178,7 +178,8 @@ class BattleControllerTest {
         //Create tournament
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
-        tournamentCreationDTO.setEducatorsInvited(List.of(educator.getId()));
+        //tournamentCreationDTO.setEducatorsInvited(List.of(educator.getUsername()));
+        tournamentCreationDTO.setEducatorsInvited(new ArrayList<>());
         tournamentCreationDTO.setTournamentName("TournamentName");
         tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(1));
 

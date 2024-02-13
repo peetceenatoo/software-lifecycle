@@ -31,11 +31,13 @@ public class UserCreationDTO {
 
     @NotBlank(message = "Username is mandatory")
     private String username;
+
+    @NotBlank(message = "linkBio is mandatory")
     private String linkBio;
 
+    @NotBlank(message = "Role is mandatory")
     private String roleName;
 
-    private Long roleId;
 
     // Add other fields as necessary, but avoid sensitive information like passwords
 }

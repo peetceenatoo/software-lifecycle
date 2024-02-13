@@ -34,7 +34,7 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
             "    JOIN battles b ON bbs.battle_fk = b.id " +
             "    JOIN battle_subscriptions bs on (bs.battle_id = bbs.battle_fk and bbs.group_id = bs.group_id) " +
             "    JOIN users u on (u.id = bs.user_id) " +
-            "WHERE tournament_fk=:tournamentId " +
+            "WHERE tournament_fk=:tournamentId and b.state='ENDED'" +
             "GROUP BY u.username" , nativeQuery = true)
     List<Object[]> calculateStudentRankingForTournament(@Param("tournamentId") Long tournamentId);
 

@@ -20,7 +20,7 @@ function LoginPage() {
   };
 
   const login = (credentials) => {
-    axios.post('https://localhost:8443/api/users/login', credentials)
+    axios.post('https://codekatabattle.it:8443/api/users/login', credentials)
       .then(response => {
         console.log('Login Success:', response.data);
         const token = response.data.token;
@@ -31,6 +31,7 @@ function LoginPage() {
       })
 
       .catch(error => {
+        alert('Login Error:'+ error.response.data.message)
         console.error('Login Error:', error.response ? error.response.data : error.message);
         // Handle errors here
       });
@@ -48,37 +49,14 @@ function LoginPage() {
           <h1>Log In</h1>
           <Form onSubmit={handleLoginSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email / Username</Form.Label>
-              <Form.Control type="email" placeholder="Enter your email or your username" required />
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter your email" required />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" required />
             </Form.Group>
-
-            <fieldset>
-              <Form.Group as={Row} className="mb-3">
-                <Col sm={7}>
-                  <Form.Check
-                    type="checkbox"
-                    label="Remember me"
-                    name="formHorizontalRadios"
-                    id="formHorizontalRadios1"
-                  />
-                </Col>
-                <Col sm={5}>
-                  <a href="#forgotpassword">Forgot password?</a>
-                </Col>
-
-              </Form.Group>
-
-              <Form.Group as={Row} className="mb-3">
-                
-              </Form.Group>
-
-            </fieldset>
-
 
             <Button variant="primary" type="submit">
               Sign in

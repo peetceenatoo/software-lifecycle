@@ -10,6 +10,7 @@ import com.polimi.PPP.CodeKataBattle.service.BattleService;
 import com.polimi.PPP.CodeKataBattle.service.SubmissionService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.mockito.internal.verification.Times;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -21,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.TemporalUnit;
 import java.util.List;
 
@@ -88,10 +91,15 @@ public class EvaluatorProcess {
 
         Timestamp submissionDeadlineTimestamp = Timestamp.valueOf(submissionDTO.getBattle().getSubmissionDeadline().toLocalDateTime());
         Timestamp subscriptionDeadlineTimestamp = Timestamp.valueOf(submissionDTO.getBattle().getSubscriptionDeadline().toLocalDateTime());
-        Timestamp submissionTimestamp =submissionDTO.getTimestamp();
+        Timestamp submissionTimestamp = Timestamp.valueOf(submissionDTO.getTimestamp().toLocalDateTime());
 
+        Long epochSecondSubmission = submissionTimestamp.toInstant().atZone(ZoneId.of("UTC")).toEpochSecond();
+        Long epochSecondSubmissionDeadline = submissionDeadlineTimestamp.toInstant().atZone(ZoneId.of("UTC")).toEpochSecond();
+        Long epochSecondSubscriptionDeadline = subscriptionDeadlineTimestamp.toInstant().atZone(ZoneId.of("UTC")).toEpochSecond();
+
+        Float timelinessScore = 100 * (1 - (float) (epochSecondSubmission - epochSecondSubscriptionDeadline) / (float) (epochSecondSubmissionDeadline - epochSecondSubscriptionDeadline));
         // 100 if submitted at subscriptionDeadline, 0 if submitted at submissionDeadline
-        Float timelinessScore = (1 - (float) (submissionTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) / (float) (submissionDeadlineTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime())) * 100;
+        //Float timelinessScore = (1 - (float) (timestamp.getTime() - subscriptionDeadlineTimestamp.getTime()) / (float) (submissionDeadlineTimestamp.getTime() - subscriptionDeadlineTimestamp.getTime())) * 100;
 
         Float automaticScore = (functionalScore + timelinessScore + staticAnalysisScore) / 3;
 

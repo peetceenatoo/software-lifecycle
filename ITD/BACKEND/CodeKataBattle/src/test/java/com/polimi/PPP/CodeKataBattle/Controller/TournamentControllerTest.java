@@ -5,6 +5,7 @@ import com.polimi.PPP.CodeKataBattle.DTOs.*;
 import com.polimi.PPP.CodeKataBattle.Model.ProgrammingLanguageEnum;
 import com.polimi.PPP.CodeKataBattle.Model.Tournament;
 import com.polimi.PPP.CodeKataBattle.Model.TournamentStateEnum;
+import com.polimi.PPP.CodeKataBattle.Model.User;
 import com.polimi.PPP.CodeKataBattle.Utilities.GitHubAPI;
 import com.polimi.PPP.CodeKataBattle.Utilities.NotificationProvider;
 import com.polimi.PPP.CodeKataBattle.service.BattleService;
@@ -127,7 +128,7 @@ class TournamentControllerTest {
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("Tournament1");
-        tournamentCreationDTO.setEducatorsInvited(List.of(educator.getId()));
+        tournamentCreationDTO.setEducatorsInvited(List.of(educator.getUsername()));
         tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(1));
 
         tournamentService.createTournament(tournamentCreationDTO);
@@ -178,7 +179,7 @@ class TournamentControllerTest {
 
         TournamentCreationDTO failedTournamentCreationDTO = new TournamentCreationDTO();
         failedTournamentCreationDTO.setTournamentName("Tournament2");
-        failedTournamentCreationDTO.setEducatorsInvited(List.of(1L,2L,3L,4L));
+        failedTournamentCreationDTO.setEducatorsInvited(List.of("wd","dinid","biobi","iboo"));
         failedTournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(1));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -197,7 +198,7 @@ class TournamentControllerTest {
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("Tournament2");
         tournamentCreationDTO.setEducatorsInvited(new ArrayList<>());
-        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusSeconds(1));
 
         final MockHttpServletResponse response3 = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/tournaments/create")
@@ -572,11 +573,12 @@ class TournamentControllerTest {
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("TournamentSub");
-        tournamentCreationDTO.setEducatorsInvited(List.of(2L));
-        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+        tournamentCreationDTO.setEducatorsInvited(List.of("edu"));
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusSeconds(1));
 
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
 
+        Thread.sleep(1000);
 
         final MockHttpServletResponse response = mockMvc.perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/tournaments/"+ tournament.getId() +"/createBattle")
@@ -755,7 +757,7 @@ class TournamentControllerTest {
         if(tournaments.isEmpty()){
             TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
             tournamentCreationDTO.setTournamentName("TournamentSub");
-            tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+            tournamentCreationDTO.setEducatorsInvited(List.of("edu"));
             tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
 
             TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
@@ -775,7 +777,9 @@ class TournamentControllerTest {
 
             //Mock status of the tournament to ongoing
 
-            BattleDTO battle = battleService.createBattle(tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
+            UserDTO user = userService.findByUsername("edu");
+
+            BattleDTO battle = battleService.createBattle(user.getId(),tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
 
 
 
@@ -846,7 +850,7 @@ class TournamentControllerTest {
         if(tournaments.isEmpty()){
             TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
             tournamentCreationDTO.setTournamentName("TournamentSub");
-            tournamentCreationDTO.setEducatorsInvited(List.of(2L));
+            tournamentCreationDTO.setEducatorsInvited(List.of("edu"));
             tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
 
             TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
@@ -865,7 +869,9 @@ class TournamentControllerTest {
 
             //Mock status of the tournament to ongoing
 
-            BattleDTO battle = battleService.createBattle(tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
+            UserDTO user = userService.findByUsername("edu");
+
+            BattleDTO battle = battleService.createBattle(user.getId(), tournamentId, battleCreationDTO, getGoodZip("codeZip"), getGoodZip("testZip"));
 
         }
         else{
@@ -894,10 +900,12 @@ class TournamentControllerTest {
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("TournamentSub2");
-        tournamentCreationDTO.setEducatorsInvited(List.of(2L));
-        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(-1));
+        tournamentCreationDTO.setEducatorsInvited(List.of("edu"));
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusSeconds(1));
 
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
+
+        Thread.sleep(1000);
         tournamentId = tournament.getId();
 
         final MockHttpServletResponse response3 = mockMvc.perform(

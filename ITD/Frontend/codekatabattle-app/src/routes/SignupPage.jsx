@@ -9,6 +9,11 @@ function SignupPage() {
   const handleSignupSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submit action
 
+    if(!event.target.elements.formHorizontalRadios1.checked && !event.target.elements.formHorizontalRadios2.checked){
+      alert("Role choice is mandatory")
+      return
+    }
+
     const userData = {
       name: event.target.elements.formBasicName.value,
       surname: event.target.elements.formBasicSurname.value,
@@ -24,7 +29,7 @@ function SignupPage() {
   };
 
   const signup = (userData) => {
-    axios.post('https://api.codekatabattle.it:8443/api/users/signup', userData)
+    axios.post('https://codekatabattle.it:8443/api/users/signup', userData)
       .then(response => {
         console.log('Signup Success:', response.data); // Log the success response
         alert('Signup successful!'); // Alert the user to the success
@@ -32,8 +37,8 @@ function SignupPage() {
       })
       .catch(error => {
         //console.error('Signup Error:', error.response ? error.response.data : error.message); // Log any errors
-        console.log('Signup Error:', error); // Log any errors (specifically the error message
-        alert('Signup Error: ' + error); // Alert the user to any errors
+        console.log('Signup Error:' + (error.response.data.message ? error.response.data.message : error)); // Log any errors (specifically the error message
+        alert('Signup Error:' + (error.response.data.message ? error.response.data.message : error)); // Alert the user to any errors
       });
   };
 
@@ -63,7 +68,7 @@ function SignupPage() {
 
             <Form.Group className="mb-3" controlId="formBasicLinkBio">
               <Form.Label>Link Bio</Form.Label>
-              <Form.Control type="text" placeholder="Enter your linkBio" required />
+              <Form.Control type="text" placeholder="Enter your LinkBio" required />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">

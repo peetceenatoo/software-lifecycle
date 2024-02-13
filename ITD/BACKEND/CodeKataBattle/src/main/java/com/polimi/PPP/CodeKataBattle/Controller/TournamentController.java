@@ -74,7 +74,7 @@ public class TournamentController extends AuthenticatedController{
         if (tournamentCreationDTO.getEducatorsInvited() == null)
             tournamentCreationDTO.setEducatorsInvited(new java.util.ArrayList<>());
 
-        tournamentCreationDTO.getEducatorsInvited().add(authenticatedUser.getId());
+        tournamentCreationDTO.getEducatorsInvited().add(authenticatedUser.getUsername());
         TournamentDTO tournament = tournamentService.createTournament(tournamentCreationDTO);
 
         return ResponseEntity.ok(tournament);
@@ -144,7 +144,10 @@ public class TournamentController extends AuthenticatedController{
     @PostMapping("/{tournamentId}/createBattle")
     @PreAuthorize("hasRole(T(com.polimi.PPP.CodeKataBattle.Model.RoleEnum).ROLE_EDUCATOR)")
     public ResponseEntity<?> createBattle(@PathVariable Long tournamentId, @RequestPart("battle") @Valid BattleCreationDTO battleDTO, @RequestPart("codeZip") MultipartFile codeZip, @RequestPart("testZip") MultipartFile testZip) {
-        BattleDTO battle = battleService.createBattle(tournamentId, battleDTO, codeZip, testZip);
+
+        UserDTO user = this.getAuthenticatedUser();
+
+        BattleDTO battle = battleService.createBattle(user.getId(),tournamentId, battleDTO, codeZip, testZip);
         return ResponseEntity.ok(battle);
     }
 

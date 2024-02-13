@@ -32,7 +32,7 @@ const CreateBattleForm = ({ tournamentId }) => {
         minStudentsInGroup: minGroupSize,
         maxStudentsInGroup: maxGroupSize,
         programmingLanguage: codingLanguage,
-        manualScoring: manualScoring
+        manualScoringRequired: manualScoring
       }
 
       formData.append(
@@ -177,6 +177,8 @@ const CreateBattleForm = ({ tournamentId }) => {
                   <Form.Check
                     type="checkbox"
                     label="Manual Scoring"
+                    onChange={(e) => {setManualScoring(e.target.checked);}
+                    }
                   />
                 </Form.Group>
       

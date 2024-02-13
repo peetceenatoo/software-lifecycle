@@ -14,7 +14,13 @@ COPY src src
 RUN mvn clean package -DskipTests
 
 # Step 2: Run stage, also using JDK 21
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:21-jdk-jammy
+
+# Install Maven for runtime use
+RUN apt-get update && \
+    apt-get install -y maven
+
+
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8443

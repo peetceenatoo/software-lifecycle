@@ -128,8 +128,15 @@ public class TournamentService {
         tournament = tournamentRepository.save(tournament);
 
         // Handle association with educators
-        for (Long id : tournamentDTO.getEducatorsInvited()) {
-            User educator = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("EducatorId not valid"));
+        for (String username : tournamentDTO.getEducatorsInvited()) {
+            if(tournamentDTO.getEducatorsInvited().stream().filter(s -> s.equals(username)).count() > 1){
+                throw new IllegalArgumentException("Duplicate educators provided");
+            }
+
+            User educator = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Educator not valid"));
+            if(educator.getRole().getName() != RoleEnum.ROLE_EDUCATOR){
+                throw new IllegalArgumentException("Invalid educator provided!");
+            }
             educator.getTournaments().add(tournament);
             userRepository.save(educator);
 

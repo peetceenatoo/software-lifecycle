@@ -140,7 +140,7 @@ const CreateTournament = () => {
                                 Add a Badge
                             </Button>
                             {' '}
-                            <Button variant="secondary" type="button" onClick={handleShow}>
+                            <Button variant="info" type="button" onClick={handleShow}>
                                 Invite an educator
                             </Button>
                         </Col>

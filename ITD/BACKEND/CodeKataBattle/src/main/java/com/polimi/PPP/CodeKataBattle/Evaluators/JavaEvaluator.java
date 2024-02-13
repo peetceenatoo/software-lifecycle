@@ -149,7 +149,17 @@ public class JavaEvaluator implements IEvaluator{
         if(!mavenExecutable.setExecutable(true)){
             throw new ErrorDuringEvaluationException("Error in setting maven executable");
         }
-        invoker.setMavenExecutable(mavenExecutable); //Set maven executable
+
+        //Using local installation as GitHub is corrupting the maven wrapper
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            invoker.setMavenExecutable(new File("C:\\Program Files\\apache-maven-3.8.1\\bin\\mvn.cmd")); //Set maven executable
+        } else if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+            invoker.setMavenExecutable(new File("/usr/bin/mvn")); //Set maven executable
+        } else if(System.getProperty("os.name").toLowerCase().contains("mac")){
+            invoker.setMavenExecutable(new File("/usr/local/bin/mvn")); //Set maven executable
+        }
+
+
 
         //Set logger
         CustomLogger customLogger = new CustomLogger();

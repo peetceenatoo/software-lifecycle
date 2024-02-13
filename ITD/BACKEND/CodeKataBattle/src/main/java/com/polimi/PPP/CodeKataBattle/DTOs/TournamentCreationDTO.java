@@ -28,6 +28,6 @@ public class TournamentCreationDTO {
     private ZonedDateTime registrationDeadline;
 
     @NotNull(message = "Tournament invitations is mandatory")
-    private List<Long> educatorsInvited;
+    private List<String> educatorsInvited;
     // Getters and setters
 }

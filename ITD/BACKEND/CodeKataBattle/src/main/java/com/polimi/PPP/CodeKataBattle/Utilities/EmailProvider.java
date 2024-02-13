@@ -55,16 +55,13 @@ public class EmailProvider implements NotificationProvider{
 
     public void sendNotification(MessageDTO messageDTO, List<String> destinations){
         new Thread(() -> {
-
+            for(String destination : destinations){
             Message message = new MimeMessage(session);
             try{
 
-                message.setFrom(new InternetAddress(this.username, "CodeKataBattle"));
+                message.setFrom(new InternetAddress("noreply@codekatabattle.it", "CodeKataBattle"));
 
-
-                for(String destination : destinations){
-                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destination));
-                }
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destination));
 
                 message.setSubject(messageDTO.getTitle());
 
@@ -84,6 +81,8 @@ public class EmailProvider implements NotificationProvider{
                 throw new ErrorInNotificationException("Error in sending email");
             }
 
+            }
+
         }).start();
     }
 
@@ -94,7 +93,7 @@ public class EmailProvider implements NotificationProvider{
             Message message = new MimeMessage(session);
             try{
 
-                message.setFrom(new InternetAddress(this.username, "CodeKataBattle"));
+                message.setFrom(new InternetAddress("noreply@codekatabattle.it", "CodeKataBattle"));
 
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destination));
 

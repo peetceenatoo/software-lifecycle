@@ -189,7 +189,7 @@ class BattleServiceTest {
 
         Long tournamentId = 10L;
 
-        ZonedDateTime deadlines = ZonedDateTime.now();
+        ZonedDateTime deadlines = ZonedDateTime.now().plus(1, ChronoUnit.DAYS);
 
         Tournament tournament = new Tournament();
         tournament.setId(tournamentId);
@@ -234,8 +234,21 @@ class BattleServiceTest {
         when(battleRepository.save(any(Battle.class))).thenReturn(mockBattleEntity);
         when(gitHubAPI.createRepository(any(String.class), any(String.class), any(boolean.class))).thenReturn("https://github.com/user/" + tournament.getName() + "-" + mockBattle.getName());
 
+        User user2 = mock(User.class);
+        Role roleEducator = new Role();
+        roleEducator.setName(RoleEnum.ROLE_EDUCATOR);
 
-        BattleDTO created = this.battleService.createBattle(tournamentId, battleCreationDTO, mockZip, mockZip);
+        // Assuming Role and RoleEnum are part of your application
+        when(user2.getRole()).thenReturn(roleEducator);
+        when(user2.getId()).thenReturn(1L);
+
+        Set<User> users = new HashSet<>();
+        users.add(user2);
+
+        // Return these mocked users when getUsers is called
+        tournament.setUsers(users);
+        BattleDTO created = this.battleService.createBattle(1L,tournamentId, battleCreationDTO, mockZip, mockZip);
+
 
         //check if the attributes are the same
         assertEquals(mockBattle.getName(), created.getName());
@@ -254,13 +267,13 @@ class BattleServiceTest {
         MockMultipartFile badMock = getBadZip1();
 
         assertThrows(InvalidBattleCreationException.class, () -> {
-            this.battleService.createBattle(tournamentId, battleCreationDTO, badMock, badMock);
+            this.battleService.createBattle(1L,tournamentId, battleCreationDTO, badMock, badMock);
         });
 
         MockMultipartFile badMock2 = getBadZip2();
 
         assertThrows(InvalidBattleCreationException.class, () -> {
-            this.battleService.createBattle(tournamentId, battleCreationDTO, badMock2, badMock2);
+            this.battleService.createBattle(1L,tournamentId, battleCreationDTO, badMock2, badMock2);
         });
 
     }

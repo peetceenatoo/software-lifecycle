@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ public class Submission {
     private Long id;
 
     @Column(nullable = false)
-    private Timestamp timestamp;
+    private ZonedDateTime timestamp;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

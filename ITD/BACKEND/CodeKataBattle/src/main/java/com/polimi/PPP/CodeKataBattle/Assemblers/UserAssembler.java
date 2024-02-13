@@ -42,9 +42,6 @@ public class UserAssembler {
             }
 
             user.setRole(role);
-        }else if (dto.getRoleId() != null) {
-            Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Invalid role provided"));
-            user.setRole(role);
         }
 
         return user;

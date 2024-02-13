@@ -14,6 +14,7 @@ import com.polimi.PPP.CodeKataBattle.Repositories.SubmissionRepository;
 import com.polimi.PPP.CodeKataBattle.Repositories.UserRepository;
 import com.polimi.PPP.CodeKataBattle.Model.*;
 import com.polimi.PPP.CodeKataBattle.Repositories.*;
+import com.polimi.PPP.CodeKataBattle.Utilities.TimezoneUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -21,10 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +70,7 @@ public class SubmissionService {
         }
 
         Submission submission = new Submission();
-        submission.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        submission.setTimestamp(TimezoneUtil.convertToUtc(ZonedDateTime.now()));
         submission.setState(SubmissionStateEnum.PENDING);
         submission.setRepositoryUrl(repositoryUrl);
         submission.setCommitHash(commitHash);
@@ -140,7 +144,7 @@ public class SubmissionService {
         for (Object[] submission : submissions) {
             GroupSubmissionDTO groupSubmission = new GroupSubmissionDTO();
             groupSubmission.setSubmissionId(((Number) submission[0]).longValue());
-            groupSubmission.setSubmissionTimestamp((Timestamp) submission[1]);
+            groupSubmission.setSubmissionTimestamp(ZonedDateTime.ofInstant(((Timestamp) submission[1]).toInstant(), ZoneId.of("UTC")));
             groupSubmission.setRepositoryUrl((String) submission[2]);
             groupSubmission.setCommitHash((String) submission[3]);
             groupSubmission.setAutomaticScore((Integer) submission[4]);
@@ -164,7 +168,7 @@ public class SubmissionService {
         for (Object[] submission : submissions) {
             GroupSubmissionDTO groupSubmission = new GroupSubmissionDTO();
             groupSubmission.setSubmissionId(((Number) submission[0]).longValue());
-            groupSubmission.setSubmissionTimestamp((Timestamp) submission[1]);
+            groupSubmission.setSubmissionTimestamp(ZonedDateTime.ofInstant(((Timestamp) submission[1]).toInstant(), ZoneId.of("UTC")));
             groupSubmission.setRepositoryUrl((String) submission[2]);
             groupSubmission.setCommitHash((String) submission[3]);
             groupSubmission.setAutomaticScore((Integer) submission[4]);

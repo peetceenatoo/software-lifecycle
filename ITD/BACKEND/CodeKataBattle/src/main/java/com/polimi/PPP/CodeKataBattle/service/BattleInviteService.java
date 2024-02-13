@@ -74,7 +74,7 @@ public class BattleInviteService {
     }
 
     private boolean isUserEnrolledInBattle(Long battleId, Long userId) {
-        return battleInviteRepository.findByBattleIdAndUserId(battleId, userId).isPresent();
+        return battleSubscriptionRepository.existsByBattleIdAndUserId(battleId, userId);
     }
 
     private boolean hasUserAcceptedInviteForBattle(Long battleId, Long userId) {
@@ -86,6 +86,11 @@ public class BattleInviteService {
     public void enrollAndInviteBattle(BattleEnrollDTO battleEnrollDTO) {
 
         Battle battle = battleRepository.findById(battleEnrollDTO.getBattleId()).orElseThrow(() -> new InvalidArgumentException("Battle not found"));
+
+        if(battle.getState() != BattleStateEnum.SUBSCRIPTION){
+            throw new InvalidArgumentException("Subscription deadline expired");
+        }
+
         User user = userRepository.findById(battleEnrollDTO.getUserId()).orElseThrow(() -> new InvalidArgumentException("User not found"));
         if(battleEnrollDTO.getUsernames().size() + 1 > battle.getMaxStudentsInGroup()) {
             throw new InvalidArgumentException("Too many users to invite");
@@ -93,11 +98,34 @@ public class BattleInviteService {
         if(battleEnrollDTO.getUsernames().size() + 1  < battle.getMinStudentsInGroup()) {
             throw new InvalidArgumentException("Too few users to invite");
         }
+        if(isUserEnrolledInBattle(battleEnrollDTO.getBattleId(), user.getId())){
+            throw new InvalidArgumentException("User already enrolled");
+        }
+
+        Tournament tournament = battle.getTournament();
+
+        if(tournament.getUsers().stream().noneMatch(x -> x.getRole().getName()==RoleEnum.ROLE_STUDENT && Objects.equals(x.getId(), user.getId()))){
+            throw new InvalidArgumentException("User not enrolled in the battle's tournament");
+        }
+
+        if(battleEnrollDTO.getUsernames().contains(user.getUsername())){
+            throw new InvalidArgumentException("User cannot invite himself");
+        }
 
         // Check invites
         for (String username : battleEnrollDTO.getUsernames()) {
             User invitedUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new InvalidArgumentException("Invited user not found"));
+
+            if(battleEnrollDTO.getUsernames().stream().filter(x -> x.equals(username)).count() > 1){
+                throw new InvalidArgumentException("Duplicate usernames");
+            }
+
+            //Check invited user is effectively enrolled in battle's tournament
+            if(tournament.getUsers().stream().noneMatch(x -> x.getRole().getName()==RoleEnum.ROLE_STUDENT && Objects.equals(x.getId(), invitedUser.getId()))){
+                throw new InvalidArgumentException("User not enrolled in the battle's tournament");
+            }
+
             if (isUserEnrolledInBattle(battleEnrollDTO.getBattleId(), invitedUser.getId())
                     || hasUserAcceptedInviteForBattle(battleEnrollDTO.getBattleId(), invitedUser.getId())){
                 throw new InvalidArgumentException("User already enrolled");
@@ -148,7 +176,7 @@ public class BattleInviteService {
 
             String inviteToken = jwtHelper.generateInviteToken(invite.getId(), invite.getBattle().getSubscriptionDeadline());
 
-            String link = "<a href='https://api.codekatabattle.it:8443/api/battles/acceptInvitation/" + inviteToken + "'>Join the gorup!</a>";
+            String link = "<a href='https://api.codekatabattle.it:8443/api/battles/acceptInvitation/" + inviteToken + "'>Join the group!</a>";
 
             MessageDTO messageDTO = new MessageDTO(link,"You have been invited to take part in a battle!");
             emails.add(invitedUser.getEmail());

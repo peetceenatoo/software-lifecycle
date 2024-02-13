@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptionDeadline, submissionDeadline, role, status }) => {
+const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptionDeadline, submissionDeadline, role, status, minStudentsInGroup, maxStudentsInGroup }) => {
   const [show, setShow] = useState(false);
   const [invitations, setInvitations] = useState([]);
   const [username, setUsername] = useState('');
@@ -86,7 +86,7 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
     <Container>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Invite Educators</Modal.Title>
+                    <Modal.Title>Invite Students</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Control
@@ -128,7 +128,7 @@ const BattleListItemOngoing = ({ battleId,  battleState, nameBattle, subscriptio
             </Modal>
     <ListGroup.Item className="d-flex justify-content-between align-items-start">
       <div className="ms-2 me-auto">
-        <div className="fw-bold">#{battleId} - {nameBattle}</div>
+        <div className="fw-bold">#{battleId} - {nameBattle} [{minStudentsInGroup} - {maxStudentsInGroup}]</div>
           <div style={{ color: isSubscriptionDeadlinePassed && isSubmissionDeadlinePassed ? 'red' : 'green' }}>
             {battleState} - {renderDeadline(battleState, subscriptionDeadline, submissionDeadline)}
           </div>

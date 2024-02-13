@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<UserLoggedDTO> login(@Valid @RequestBody UserLoginDTO request) {
+    public ResponseEntity<UserLoggedDTO> login(@RequestBody @Valid UserLoginDTO request) {
         log.warn("User {} logging in with password {}", request.getEmail(), request.getPassword());
         
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid  @RequestBody UserCreationDTO requestDto) {
+    public ResponseEntity<Void> signup(@RequestBody @Valid UserCreationDTO requestDto) {
         userService.createUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

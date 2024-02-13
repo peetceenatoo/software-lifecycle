@@ -56,6 +56,8 @@ const BattleList = ({ type, name, tournamentId}) => {
                   subscriptionDeadline={battle.subscriptionDeadline}
                   role={localStorage.getItem('role')}
                   status={battle.state}
+                  minStudentsInGroup={battle.minStudentsInGroup}
+                  maxStudentsInGroup={battle.maxStudentsInGroup}
                 />
               );
             } else if (type === 'Managed' || type==='Enrolled') {
@@ -66,6 +68,8 @@ const BattleList = ({ type, name, tournamentId}) => {
                     id={battle.id}
                     nameBattle={battle.name}
                     status={battle.state}
+                    minStudentsInGroup={battle.minStudentsInGroup}
+                    maxStudentsInGroup={battle.maxStudentsInGroup}
                   />
                 );
               } else {
@@ -75,6 +79,8 @@ const BattleList = ({ type, name, tournamentId}) => {
                   id={battle.id}
                   nameBattle={battle.name}
                   status = {battle.state}
+                  minStudentsInGroup={battle.minStudentsInGroup}
+                  maxStudentsInGroup={battle.maxStudentsInGroup}
                   />
                 );
               }

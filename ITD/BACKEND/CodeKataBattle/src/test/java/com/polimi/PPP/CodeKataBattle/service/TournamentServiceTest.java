@@ -355,10 +355,10 @@ class TournamentServiceTest {
 
         TournamentCreationDTO tournamentCreationDTO = new TournamentCreationDTO();
         tournamentCreationDTO.setTournamentName("tournament1");
-        tournamentCreationDTO.setEducatorsInvited(new ArrayList<Long>());
-        tournamentCreationDTO.getEducatorsInvited().add(1L);
-        tournamentCreationDTO.getEducatorsInvited().add(2L);
-        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now());
+        tournamentCreationDTO.setEducatorsInvited(new ArrayList<String>());
+        tournamentCreationDTO.getEducatorsInvited().add("user1");
+        tournamentCreationDTO.getEducatorsInvited().add("user2");
+        tournamentCreationDTO.setRegistrationDeadline(ZonedDateTime.now().plusDays(1));
 
         Tournament created = new Tournament();
         created.setId(1L);
@@ -376,8 +376,8 @@ class TournamentServiceTest {
         resultDTO.setDeadline(tournamentCreationDTO.getRegistrationDeadline());
 
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(created);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(edu1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(edu2));
+        when(userRepository.findByUsername("user1")).thenReturn(Optional.of(edu1));
+        when(userRepository.findByUsername("user2")).thenReturn(Optional.of(edu2));
 
         Role studentRole = new Role();
         studentRole.setId(1L);

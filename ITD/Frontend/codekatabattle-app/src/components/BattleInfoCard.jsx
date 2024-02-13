@@ -10,6 +10,13 @@ const BattleInfoCard = ({ battle }) => {
     return null; // Don't render anything if battle is undefined
   }
 
+  const handleClickRepo = () => {
+    // Use window.open(url, target) to open a new tab
+
+      window.open('https://github.com/'+ battle.repositoryLink, '_blank', 'noopener,noreferrer');
+    
+  };
+
   console.log("BattleInfoCard");
   console.log(battle)
 
@@ -46,11 +53,11 @@ const BattleInfoCard = ({ battle }) => {
               MinStudents: {battle.minStudentsInGroup}, MaxStudents: {battle.maxStudentsInGroup}
             </Form.Label>
           </Form.Group>
-          <Button variant="primary" onClick={onclickButtonNotYetImplemented}>Show codekata</Button>
+          <Button variant="primary" onClick={handleClickRepo} disabled={battle.state != "ONGOING"}>Show codekata</Button>
           <Form.Group controlId="programmingLanguage">
-            <DropdownButton className="m-2"  title={battle.programmingLanguage || 'Select language'}>
-              {/* Map through enum if it's available */}
-            </DropdownButton>
+            <Button className="m-2" disabled={true}>
+              {battle.programmingLanguage}
+            </Button>
           </Form.Group>
           <Form.Group  controlId="manualScoring">
             <Form.Check className="m-2" 

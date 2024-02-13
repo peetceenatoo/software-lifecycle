@@ -248,7 +248,7 @@ public class BattleService {
     }
 
     @Transactional
-    public BattleDTO createBattle (Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
+    public BattleDTO createBattle (Long userId, Long tournamentId, BattleCreationDTO battleDTO, MultipartFile codeZip, MultipartFile testZip) throws InvalidBattleCreationException {
 
 
         if (battleDTO.getMinStudentsInGroup() < 1 || battleDTO.getMaxStudentsInGroup() < 1)
@@ -257,9 +257,11 @@ public class BattleService {
         if(battleDTO.getMinStudentsInGroup() > battleDTO.getMaxStudentsInGroup())
             throw new InvalidBattleCreationException("Invalid Min and Max number for students groups.");
 
-        if(battleDTO.getSubscriptionDeadline().isAfter(battleDTO.getSubmissionDeadline()))
+        if(battleDTO.getSubscriptionDeadline().isBefore(ZonedDateTime.now()))
             throw new InvalidBattleCreationException("Invalid deadlines.");
 
+        if(battleDTO.getSubscriptionDeadline().isAfter(battleDTO.getSubmissionDeadline()))
+            throw new InvalidBattleCreationException("Invalid deadlines.");
 
         // Check tournamentId is valid and tournament is ongoing
         Optional<Tournament> tournamentOpt = tournamentRepository.findById(tournamentId);
@@ -268,6 +270,9 @@ public class BattleService {
         Tournament tournament = tournamentOpt.get();
         if ( tournament.getState() != TournamentStateEnum.ONGOING )
             throw new InvalidBattleCreationException("Tournament is not ongoing.");
+
+        if (tournament.getUsers().stream().noneMatch(s -> s.getRole().getName() == RoleEnum.ROLE_EDUCATOR && s.getId().equals(userId)))
+            throw new InvalidBattleCreationException("User is not an educator of the tournament.");
 
         // Check if a battle with the same name in this tournament already exists
         if ( battleRepository.existsByTournamentIdAndName(tournamentId, battleDTO.getName()) )
@@ -324,7 +329,6 @@ public class BattleService {
             battle.setTestRepositoryLink(testRepoUrl);
             battle.setState(BattleStateEnum.SUBSCRIPTION);
             battle.setTournament(tournament);
-
 
             // Map battleDTO to Battle and set other fields
             result = battleRepository.save(battle);

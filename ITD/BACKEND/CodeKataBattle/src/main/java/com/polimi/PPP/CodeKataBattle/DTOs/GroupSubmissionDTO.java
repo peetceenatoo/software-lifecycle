@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class GroupSubmissionDTO {
     private Long submissionId;
-    private Timestamp submissionTimestamp;
+    private ZonedDateTime submissionTimestamp;
     private String repositoryUrl;
     private String commitHash;
     private int automaticScore;
@@ -20,7 +21,7 @@ public class GroupSubmissionDTO {
     private String logScoring;
     private Long groupId;
 
-    public GroupSubmissionDTO(Long submissionId, Timestamp submissionTimestamp, String repositoryUrl, String commitHash, int automaticScore, Integer manualCorrection, String logScoring, Long groupId) {
+    public GroupSubmissionDTO(Long submissionId, ZonedDateTime submissionTimestamp, String repositoryUrl, String commitHash, int automaticScore, Integer manualCorrection, String logScoring, Long groupId) {
         this.submissionId = submissionId;
         this.submissionTimestamp = submissionTimestamp;
         this.repositoryUrl = repositoryUrl;
