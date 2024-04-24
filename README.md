@@ -1,4 +1,4 @@
-# CodeKataBattle - Requirements Engineering, Software Design and Implementation
+# CodeKataBattle Platform
 
 ### Requirement Engineering
 Requirement Engineering is the process of defining, documenting, and maintaining requirements for a software system. It involves gathering, analyzing, and prioritizing user needs and translating them into detailed specifications that guide the development process.
